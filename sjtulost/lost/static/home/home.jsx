@@ -1,9 +1,34 @@
 /**
  * Created by gougoumemeda on 16/4/22.
  */
-
+var JaccountLoginActions = require('../flux/action/loginAction');
+var UserInfoStore = require('../flux/store/userInfoStore');
 
 var Navigation = React.createClass({
+    getInitialState: function() {
+        return {
+            name: UserInfoStore.getUserName()
+        }
+    },
+
+    componentDidMount: function() {
+        UserInfoStore.addChangeListener(this._onChange);
+    },
+
+    componentWillUnmount: function() {
+        UserInfoStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function () {
+        this.setState({
+            name: UserInfoStore.getUserName()
+        });
+    },
+
+    login: function() {
+        JaccountLoginActions.login()
+    },
+
     render: function() {
         return (
             <div className="navbar navbar-default navbar-fixed-top">
@@ -24,7 +49,7 @@ var Navigation = React.createClass({
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
-                            <li><a href="#">使用Jaccount登录</a></li>
+                            <li><a href="#" onClick = { this.login }>{ this.state.name }</a></li>
                         </ul>
                     </div>
                 </div>
