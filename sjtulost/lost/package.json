@@ -1,0 +1,15 @@
+{
+  "name": "SJTULost",
+  "version": "1.0.0",
+  "description": "For SJTU student.",
+  "keywords": [
+    "SJTU",
+    "Flux",
+    "React"
+  ],
+  "author": "Ruan Yifeng",
+  "license": "MIT",
+  "dependencies": {
+    "flux": "~2.0.3"
+  }
+}
