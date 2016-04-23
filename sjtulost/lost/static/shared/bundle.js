@@ -47,8 +47,15 @@
 	/**
 	 * Created by gougoumemeda on 16/4/22.
 	 */
+	var constant = {
+	    'dev-prefix': 'http://127.0.0.1:8888'
+	};
+
 	var JaccountLoginActions = __webpack_require__(1);
 	var UserInfoStore = __webpack_require__(6);
+
+	var Homepage = __webpack_require__(9);
+	var Finding = __webpack_require__(10);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -80,12 +87,12 @@
 	            React.createElement("div", {className: "navbar navbar-default navbar-fixed-top"}, 
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement("div", {className: "navbar-header"}, 
-	                        React.createElement("a", {href: "#", className: "navbar-brand"}, "SJTU Lost")
+	                        React.createElement("a", {href: "/", className: "navbar-brand"}, "SJTU Lost")
 	                    ), 
 	                    React.createElement("div", {className: "navbar-collapse collapse", id: "navbar-main"}, 
 	                        React.createElement("ul", {className: "nav navbar-nav"}, 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "#"}, "丢失")
+	                                React.createElement("a", {href: "/finding/"}, "丢失")
 	                            ), 
 	                            React.createElement("li", null, 
 	                                React.createElement("a", {href: "#"}, "拾物")
@@ -104,21 +111,30 @@
 	    }
 	})
 
-	var HomePage = React.createClass({displayName: "HomePage",
+	var App = React.createClass({displayName: "App",
 	    render: function() {
-	        return (
-	            React.createElement(Navigation, null)
-	        )
+	        if (window.location.href == constant['dev-prefix'] + '/') {
+	            return (
+	                React.createElement("div", null, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(Homepage, null)
+	                )
+	            )
+	        } else if (window.location.href == constant['dev-prefix'] + '/finding/'){
+	            return (
+	                React.createElement("div", null, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(Finding, null)
+	                )
+	            )
+	        }
 	    }
 	})
 
-
-
 	React.render(
-	    React.createElement(HomePage, null),
+	    React.createElement(App, null),
 	    document.getElementById('content')
 	);
-
 
 
 /***/ },
@@ -513,7 +529,7 @@
 	var UserInfoStore = assign({}, EventEmitter.prototype, {
 	    name: "使用Jaccount登录",
 	    phone: "",
-	    studentId: 0,
+	    studentId: "",
 	    recommend_ids: [],
 
 	    getUserName: function getUserName() {
@@ -927,6 +943,41 @@
 		return to;
 	};
 
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	var HomePage = React.createClass({displayName: "HomePage",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                "22222"
+	            )
+	        )
+	    }
+	})
+
+
+
+	module.exports = HomePage;
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	var Finding = React.createClass({displayName: "Finding",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                "44444"
+	            )
+	        )
+	    }
+	});
+
+	module.exports = Finding;
 
 /***/ }
 /******/ ]);

@@ -1,12 +1,9 @@
 var webpack = require('webpack');
 
-var homePath = './static/home/home.jsx';
-var homeOutput = './static/home/bundle.js';
-
 module.exports = {
-  entry: homePath,
+  entry: './static/shared/navigation.jsx',
   output: {
-    filename: homeOutput
+    filename: './static/shared/bundle.js'
   },
   resolve: {
     extensions: ['', '.js', '.jsx']

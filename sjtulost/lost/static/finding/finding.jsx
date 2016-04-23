@@ -1,13 +1,11 @@
-var HomePage = React.createClass({
+var Finding = React.createClass({
     render: function() {
         return (
             <div>
-                22222
+                44444
             </div>
         )
     }
-})
+});
 
-
-
-module.exports = HomePage;
+module.exports = Finding;
