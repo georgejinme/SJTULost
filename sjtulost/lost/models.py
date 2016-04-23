@@ -12,7 +12,9 @@ class User(models.Model):
     id = models.AutoField(primary_key=True)
     phone = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
-    student_number = models.CharField(max_length=25)
+    student_number = models.CharField(max_length=25, default='0')
+    class Meta:
+        unique_together = ('id', 'student_number')
     def __unicode__(self):
         return str(self.id) + self.name
 

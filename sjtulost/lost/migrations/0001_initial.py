@@ -64,8 +64,12 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('phone', models.CharField(max_length=20)),
                 ('name', models.CharField(max_length=20)),
-                ('student_number', models.CharField(max_length=25)),
+                ('student_number', models.CharField(default=b'0', max_length=25)),
             ],
+        ),
+        migrations.AlterUniqueTogether(
+            name='user',
+            unique_together=set([('id', 'student_number')]),
         ),
         migrations.AddField(
             model_name='recommend',

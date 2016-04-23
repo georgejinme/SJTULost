@@ -7,7 +7,7 @@ var assign = require('object-assign');
 var UserInfoStore = assign({}, EventEmitter.prototype, {
     name: "使用Jaccount登录",
     phone: "",
-    studentId: 0,
+    studentId: "",
     recommend_ids: [],
 
     getUserName: function() {
