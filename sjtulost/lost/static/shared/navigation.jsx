@@ -41,18 +41,18 @@ var Navigation = React.createClass({
             <div className="navbar navbar-default navbar-fixed-top">
                 <div className="container">
                     <div className="navbar-header">
-                        <a href="/" className="navbar-brand">SJTU Lost</a>
+                        <a href="/" className="navbar-brand" target = "_blank">SJTU Lost</a>
                     </div>
                     <div className="navbar-collapse collapse" id="navbar-main">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href = "/finding/">丢失</a>
+                                <a href = "/finding/" target = "_blank">丢失</a>
                             </li>
                             <li>
-                                <a href = "#">拾物</a>
+                                <a href = "#" target = "_blank">拾物</a>
                             </li>
                             <li>
-                                <a href = "#">排行</a>
+                                <a href = "#" target = "_blank">排行</a>
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">

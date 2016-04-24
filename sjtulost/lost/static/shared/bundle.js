@@ -87,18 +87,18 @@
 	            React.createElement("div", {className: "navbar navbar-default navbar-fixed-top"}, 
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement("div", {className: "navbar-header"}, 
-	                        React.createElement("a", {href: "/", className: "navbar-brand"}, "SJTU Lost")
+	                        React.createElement("a", {href: "/", className: "navbar-brand", target: "_blank"}, "SJTU Lost")
 	                    ), 
 	                    React.createElement("div", {className: "navbar-collapse collapse", id: "navbar-main"}, 
 	                        React.createElement("ul", {className: "nav navbar-nav"}, 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "/finding/"}, "丢失")
+	                                React.createElement("a", {href: "/finding/", target: "_blank"}, "丢失")
 	                            ), 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "#"}, "拾物")
+	                                React.createElement("a", {href: "#", target: "_blank"}, "拾物")
 	                            ), 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "#"}, "排行")
+	                                React.createElement("a", {href: "#", target: "_blank"}, "排行")
 	                            )
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
