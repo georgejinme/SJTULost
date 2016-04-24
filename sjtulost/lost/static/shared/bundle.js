@@ -955,7 +955,7 @@
 	            React.createElement("div", null, 
 	                React.createElement("img", {src: "static/image/qwt.jpg", className: "img-rounded homepageItemImage"}), 
 	                React.createElement("div", {className: "homepageItemDetail"}, 
-	                    React.createElement("p", {className: "homepageItemDetailTitle"}, "求助!丢失了一个钱包,钱包对我很关键"), 
+	                    React.createElement("p", {className: "homepageItemDetailTitle"}, "求助!丢失了一个钱包,钱包对我很关键,我知道没福利没人看,先po裸照"), 
 	                    React.createElement("p", null, "遗失时间: 2015/02/04"), 
 	                    React.createElement("p", null, "遗失地点: 东转篮球场")
 	                )
