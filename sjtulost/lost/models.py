@@ -13,8 +13,6 @@ class User(models.Model):
     phone = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
     student_number = models.CharField(max_length=25, default='0')
-    class Meta:
-        unique_together = ('id', 'student_number')
     def __unicode__(self):
         return str(self.id) + self.name
 
@@ -34,9 +32,9 @@ class Finding(models.Model):
     image = models.CharField(max_length=200)
     place_ids = models.ManyToManyField(Place)
     place_detail = models.CharField(max_length=200)
-    lost_time = models.DateField()
-    create_time = models.DateField(auto_now_add=True)
-    complete_time = models.DateField()
+    lost_time = models.DateTimeField()
+    create_time = models.DateTimeField(auto_now_add=True)
+    complete_time = models.DateTimeField(null=True)
     def __unicode__(self):
         return str(self.id)
 
@@ -47,11 +45,11 @@ class Found(models.Model):
     description = models.CharField(max_length=200)
     state = models.IntegerField()
     image = models.CharField(max_length=200)
-    place_ids = models.ForeignKey(Place)
+    place_id = models.ForeignKey(Place)
     place_detail = models.CharField(max_length=200)
-    found_time = models.DateField()
-    create_time = models.DateField(auto_now_add=True)
-    complete_time = models.DateField()
+    found_time = models.DateTimeField()
+    create_time = models.DateTimeField(auto_now_add=True)
+    complete_time = models.DateTimeField(null=True)
     def __unicode__(self):
         return str(self.id)
 

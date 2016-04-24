@@ -19,9 +19,9 @@ class Migration(migrations.Migration):
                 ('state', models.IntegerField()),
                 ('image', models.CharField(max_length=200)),
                 ('place_detail', models.CharField(max_length=200)),
-                ('lost_time', models.DateField()),
-                ('create_time', models.DateField(auto_now_add=True)),
-                ('complete_time', models.DateField()),
+                ('lost_time', models.DateTimeField()),
+                ('create_time', models.DateTimeField(auto_now_add=True)),
+                ('complete_time', models.DateTimeField(null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -32,9 +32,9 @@ class Migration(migrations.Migration):
                 ('state', models.IntegerField()),
                 ('image', models.CharField(max_length=200)),
                 ('place_detail', models.CharField(max_length=200)),
-                ('found_time', models.DateField()),
-                ('create_time', models.DateField(auto_now_add=True)),
-                ('complete_time', models.DateField()),
+                ('found_time', models.DateTimeField()),
+                ('create_time', models.DateTimeField(auto_now_add=True)),
+                ('complete_time', models.DateTimeField(null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -67,10 +67,6 @@ class Migration(migrations.Migration):
                 ('student_number', models.CharField(default=b'0', max_length=25)),
             ],
         ),
-        migrations.AlterUniqueTogether(
-            name='user',
-            unique_together=set([('id', 'student_number')]),
-        ),
         migrations.AddField(
             model_name='recommend',
             name='user_id',
@@ -78,7 +74,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='found',
-            name='place_ids',
+            name='place_id',
             field=models.ForeignKey(to='lost.Place'),
         ),
         migrations.AddField(
