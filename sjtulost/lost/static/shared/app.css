@@ -1,0 +1,32 @@
+/*
+    For Homepage
+*/
+
+.homepageContent {
+    margin-top: 90px;
+}
+
+.homepageContent .homepageItemImage {
+    height:300px;
+    width: 100%;
+}
+
+.homepageItemDetail {
+    margin-top: 15px;
+}
+
+.homepageItemDetail p {
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+.homepageItemDetail .homepageItemDetailTitle {
+    line-height:20px;
+    height: 40px;
+    overflow: hidden;
+    color: #e08600;
+    font-size: 15px;
+}

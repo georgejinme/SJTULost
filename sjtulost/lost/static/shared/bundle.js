@@ -948,11 +948,71 @@
 /* 9 */
 /***/ function(module, exports) {
 
-	var HomePage = React.createClass({displayName: "HomePage",
+	
+	var HomepageItems = React.createClass({displayName: "HomepageItems",
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
-	                "22222"
+	                React.createElement("img", {src: "static/image/qwt.jpg", className: "img-rounded homepageItemImage"}), 
+	                React.createElement("div", {className: "homepageItemDetail"}, 
+	                    React.createElement("p", {className: "homepageItemDetailTitle"}, "求助!丢失了一个钱包,钱包对我很关键"), 
+	                    React.createElement("p", null, "遗失时间: 2015/02/04"), 
+	                    React.createElement("p", null, "遗失地点: 东转篮球场")
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var HomepageRow = React.createClass({displayName: "HomepageRow",
+	    render: function() {
+	        var times = [0, 1, 2, 3];
+	        return (
+	            React.createElement("div", {className: "row"}, 
+	                
+	                times.map(function(index, val){
+	                    return (
+	                        React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3"}, 
+	                            React.createElement(HomepageItems, null)
+	                        )
+	                    )
+	                })
+	                
+	            )
+	        )
+	    }
+	});
+
+	var HomepageSection = React.createClass({displayName: "HomepageSection",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "container"}, 
+	                React.createElement("h1", null,  this.props.title, " "), 
+	                React.createElement("hr", null), 
+	                React.createElement(HomepageRow, null)
+	            )
+	        )
+	    }
+	})
+
+
+
+	var HomePage = React.createClass({displayName: "HomePage",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "homepageContent"}, 
+	                React.createElement(HomepageSection, {
+	                    title: "最新丢失"}
+	                ), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null), 
+	                React.createElement(HomepageSection, {
+	                    title: "最新拾遗"}
+	                ), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null)
 	            )
 	        )
 	    }
