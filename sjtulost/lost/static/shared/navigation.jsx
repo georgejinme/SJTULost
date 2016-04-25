@@ -56,6 +56,7 @@ var Navigation = React.createClass({
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
+                            <li><a href="#">发布</a></li>
                             <li><a href="#" onClick = { this.login }>{ this.state.name }</a></li>
                         </ul>
                     </div>
@@ -69,14 +70,14 @@ var App = React.createClass({
     render: function() {
         if (window.location.href == constant['dev-prefix'] + '/') {
             return (
-                <div>
+                <div className="container">
                     <Navigation />
                     <Homepage />
                 </div>
             )
         } else if (window.location.href == constant['dev-prefix'] + '/finding/'){
             return (
-                <div>
+                <div className="container">
                     <Navigation />
                     <Finding />
                 </div>

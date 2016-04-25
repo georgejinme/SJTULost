@@ -102,6 +102,7 @@
 	                            )
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
+	                            React.createElement("li", null, React.createElement("a", {href: "#"}, "发布")), 
 	                            React.createElement("li", null, React.createElement("a", {href: "#", onClick:  this.login},  this.state.name))
 	                        )
 	                    )
@@ -115,14 +116,14 @@
 	    render: function() {
 	        if (window.location.href == constant['dev-prefix'] + '/') {
 	            return (
-	                React.createElement("div", null, 
+	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Homepage, null)
 	                )
 	            )
 	        } else if (window.location.href == constant['dev-prefix'] + '/finding/'){
 	            return (
-	                React.createElement("div", null, 
+	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Finding, null)
 	                )
@@ -1074,7 +1075,7 @@
 	var HomepageSection = React.createClass({displayName: "HomepageSection",
 	    render: function() {
 	        return (
-	            React.createElement("div", {className: "container"}, 
+	            React.createElement("div", null, 
 	                React.createElement("h1", null,  this.props.title, " "), 
 	                React.createElement("hr", null), 
 	                React.createElement(HomepageRow, {
@@ -1150,11 +1151,73 @@
 /* 11 */
 /***/ function(module, exports) {
 
-	var Finding = React.createClass({displayName: "Finding",
+	var FindingTypeRow = React.createClass({displayName: "FindingTypeRow",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "row"}, 
+	                React.createElement("p", {className: "col-lg-1 col-md-1 col-sm-1 findingTypeLabel"}, "物品类别"), 
+	                React.createElement("ul", {className: "nav nav-pills col-lg-11 col-md-11 col-sm-11 findingTypeNav"}, 
+	                    React.createElement("li", {className: "active"}, React.createElement("a", null, "全部")), 
+	                    React.createElement("li", null, React.createElement("a", null, "钥匙")), 
+	                    React.createElement("li", null, React.createElement("a", null, "钱包")), 
+	                    React.createElement("li", null, React.createElement("a", null, "手机"))
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var FindingType = React.createClass({displayName: "FindingType",
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
-	                "44444"
+	                React.createElement(FindingTypeRow, null), 
+	                React.createElement(FindingTypeRow, null), 
+	                React.createElement(FindingTypeRow, null)
+	            )
+	        )
+	    }
+	});
+
+	var FindingItem = React.createClass({displayName: "FindingItem",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "row findingItem"}, 
+	                React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3 findingItemImage"}, 
+	                    React.createElement("img", {src: "/static/image/qwt.jpg", className: "img-rounded"})
+	                ), 
+	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9"}, 
+	                    React.createElement("p", null, "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), 
+	                    React.createElement("p", null, "物品类别: 手机"), 
+	                    React.createElement("p", null, "遗失时间: 2015/06/14 19:00:00"), 
+	                    React.createElement("p", null, "遗失地点: 二餐. 大概是在XXXXX位置"), 
+	                    React.createElement("p", null, "酬金: 50元")
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var FindingSection = React.createClass({displayName: "FindingSection",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "findingSection"}, 
+	                React.createElement(FindingItem, null), 
+	                React.createElement("hr", null), 
+	                React.createElement(FindingItem, null), 
+	                React.createElement("hr", null)
+	            )
+	        )
+	    }
+	});
+
+	var Finding = React.createClass({displayName: "Finding",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "findingContent"}, 
+	                React.createElement(FindingType, null), 
+	                React.createElement("hr", null), 
+	                React.createElement(FindingSection, null)
 	            )
 	        )
 	    }

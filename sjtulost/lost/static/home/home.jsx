@@ -53,7 +53,7 @@ var HomepageRow = React.createClass({
 var HomepageSection = React.createClass({
     render: function() {
         return (
-            <div className="container">
+            <div>
                 <h1>{ this.props.title} </h1>
                 <hr/>
                 <HomepageRow
