@@ -31,10 +31,6 @@ var FindingStore = assign({}, EventEmitter.prototype, {
         this.findings = array;
     },
 
-    appendNewFinding: function(json) {
-        this.findings.append(json)
-    },
-
     emitChange: function () {
         this.emit('change');
     },

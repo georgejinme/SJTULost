@@ -57,7 +57,7 @@ var Navigation = React.createClass({
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
                             <li><a href="#">发布</a></li>
-                            <li><a href="#" onClick = { this.login }>{ this.state.name }</a></li>
+                            <li><a href="javascript:void(0);" onClick = { this.login }>{ this.state.name }</a></li>
                         </ul>
                     </div>
                 </div>

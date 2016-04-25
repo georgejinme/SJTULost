@@ -21,4 +21,26 @@ var InitFindingAction = {
     }
 };
 
-module.exports = InitFindingAction;
+var InitItemTypeAction = {
+    fetchData: function() {
+        AppDispatcher.dispatch({
+            actionType: 'ITEM_TYPE_INITIALIZATION',
+            itemTypes: []
+        })
+    }
+};
+
+var InitPlaceAction = {
+    fetchData: function() {
+        AppDispatcher.dispatch({
+            actionType: 'PLACE_INITIALIZATION',
+            places: []
+        })
+    }
+};
+
+module.exports = {
+    InitFindingAction: InitFindingAction,
+    InitItemTypeAction: InitItemTypeAction,
+    InitPlaceAction: InitPlaceAction
+};

@@ -2,12 +2,18 @@
     For Homepage
 */
 
+.container{
+    position: relative;
+    width: 80%;
+    margin: auto;
+}
+
 .homepageContent {
     margin-top: 90px;
 }
 
 .homepageContent .homepageItemImage {
-    height:300px;
+    height:250px;
     width: 100%;
     border-radius: 0;
 }
@@ -60,18 +66,30 @@
     margin-top: 90px;
 }
 
+.findingContent .findingType {
+    width: 70%;
+}
+
 .findingContent .findingTypeLabel {
-    height: 43px;
-    line-height: 43px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .findingContent .findingTypeNav li a{
     color: brown;
+    height: 30px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .findingContent .findingTypeNav li.active a {
     color: white;
     background-color: brown;
+    line-height: 30px;
+    height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .findingSection {
@@ -79,7 +97,40 @@
 }
 
 .findingSection .findingItem .findingItemImage img{
-    height: 300px;
+    height: 250px;
     width: 100%;
 }
+
+.findingSection .findingItem .findingItemDetail {
+    height: 250px;
+}
+
+.findingSection .findingItem .findingItemDetail p {
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+.findingSection .findingItem .findingItemDetail .findingItemTitle {
+    color: brown;
+    line-height:30px;
+    height: 60px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.findingSection .findingItem .findingItemDetail .findingItemInfo {
+    line-height: 35px;
+    height:35px;
+    overflow: hidden;
+    font-size: 13px;
+}
+
+.findingSection .findingItem .findingItemDetail .findingItemPay {
+    color: #e08600;
+}
+
+
 

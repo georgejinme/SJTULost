@@ -4,6 +4,8 @@ var AppDispatcher = new Dispatcher();
 var UserInfoStore = require('../store/userInfoStore');
 var FindingStore = require('../store/findingStore');
 var FoundStore = require('../store/foundStore');
+var ItemStore = require('../store/itemStore');
+var PlaceStore = require('../store/placeStore');
 
 AppDispatcher.register(function (action) {
     switch(action.actionType) {
@@ -20,6 +22,16 @@ AppDispatcher.register(function (action) {
         case 'FOUND_INITIALIZATION':
             FoundStore.setFounds(action.foundArray);
             FoundStore.emitChange();
+            break;
+
+        case 'ITEM_TYPE_INITIALIZATION':
+            ItemStore.setDescriptions(action.itemTypes);
+            ItemStore.emitChange();
+            break;
+
+        case 'PLACE_INITIALIZATION':
+            PlaceStore.setDescriptions(action.places);
+            PlaceStore.emitChange();
             break;
 
         default:

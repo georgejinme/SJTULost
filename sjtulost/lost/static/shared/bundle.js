@@ -103,7 +103,7 @@
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
 	                            React.createElement("li", null, React.createElement("a", {href: "#"}, "发布")), 
-	                            React.createElement("li", null, React.createElement("a", {href: "#", onClick:  this.login},  this.state.name))
+	                            React.createElement("li", null, React.createElement("a", {href: "javascript:void(0);", onClick:  this.login},  this.state.name))
 	                        )
 	                    )
 	                )
@@ -172,6 +172,8 @@
 	var UserInfoStore = __webpack_require__(6);
 	var FindingStore = __webpack_require__(9);
 	var FoundStore = __webpack_require__(13);
+	var ItemStore = __webpack_require__(14);
+	var PlaceStore = __webpack_require__(15);
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
@@ -188,6 +190,16 @@
 	        case 'FOUND_INITIALIZATION':
 	            FoundStore.setFounds(action.foundArray);
 	            FoundStore.emitChange();
+	            break;
+
+	        case 'ITEM_TYPE_INITIALIZATION':
+	            ItemStore.setDescriptions(action.itemTypes);
+	            ItemStore.emitChange();
+	            break;
+
+	        case 'PLACE_INITIALIZATION':
+	            PlaceStore.setDescriptions(action.places);
+	            PlaceStore.emitChange();
 	            break;
 
 	        default:
@@ -997,10 +1009,6 @@
 	        this.findings = array;
 	    },
 
-	    appendNewFinding: function appendNewFinding(json) {
-	        this.findings.append(json);
-	    },
-
 	    emitChange: function emitChange() {
 	        this.emit('change');
 	    },
@@ -1020,7 +1028,7 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var InitializationAction = __webpack_require__(12);
+	var InitFindingAction = __webpack_require__(12).InitFindingAction;
 	var FindingStore = __webpack_require__(9);
 	var FoundStore = __webpack_require__(13);
 
@@ -1100,7 +1108,7 @@
 	    componentDidMount: function() {
 	        FindingStore.addChangeListener(this._onFindingChange);
 	        FoundStore.addChangeListener(this._onFoundChange);
-	        InitializationAction.fetchData()
+	        InitFindingAction.fetchData()
 	    },
 
 	    componentWillUnmount: function() {
@@ -1149,18 +1157,27 @@
 
 /***/ },
 /* 11 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var InitItemTypeAction = __webpack_require__(12).InitItemTypeAction;
+	var InitPlaceAction = __webpack_require__(12).InitPlaceAction;
+
+	var ItemStore = __webpack_require__(14);
+	var PlaceStore = __webpack_require__(15);
 
 	var FindingTypeRow = React.createClass({displayName: "FindingTypeRow",
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "row"}, 
-	                React.createElement("p", {className: "col-lg-1 col-md-1 col-sm-1 findingTypeLabel"}, "物品类别"), 
-	                React.createElement("ul", {className: "nav nav-pills col-lg-11 col-md-11 col-sm-11 findingTypeNav"}, 
-	                    React.createElement("li", {className: "active"}, React.createElement("a", null, "全部")), 
-	                    React.createElement("li", null, React.createElement("a", null, "钥匙")), 
-	                    React.createElement("li", null, React.createElement("a", null, "钱包")), 
-	                    React.createElement("li", null, React.createElement("a", null, "手机"))
+	                React.createElement("p", {className: "col-lg-2 col-md-2 col-sm-2 findingTypeLabel"},  this.props.typeName), 
+	                React.createElement("ul", {className: "nav nav-pills col-lg-10 col-md-10 col-sm-10 findingTypeNav"}, 
+	                    
+	                        this.props.data.map(function(val, index){
+	                            return (
+	                                React.createElement("li", null, React.createElement("a", null, val))
+	                            )
+	                        })
+	                    
 	                )
 	            )
 	        )
@@ -1170,10 +1187,15 @@
 	var FindingType = React.createClass({displayName: "FindingType",
 	    render: function() {
 	        return (
-	            React.createElement("div", null, 
-	                React.createElement(FindingTypeRow, null), 
-	                React.createElement(FindingTypeRow, null), 
-	                React.createElement(FindingTypeRow, null)
+	            React.createElement("div", {className: "findingType"}, 
+	                React.createElement(FindingTypeRow, {
+	                    typeName: "物品类别", 
+	                    data: this.props.itemTypes}
+	                ), 
+	                React.createElement(FindingTypeRow, {
+	                    typeName: "地点", 
+	                    data: this.props.places}
+	                )
 	            )
 	        )
 	    }
@@ -1186,12 +1208,14 @@
 	                React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3 findingItemImage"}, 
 	                    React.createElement("img", {src: "/static/image/qwt.jpg", className: "img-rounded"})
 	                ), 
-	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9"}, 
-	                    React.createElement("p", null, "啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), 
-	                    React.createElement("p", null, "物品类别: 手机"), 
-	                    React.createElement("p", null, "遗失时间: 2015/06/14 19:00:00"), 
-	                    React.createElement("p", null, "遗失地点: 二餐. 大概是在XXXXX位置"), 
-	                    React.createElement("p", null, "酬金: 50元")
+	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9 findingItemDetail"}, 
+	                    React.createElement("p", {className: "findingItemTitle"}, "啊啊啊啊啊啊啊水电费实际带来看收到发送的咖啡机按拉斯克奖弗拉未开机我耳机了科技算法啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), 
+	                    React.createElement("span", {className: "label-danger label"}, "Uncompleted"), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "物品类别: 手机"), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "遗失时间: 2015/06/14 19:00:00"), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "遗失地点: 二餐. 大概是在XXXXX位置"), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "联系电话: 1801812712"), 
+	                    React.createElement("p", {className: "findingItemInfo findingItemPay"}, "酬金: 50元")
 	                )
 	            )
 	        )
@@ -1212,10 +1236,44 @@
 	});
 
 	var Finding = React.createClass({displayName: "Finding",
+	    getInitialState: function() {
+	        return {
+	            itemTypes: ItemStore.getDescriptions(),
+	            places: PlaceStore.getDescriptions()
+	        }
+	    },
+
+	    componentDidMount: function() {
+	        ItemStore.addChangeListener(this._onItemChange);
+	        PlaceStore.addChangeListener(this._onPlaceChange);
+	        InitItemTypeAction.fetchData();
+	        InitPlaceAction.fetchData();
+	    },
+
+	    componentWillUnmount: function() {
+	        ItemStore.removeChangeListener(this._onItemChange);
+	        PlaceStore.removeChangeListener(this._onPlaceChange);
+	    },
+
+	    _onItemChange: function () {
+	        this.setState({
+	            itemTypes: ItemStore.getDescriptions()
+	        });
+	    },
+
+	    _onPlaceChange: function() {
+	        this.setState({
+	            places: PlaceStore.getDescriptions()
+	        });
+	    },
+
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingContent"}, 
-	                React.createElement(FindingType, null), 
+	                React.createElement(FindingType, {
+	                    itemTypes: this.state.itemTypes, 
+	                    places: this.state.places}
+	                ), 
 	                React.createElement("hr", null), 
 	                React.createElement(FindingSection, null)
 	            )
@@ -1254,7 +1312,29 @@
 	    }
 	};
 
-	module.exports = InitFindingAction;
+	var InitItemTypeAction = {
+	    fetchData: function fetchData() {
+	        AppDispatcher.dispatch({
+	            actionType: 'ITEM_TYPE_INITIALIZATION',
+	            itemTypes: []
+	        });
+	    }
+	};
+
+	var InitPlaceAction = {
+	    fetchData: function fetchData() {
+	        AppDispatcher.dispatch({
+	            actionType: 'PLACE_INITIALIZATION',
+	            places: []
+	        });
+	    }
+	};
+
+	module.exports = {
+	    InitFindingAction: InitFindingAction,
+	    InitItemTypeAction: InitItemTypeAction,
+	    InitPlaceAction: InitPlaceAction
+	};
 
 /***/ },
 /* 13 */
@@ -1274,12 +1354,12 @@
 	    /*
 	     Each finding format:
 	     {
-	     description: string
-	     img: string
-	     user_phone: string
-	     lost_time:
-	     lost_place:
-	     state:
+	         description: string
+	         img: string
+	         user_phone: string
+	         lost_time:
+	         lost_place:
+	         state:
 	     }
 	     */
 
@@ -1313,6 +1393,86 @@
 	});
 
 	module.exports = FoundStore;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+
+	var ItemStore = assign({}, EventEmitter.prototype, {
+	    descriptions: [],
+
+	    getDescriptions: function getDescriptions() {
+	        return this.descriptions;
+	    },
+
+	    setDescriptions: function setDescriptions(array) {
+	        this.descriptions = array;
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+
+	});
+
+	module.exports = ItemStore;
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+
+	var PlaceStore = assign({}, EventEmitter.prototype, {
+	    descriptions: [],
+
+	    getDescriptions: function getDescriptions() {
+	        return this.descriptions;
+	    },
+
+	    setDescriptions: function setDescriptions(array) {
+	        this.descriptions = array;
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+
+	});
+
+	module.exports = PlaceStore;
 
 /***/ }
 /******/ ]);
