@@ -11,6 +11,10 @@
     width: 100%;
 }
 
+.homepageItemState {
+    position: absolute;
+}
+
 .homepageItemDetail {
     margin-top: 15px;
 }
@@ -29,4 +33,12 @@
     overflow: hidden;
     color: #e08600;
     font-size: 15px;
+}
+
+.homepageItemDetail .homepageItemDetailInfo {
+    margin-top: 5px;
+    line-height: 15px;
+    height:15px;
+    overflow: hidden;
+    font-size: 13px;
 }

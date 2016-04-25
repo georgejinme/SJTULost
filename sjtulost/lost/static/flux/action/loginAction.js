@@ -4,7 +4,7 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
 
 var JaccountLoginActions = {
-    login: function (text) {
+    login: function () {
         AppDispatcher.dispatch({
             actionType: 'JACCOUNT_LOGIN',
             name: "JIN JIAJUN"

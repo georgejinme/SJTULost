@@ -149,7 +149,7 @@
 	var AppDispatcher = __webpack_require__(2);
 
 	var JaccountLoginActions = {
-	    login: function login(text) {
+	    login: function login() {
 	        AppDispatcher.dispatch({
 	            actionType: 'JACCOUNT_LOGIN',
 	            name: "JIN JIAJUN"
@@ -169,12 +169,18 @@
 	var AppDispatcher = new Dispatcher();
 
 	var UserInfoStore = __webpack_require__(6);
+	var FindingStore = __webpack_require__(11);
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
 	        case 'JACCOUNT_LOGIN':
 	            UserInfoStore.setUserName(action.name);
 	            UserInfoStore.emitChange();
+	            break;
+
+	        case 'FINDING_INITIALIZATION':
+	            FindingStore.setFindings(action.findingArray);
+	            FindingStore.emitChange();
 	            break;
 	        default:
 	        // no op
@@ -953,11 +959,13 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
+	                React.createElement("span", {className: "label label-danger homepageItemState"}, "未找到"), 
 	                React.createElement("img", {src: "static/image/qwt.jpg", className: "img-rounded homepageItemImage"}), 
 	                React.createElement("div", {className: "homepageItemDetail"}, 
 	                    React.createElement("p", {className: "homepageItemDetailTitle"}, "求助!丢失了一个钱包,钱包对我很关键,我知道没福利没人看,先po裸照"), 
-	                    React.createElement("p", null, "遗失时间: 2015/02/04"), 
-	                    React.createElement("p", null, "遗失地点: 东转篮球场")
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: 2015/02/04"), 
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: 东转篮球场"), 
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "联系电话: 1383838438")
 	                )
 	            )
 	        )
@@ -1038,6 +1046,61 @@
 	});
 
 	module.exports = Finding;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+
+	var FindingStore = assign({}, EventEmitter.prototype, {
+
+	    /*
+	     Each finding format:
+	     {
+	        description: string
+	        user_phone: string
+	        lost_time:
+	        lost_place:
+	        state:
+	     }
+	     */
+
+	    findings: [],
+
+	    getFindings: function getFindings() {
+	        return this.findings;
+	    },
+
+	    setFindings: function setFindings(array) {
+	        this.findings = array;
+	    },
+
+	    appendNewFinding: function appendNewFinding(json) {
+	        this.findings.append(json);
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+	});
+
+	module.exports = FindingStore;
 
 /***/ }
 /******/ ]);

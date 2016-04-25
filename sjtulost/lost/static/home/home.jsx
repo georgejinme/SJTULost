@@ -3,11 +3,13 @@ var HomepageItems = React.createClass({
     render: function() {
         return (
             <div>
+                <span className="label label-danger homepageItemState">未找到</span>
                 <img src="static/image/qwt.jpg" className="img-rounded homepageItemImage" />
                 <div className="homepageItemDetail">
                     <p className="homepageItemDetailTitle">求助!丢失了一个钱包,钱包对我很关键,我知道没福利没人看,先po裸照</p>
-                    <p>遗失时间: 2015/02/04</p>
-                    <p>遗失地点: 东转篮球场</p>
+                    <p className="homepageItemDetailInfo">遗失时间: 2015/02/04</p>
+                    <p className="homepageItemDetailInfo">遗失地点: 东转篮球场</p>
+                    <p className="homepageItemDetailInfo">联系电话: 1383838438</p>
                 </div>
             </div>
         )
