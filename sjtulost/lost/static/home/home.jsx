@@ -16,7 +16,7 @@ var HomepageItems = React.createClass({
 
     render: function() {
         return (
-            <div>
+            <div className="homepageItem">
                 <span className={this.badgeColor()}>{this.badgeText()}</span>
                 <img src={this.props.json['img']} className="img-rounded homepageItemImage" />
                 <div className="homepageItemDetail">

@@ -9,17 +9,26 @@
 .homepageContent .homepageItemImage {
     height:300px;
     width: 100%;
+    border-radius: 0;
 }
 
-.homepageItemState {
+.homepageItem {
+    background-color: #eeeeee;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.homepageItem .homepageItemState {
     position: absolute;
 }
 
-.homepageItemDetail {
-    margin-top: 15px;
+.homepageItem .homepageItemDetail {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
 }
 
-.homepageItemDetail p {
+.homepageItem .homepageItemDetail p {
     word-wrap: break-word;
     word-break: normal;
     white-space: pre-wrap;
@@ -27,7 +36,7 @@
     margin-bottom: 0px;
 }
 
-.homepageItemDetail .homepageItemDetailTitle {
+.homepageItem .homepageItemDetail .homepageItemDetailTitle {
     line-height:20px;
     height: 40px;
     overflow: hidden;
@@ -35,7 +44,7 @@
     font-size: 15px;
 }
 
-.homepageItemDetail .homepageItemDetailInfo {
+.homepageItem .homepageItemDetail .homepageItemDetailInfo {
     margin-top: 5px;
     line-height: 15px;
     height:15px;

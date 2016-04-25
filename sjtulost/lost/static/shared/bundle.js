@@ -1037,7 +1037,7 @@
 
 	    render: function() {
 	        return (
-	            React.createElement("div", null, 
+	            React.createElement("div", {className: "homepageItem"}, 
 	                React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
 	                React.createElement("img", {src: this.props.json['img'], className: "img-rounded homepageItemImage"}), 
 	                React.createElement("div", {className: "homepageItemDetail"}, 
