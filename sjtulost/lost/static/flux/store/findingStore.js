@@ -13,6 +13,7 @@ var FindingStore = assign({}, EventEmitter.prototype, {
      Each finding format:
      {
         description: string
+        img: string
         user_phone: string
         lost_time:
         lost_place:
@@ -22,8 +23,8 @@ var FindingStore = assign({}, EventEmitter.prototype, {
 
     findings: [],
 
-    getFindings: function() {
-        return this.findings;
+    getFindingsWithAmount: function(amount=this.findings.count) {
+        return this.findings.slice(0, amount);
     },
 
     setFindings: function(array) {

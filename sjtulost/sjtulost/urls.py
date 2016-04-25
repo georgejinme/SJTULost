@@ -21,5 +21,9 @@ urlpatterns = [
 
     url(r'^$', 'lost.app.views.home', name='home'),
     url(r'^finding/', 'lost.app.views.finding', name='finding'),
+
+    url(r'^getfindings/', 'lost.app.finding.get_all_findings', name='get_all_findings'),
+    url(r'^getfounds/', 'lost.app.found.get_all_founds', name='get_all_founds'),
+
     url(r'^admin/', include(admin.site.urls)),
 ]

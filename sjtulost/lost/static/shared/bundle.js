@@ -54,8 +54,8 @@
 	var JaccountLoginActions = __webpack_require__(1);
 	var UserInfoStore = __webpack_require__(6);
 
-	var Homepage = __webpack_require__(9);
-	var Finding = __webpack_require__(10);
+	var Homepage = __webpack_require__(10);
+	var Finding = __webpack_require__(11);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -169,7 +169,8 @@
 	var AppDispatcher = new Dispatcher();
 
 	var UserInfoStore = __webpack_require__(6);
-	var FindingStore = __webpack_require__(11);
+	var FindingStore = __webpack_require__(9);
+	var FoundStore = __webpack_require__(13);
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
@@ -182,6 +183,12 @@
 	            FindingStore.setFindings(action.findingArray);
 	            FindingStore.emitChange();
 	            break;
+
+	        case 'FOUND_INITIALIZATION':
+	            FoundStore.setFounds(action.foundArray);
+	            FoundStore.emitChange();
+	            break;
+
 	        default:
 	        // no op
 	    }
@@ -952,103 +959,6 @@
 
 /***/ },
 /* 9 */
-/***/ function(module, exports) {
-
-	
-	var HomepageItems = React.createClass({displayName: "HomepageItems",
-	    render: function() {
-	        return (
-	            React.createElement("div", null, 
-	                React.createElement("span", {className: "label label-danger homepageItemState"}, "未找到"), 
-	                React.createElement("img", {src: "static/image/qwt.jpg", className: "img-rounded homepageItemImage"}), 
-	                React.createElement("div", {className: "homepageItemDetail"}, 
-	                    React.createElement("p", {className: "homepageItemDetailTitle"}, "求助!丢失了一个钱包,钱包对我很关键,我知道没福利没人看,先po裸照"), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: 2015/02/04"), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: 东转篮球场"), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "联系电话: 1383838438")
-	                )
-	            )
-	        )
-	    }
-	});
-
-	var HomepageRow = React.createClass({displayName: "HomepageRow",
-	    render: function() {
-	        var times = [0, 1, 2, 3];
-	        return (
-	            React.createElement("div", {className: "row"}, 
-	                
-	                times.map(function(index, val){
-	                    return (
-	                        React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3"}, 
-	                            React.createElement(HomepageItems, null)
-	                        )
-	                    )
-	                })
-	                
-	            )
-	        )
-	    }
-	});
-
-	var HomepageSection = React.createClass({displayName: "HomepageSection",
-	    render: function() {
-	        return (
-	            React.createElement("div", {className: "container"}, 
-	                React.createElement("h1", null,  this.props.title, " "), 
-	                React.createElement("hr", null), 
-	                React.createElement(HomepageRow, null)
-	            )
-	        )
-	    }
-	})
-
-
-
-	var HomePage = React.createClass({displayName: "HomePage",
-	    render: function() {
-	        return (
-	            React.createElement("div", {className: "homepageContent"}, 
-	                React.createElement(HomepageSection, {
-	                    title: "最新丢失"}
-	                ), 
-	                React.createElement("br", null), 
-	                React.createElement("br", null), 
-	                React.createElement("br", null), 
-	                React.createElement(HomepageSection, {
-	                    title: "最新拾遗"}
-	                ), 
-	                React.createElement("br", null), 
-	                React.createElement("br", null), 
-	                React.createElement("br", null)
-	            )
-	        )
-	    }
-	})
-
-
-
-	module.exports = HomePage;
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	var Finding = React.createClass({displayName: "Finding",
-	    render: function() {
-	        return (
-	            React.createElement("div", null, 
-	                "44444"
-	            )
-	        )
-	    }
-	});
-
-	module.exports = Finding;
-
-/***/ },
-/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1066,6 +976,7 @@
 	     Each finding format:
 	     {
 	        description: string
+	        img: string
 	        user_phone: string
 	        lost_time:
 	        lost_place:
@@ -1075,8 +986,10 @@
 
 	    findings: [],
 
-	    getFindings: function getFindings() {
-	        return this.findings;
+	    getFindingsWithAmount: function getFindingsWithAmount() {
+	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.findings.count : arguments[0];
+
+	        return this.findings.slice(0, amount);
 	    },
 
 	    setFindings: function setFindings(array) {
@@ -1101,6 +1014,242 @@
 	});
 
 	module.exports = FindingStore;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var InitializationAction = __webpack_require__(12);
+	var FindingStore = __webpack_require__(9);
+	var FoundStore = __webpack_require__(13);
+
+
+	var HomepageItems = React.createClass({displayName: "HomepageItems",
+	    badgeColor: function() {
+	        if (this.props.json['state'] == 0) return 'label-danger label homepageItemState';
+	        else return 'label-success label homepageItemState';
+	    },
+
+	    badgeText: function() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';
+	        else return 'Completed'
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                React.createElement("img", {src: this.props.json['img'], className: "img-rounded homepageItemImage"}), 
+	                React.createElement("div", {className: "homepageItemDetail"}, 
+	                    React.createElement("p", {className: "homepageItemDetailTitle"}, this.props.json['description']), 
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: ", this.props.json['lost_time']), 
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['lost_place']), 
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "联系电话: ", this.props.json['user_phone'])
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var HomepageRow = React.createClass({displayName: "HomepageRow",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "row"}, 
+	                
+	                this.props.data.map(function(val, index){
+	                    return (
+	                        React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3"}, 
+	                            React.createElement(HomepageItems, {
+	                                json: val}
+	                            )
+	                        )
+	                    )
+	                })
+	                
+	            )
+	        )
+	    }
+	});
+
+	var HomepageSection = React.createClass({displayName: "HomepageSection",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "container"}, 
+	                React.createElement("h1", null,  this.props.title, " "), 
+	                React.createElement("hr", null), 
+	                React.createElement(HomepageRow, {
+	                    data: this.props.data}
+	                )
+	            )
+	        )
+	    }
+	});
+
+
+
+	var HomePage = React.createClass({displayName: "HomePage",
+	    getInitialState: function() {
+	        return {
+	            findings: FindingStore.getFindingsWithAmount(4),
+	            founds: FoundStore.getFoundsWithAmount(4)
+	        }
+	    },
+
+
+	    componentDidMount: function() {
+	        FindingStore.addChangeListener(this._onFindingChange);
+	        FoundStore.addChangeListener(this._onFoundChange);
+	        InitializationAction.fetchData()
+	    },
+
+	    componentWillUnmount: function() {
+	        FindingStore.removeChangeListener(this._onFindingChange);
+	        FoundStore.removeChangeListener(this._onFoundChange);
+	    },
+
+	    _onFindingChange: function () {
+	        this.setState({
+	            findings: FindingStore.getFindingsWithAmount(4)
+	        });
+	    },
+
+	    _onFoundChange: function() {
+	        this.setState({
+	            founds: FoundStore.getFoundsWithAmount(4)
+	        });
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "homepageContent"}, 
+	                React.createElement(HomepageSection, {
+	                    title: "最新丢失", 
+	                    data: this.state.findings}
+	                ), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null), 
+	                React.createElement(HomepageSection, {
+	                    title: "最新拾遗", 
+	                    data: this.state.founds}
+	                ), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null), 
+	                React.createElement("br", null)
+	            )
+	        )
+	    }
+	})
+
+
+
+	module.exports = HomePage;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	var Finding = React.createClass({displayName: "Finding",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                "44444"
+	            )
+	        )
+	    }
+	});
+
+	module.exports = Finding;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var AppDispatcher = __webpack_require__(2);
+
+	var InitFindingAction = {
+	    fetchData: function fetchData() {
+	        $.get('/getfindings/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FINDING_INITIALIZATION',
+	                findingArray: data
+	            });
+	        });
+	        $.get('/getfounds/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FOUND_INITIALIZATION',
+	                foundArray: data
+	            });
+	        });
+	    }
+	};
+
+	module.exports = InitFindingAction;
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+
+	var FoundStore = assign({}, EventEmitter.prototype, {
+
+	    /*
+	     Each finding format:
+	     {
+	     description: string
+	     img: string
+	     user_phone: string
+	     lost_time:
+	     lost_place:
+	     state:
+	     }
+	     */
+
+	    founds: [],
+	    getFoundsWithAmount: function getFoundsWithAmount() {
+	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.founds.count : arguments[0];
+
+	        return this.founds.slice(0, amount);
+	    },
+
+	    setFounds: function setFounds(array) {
+	        this.founds = array;
+	    },
+
+	    appendNewFound: function appendNewFound(json) {
+	        this.founds.append(json);
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+
+	});
+
+	module.exports = FoundStore;
 
 /***/ }
 /******/ ]);
