@@ -14,9 +14,12 @@ var FindingStore = assign({}, EventEmitter.prototype, {
      {
         description: string
         img: string
+        item_type:
         user_phone: string
         lost_time:
         lost_place:
+        lost_place_detail:
+        pay:
         state:
      }
      */

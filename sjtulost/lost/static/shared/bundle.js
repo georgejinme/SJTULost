@@ -990,9 +990,12 @@
 	     {
 	        description: string
 	        img: string
+	        item_type:
 	        user_phone: string
 	        lost_time:
 	        lost_place:
+	        lost_place_detail:
+	        pay:
 	        state:
 	     }
 	     */
@@ -1190,8 +1193,7 @@
 	                React.createElement("div", {className: "homepageItemDetail"}, 
 	                    React.createElement("p", {className: "homepageItemDetailTitle"}, this.props.json['description']), 
 	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: ", this.props.json['lost_time']), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['lost_place']), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "联系电话: ", this.props.json['user_phone'])
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['lost_place'])
 	                )
 	            )
 	        )
@@ -1356,9 +1358,11 @@
 
 	var InitItemTypeAction = __webpack_require__(14).InitItemTypeAction;
 	var InitPlaceAction = __webpack_require__(14).InitPlaceAction;
+	var InitFindingAction = __webpack_require__(14).InitFindingAction;
 
 	var ItemStore = __webpack_require__(11);
 	var PlaceStore = __webpack_require__(12);
+	var FindingStore = __webpack_require__(9);
 
 	var FindingTypeRow = React.createClass({displayName: "FindingTypeRow",
 	    render: function() {
@@ -1397,20 +1401,29 @@
 	});
 
 	var FindingItem = React.createClass({displayName: "FindingItem",
+	    badgeColor: function() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';
+	        else return 'label-success label';
+	    },
+
+	    badgeText: function() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';
+	        else return 'Completed'
+	    },
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "row findingItem"}, 
 	                React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3 findingItemImage"}, 
-	                    React.createElement("img", {src: "/static/image/qwt.jpg", className: "img-rounded"})
+	                    React.createElement("img", {src: this.props.json['img'], className: "img-rounded"})
 	                ), 
 	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9 findingItemDetail"}, 
-	                    React.createElement("p", {className: "findingItemTitle"}, "啊啊啊啊啊啊啊水电费实际带来看收到发送的咖啡机按拉斯克奖弗拉未开机我耳机了科技算法啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), 
-	                    React.createElement("span", {className: "label-danger label"}, "Uncompleted"), 
-	                    React.createElement("p", {className: "findingItemInfo"}, "物品类别: 手机"), 
-	                    React.createElement("p", {className: "findingItemInfo"}, "遗失时间: 2015/06/14 19:00:00"), 
-	                    React.createElement("p", {className: "findingItemInfo"}, "遗失地点: 二餐. 大概是在XXXXX位置"), 
-	                    React.createElement("p", {className: "findingItemInfo"}, "联系电话: 1801812712"), 
-	                    React.createElement("p", {className: "findingItemInfo findingItemPay"}, "酬金: 50元")
+	                    React.createElement("p", {className: "findingItemTitle"}, this.props.json['description']), 
+	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "物品类别: ", this.props.json['item_type']), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "遗失时间: ", this.props.json['lost_time']), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "遗失地点: ", this.props.json['lost_place'], ". ", this.props.json['lost_place_detail']), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "联系电话: ", this.props.json['user_phone']), 
+	                    React.createElement("p", {className: "findingItemInfo findingItemPay"}, "酬金: ", this.props.json['pay'], " 元")
 	                )
 	            )
 	        )
@@ -1421,10 +1434,18 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingSection"}, 
-	                React.createElement(FindingItem, null), 
-	                React.createElement("hr", null), 
-	                React.createElement(FindingItem, null), 
-	                React.createElement("hr", null)
+	                
+	                    this.props.data.map(function(val, index) {
+	                        return (
+	                            React.createElement("div", null, 
+	                                React.createElement(FindingItem, {
+	                                    json: val}
+	                                ), 
+	                                React.createElement("hr", null)
+	                            )
+	                        )
+	                    })
+	                
 	            )
 	        )
 	    }
@@ -1434,20 +1455,24 @@
 	    getInitialState: function() {
 	        return {
 	            itemTypes: ItemStore.getDescriptions(),
-	            places: PlaceStore.getDescriptions()
+	            places: PlaceStore.getDescriptions(),
+	            findings: FindingStore.getFindingsWithAmount()
 	        }
 	    },
 
 	    componentDidMount: function() {
 	        ItemStore.addChangeListener(this._onItemChange);
 	        PlaceStore.addChangeListener(this._onPlaceChange);
+	        FindingStore.addChangeListener(this._onFindingChange);
 	        InitItemTypeAction.fetchData();
 	        InitPlaceAction.fetchData();
+	        InitFindingAction.fetchData();
 	    },
 
 	    componentWillUnmount: function() {
 	        ItemStore.removeChangeListener(this._onItemChange);
 	        PlaceStore.removeChangeListener(this._onPlaceChange);
+	        FindingStore.removeChangeListener(this._onFindingChange);
 	    },
 
 	    _onItemChange: function () {
@@ -1462,6 +1487,12 @@
 	        });
 	    },
 
+	    _onFindingChange: function() {
+	        this.setState({
+	            findings: FindingStore.getFindingsWithAmount()
+	        })
+	    },
+
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingContent"}, 
@@ -1470,7 +1501,9 @@
 	                    places: this.state.places}
 	                ), 
 	                React.createElement("hr", null), 
-	                React.createElement(FindingSection, null)
+	                React.createElement(FindingSection, {
+	                    data: this.state.findings}
+	                )
 	            )
 	        )
 	    }

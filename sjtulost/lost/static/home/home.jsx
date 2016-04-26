@@ -23,7 +23,6 @@ var HomepageItems = React.createClass({
                     <p className="homepageItemDetailTitle">{this.props.json['description']}</p>
                     <p className="homepageItemDetailInfo">遗失时间: {this.props.json['lost_time']}</p>
                     <p className="homepageItemDetailInfo">遗失地点: {this.props.json['lost_place']}</p>
-                    <p className="homepageItemDetailInfo">联系电话: {this.props.json['user_phone']}</p>
                 </div>
             </div>
         )
