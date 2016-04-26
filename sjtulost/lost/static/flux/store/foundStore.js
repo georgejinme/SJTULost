@@ -10,11 +10,14 @@ var FoundStore = assign({}, EventEmitter.prototype, {
     /*
      Each finding format:
      {
+         id:
          description: string
          img: string
+         item_type:
          user_phone: string
-         lost_time:
-         lost_place:
+         time:
+         place:
+         place_detail:
          state:
      }
      */

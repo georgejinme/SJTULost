@@ -193,12 +193,12 @@
 	            break;
 
 	        case 'ITEM_TYPE_INITIALIZATION':
-	            ItemStore.setDescriptions(action.itemTypes);
+	            ItemStore.setItems(action.itemTypes);
 	            ItemStore.emitChange();
 	            break;
 
 	        case 'PLACE_INITIALIZATION':
-	            PlaceStore.setDescriptions(action.places);
+	            PlaceStore.setPlaces(action.places);
 	            PlaceStore.emitChange();
 	            break;
 
@@ -988,13 +988,14 @@
 	    /*
 	     Each finding format:
 	     {
+	        id:
 	        description: string
 	        img: string
 	        item_type:
 	        user_phone: string
-	        lost_time:
-	        lost_place:
-	        lost_place_detail:
+	        time:
+	        place:
+	        place_detail:
 	        pay:
 	        state:
 	     }
@@ -1045,11 +1046,14 @@
 	    /*
 	     Each finding format:
 	     {
+	         id:
 	         description: string
 	         img: string
+	         item_type:
 	         user_phone: string
-	         lost_time:
-	         lost_place:
+	         time:
+	         place:
+	         place_detail:
 	         state:
 	     }
 	     */
@@ -1099,14 +1103,22 @@
 	var assign = __webpack_require__(8);
 
 	var ItemStore = assign({}, EventEmitter.prototype, {
-	    descriptions: [],
+	    /*
+	      Each item format:
+	      {
+	        id:
+	        description:
+	      }
+	     */
 
-	    getDescriptions: function getDescriptions() {
-	        return this.descriptions;
+	    items: [],
+
+	    getItems: function getItems() {
+	        return this.items;
 	    },
 
-	    setDescriptions: function setDescriptions(array) {
-	        this.descriptions = array;
+	    setItems: function setItems(array) {
+	        this.items = array;
 	    },
 
 	    emitChange: function emitChange() {
@@ -1139,14 +1151,22 @@
 	var assign = __webpack_require__(8);
 
 	var PlaceStore = assign({}, EventEmitter.prototype, {
-	    descriptions: [],
+	    /*
+	    Each place format:
+	    {
+	        id:
+	        description:
+	    }
+	     */
 
-	    getDescriptions: function getDescriptions() {
-	        return this.descriptions;
+	    places: [],
+
+	    getPlaces: function getPlaces() {
+	        return this.places;
 	    },
 
-	    setDescriptions: function setDescriptions(array) {
-	        this.descriptions = array;
+	    setPlaces: function setPlaces(array) {
+	        this.places = array;
 	    },
 
 	    emitChange: function emitChange() {
@@ -1192,8 +1212,8 @@
 	                React.createElement("img", {src: this.props.json['img'], className: "img-rounded homepageItemImage"}), 
 	                React.createElement("div", {className: "homepageItemDetail"}, 
 	                    React.createElement("p", {className: "homepageItemDetailTitle"}, this.props.json['description']), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: ", this.props.json['lost_time']), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['lost_place'])
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
+	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['place'])
 	                )
 	            )
 	        )
@@ -1373,7 +1393,7 @@
 	                    
 	                        this.props.data.map(function(val, index){
 	                            return (
-	                                React.createElement("li", null, React.createElement("a", null, val))
+	                                React.createElement("li", null, React.createElement("a", null, val['description']))
 	                            )
 	                        })
 	                    
@@ -1420,8 +1440,8 @@
 	                    React.createElement("p", {className: "findingItemTitle"}, this.props.json['description']), 
 	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
 	                    React.createElement("p", {className: "findingItemInfo"}, "物品类别: ", this.props.json['item_type']), 
-	                    React.createElement("p", {className: "findingItemInfo"}, "遗失时间: ", this.props.json['lost_time']), 
-	                    React.createElement("p", {className: "findingItemInfo"}, "遗失地点: ", this.props.json['lost_place'], ". ", this.props.json['lost_place_detail']), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "遗失时间: ", this.props.json['time']), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "遗失地点: ", this.props.json['place'], ". ", this.props.json['lost_place_detail']), 
 	                    React.createElement("p", {className: "findingItemInfo"}, "联系电话: ", this.props.json['user_phone']), 
 	                    React.createElement("p", {className: "findingItemInfo findingItemPay"}, "酬金: ", this.props.json['pay'], " 元")
 	                )
@@ -1454,8 +1474,8 @@
 	var Finding = React.createClass({displayName: "Finding",
 	    getInitialState: function() {
 	        return {
-	            itemTypes: ItemStore.getDescriptions(),
-	            places: PlaceStore.getDescriptions(),
+	            itemTypes: ItemStore.getItems(),
+	            places: PlaceStore.getPlaces(),
 	            findings: FindingStore.getFindingsWithAmount()
 	        }
 	    },
@@ -1477,13 +1497,13 @@
 
 	    _onItemChange: function () {
 	        this.setState({
-	            itemTypes: ItemStore.getDescriptions()
+	            itemTypes: ItemStore.getItems()
 	        });
 	    },
 
 	    _onPlaceChange: function() {
 	        this.setState({
-	            places: PlaceStore.getDescriptions()
+	            places: PlaceStore.getPlaces()
 	        });
 	    },
 

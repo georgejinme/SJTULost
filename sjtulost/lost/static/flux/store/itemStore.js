@@ -7,14 +7,22 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
 var ItemStore = assign({}, EventEmitter.prototype, {
-    descriptions: [],
+    /*
+      Each item format:
+      {
+        id:
+        description:
+      }
+     */
 
-    getDescriptions: function() {
-        return this.descriptions
+    items: [],
+
+    getItems: function() {
+        return this.items
     },
 
-    setDescriptions: function(array) {
-        this.descriptions = array
+    setItems: function(array) {
+        this.items = array
     },
 
     emitChange: function () {

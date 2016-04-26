@@ -15,7 +15,7 @@ var FindingTypeRow = React.createClass({
                     {
                         this.props.data.map(function(val, index){
                             return (
-                                <li><a>{val}</a></li>
+                                <li><a>{val['description']}</a></li>
                             )
                         })
                     }
@@ -62,8 +62,8 @@ var FindingItem = React.createClass({
                     <p className="findingItemTitle">{this.props.json['description']}</p>
                     <span className={this.badgeColor()}>{this.badgeText()}</span>
                     <p className="findingItemInfo">物品类别: {this.props.json['item_type']}</p>
-                    <p className="findingItemInfo">遗失时间: {this.props.json['lost_time']}</p>
-                    <p className="findingItemInfo">遗失地点: {this.props.json['lost_place']}. {this.props.json['lost_place_detail']}</p>
+                    <p className="findingItemInfo">遗失时间: {this.props.json['time']}</p>
+                    <p className="findingItemInfo">遗失地点: {this.props.json['place']}. {this.props.json['lost_place_detail']}</p>
                     <p className="findingItemInfo">联系电话: {this.props.json['user_phone']}</p>
                     <p className="findingItemInfo findingItemPay">酬金: {this.props.json['pay']} 元</p>
                 </div>
@@ -96,8 +96,8 @@ var FindingSection = React.createClass({
 var Finding = React.createClass({
     getInitialState: function() {
         return {
-            itemTypes: ItemStore.getDescriptions(),
-            places: PlaceStore.getDescriptions(),
+            itemTypes: ItemStore.getItems(),
+            places: PlaceStore.getPlaces(),
             findings: FindingStore.getFindingsWithAmount()
         }
     },
@@ -119,13 +119,13 @@ var Finding = React.createClass({
 
     _onItemChange: function () {
         this.setState({
-            itemTypes: ItemStore.getDescriptions()
+            itemTypes: ItemStore.getItems()
         });
     },
 
     _onPlaceChange: function() {
         this.setState({
-            places: PlaceStore.getDescriptions()
+            places: PlaceStore.getPlaces()
         });
     },
 

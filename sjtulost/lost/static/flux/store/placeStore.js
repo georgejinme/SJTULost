@@ -7,14 +7,22 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
 var PlaceStore = assign({}, EventEmitter.prototype, {
-    descriptions: [],
+    /*
+    Each place format:
+    {
+        id:
+        description:
+    }
+     */
 
-    getDescriptions: function() {
-        return this.descriptions
+    places: [],
+
+    getPlaces: function() {
+        return this.places
     },
 
-    setDescriptions: function(array) {
-        this.descriptions = array
+    setPlaces: function(array) {
+        this.places = array
     },
 
     emitChange: function () {

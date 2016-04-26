@@ -25,12 +25,12 @@ AppDispatcher.register(function (action) {
             break;
 
         case 'ITEM_TYPE_INITIALIZATION':
-            ItemStore.setDescriptions(action.itemTypes);
+            ItemStore.setItems(action.itemTypes);
             ItemStore.emitChange();
             break;
 
         case 'PLACE_INITIALIZATION':
-            PlaceStore.setDescriptions(action.places);
+            PlaceStore.setPlaces(action.places);
             PlaceStore.emitChange();
             break;
 
