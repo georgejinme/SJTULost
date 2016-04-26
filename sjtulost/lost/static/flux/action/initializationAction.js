@@ -23,19 +23,23 @@ var InitFindingAction = {
 
 var InitItemTypeAction = {
     fetchData: function() {
-        AppDispatcher.dispatch({
-            actionType: 'ITEM_TYPE_INITIALIZATION',
-            itemTypes: []
-        })
+        $.get('/getitems/', function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'ITEM_TYPE_INITIALIZATION',
+                itemTypes: data
+            })
+        });
     }
 };
 
 var InitPlaceAction = {
     fetchData: function() {
-        AppDispatcher.dispatch({
-            actionType: 'PLACE_INITIALIZATION',
-            places: []
-        })
+        $.get('/getplaces/', function(data){
+            AppDispatcher.dispatch({
+                actionType: 'PLACE_INITIALIZATION',
+                places: data
+            })
+        });
     }
 };
 

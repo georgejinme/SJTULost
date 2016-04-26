@@ -24,6 +24,8 @@ urlpatterns = [
 
     url(r'^getfindings/', 'lost.app.finding.get_all_findings', name='get_all_findings'),
     url(r'^getfounds/', 'lost.app.found.get_all_founds', name='get_all_founds'),
+    url(r'^getitems/', 'lost.app.item.get_all_item_types', name = 'get_all_item_types'),
+    url(r'^getplaces/', 'lost.app.place.get_all_places', name='get_all_places'),
 
     url(r'^admin/', include(admin.site.urls)),
 ]

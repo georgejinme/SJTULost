@@ -54,8 +54,8 @@
 	var JaccountLoginActions = __webpack_require__(1);
 	var UserInfoStore = __webpack_require__(6);
 
-	var Homepage = __webpack_require__(10);
-	var Finding = __webpack_require__(11);
+	var Homepage = __webpack_require__(13);
+	var Finding = __webpack_require__(15);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -171,9 +171,9 @@
 
 	var UserInfoStore = __webpack_require__(6);
 	var FindingStore = __webpack_require__(9);
-	var FoundStore = __webpack_require__(13);
-	var ItemStore = __webpack_require__(14);
-	var PlaceStore = __webpack_require__(15);
+	var FoundStore = __webpack_require__(10);
+	var ItemStore = __webpack_require__(11);
+	var PlaceStore = __webpack_require__(12);
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
@@ -1028,9 +1028,147 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var InitFindingAction = __webpack_require__(12).InitFindingAction;
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+
+	var FoundStore = assign({}, EventEmitter.prototype, {
+
+	    /*
+	     Each finding format:
+	     {
+	         description: string
+	         img: string
+	         user_phone: string
+	         lost_time:
+	         lost_place:
+	         state:
+	     }
+	     */
+
+	    founds: [],
+	    getFoundsWithAmount: function getFoundsWithAmount() {
+	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.founds.count : arguments[0];
+
+	        return this.founds.slice(0, amount);
+	    },
+
+	    setFounds: function setFounds(array) {
+	        this.founds = array;
+	    },
+
+	    appendNewFound: function appendNewFound(json) {
+	        this.founds.append(json);
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+
+	});
+
+	module.exports = FoundStore;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+
+	var ItemStore = assign({}, EventEmitter.prototype, {
+	    descriptions: [],
+
+	    getDescriptions: function getDescriptions() {
+	        return this.descriptions;
+	    },
+
+	    setDescriptions: function setDescriptions(array) {
+	        this.descriptions = array;
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+
+	});
+
+	module.exports = ItemStore;
+
+/***/ },
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+
+	var PlaceStore = assign({}, EventEmitter.prototype, {
+	    descriptions: [],
+
+	    getDescriptions: function getDescriptions() {
+	        return this.descriptions;
+	    },
+
+	    setDescriptions: function setDescriptions(array) {
+	        this.descriptions = array;
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+
+	});
+
+	module.exports = PlaceStore;
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var InitFindingAction = __webpack_require__(14).InitFindingAction;
 	var FindingStore = __webpack_require__(9);
-	var FoundStore = __webpack_require__(13);
+	var FoundStore = __webpack_require__(10);
 
 
 	var HomepageItems = React.createClass({displayName: "HomepageItems",
@@ -1156,14 +1294,71 @@
 
 
 /***/ },
-/* 11 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var InitItemTypeAction = __webpack_require__(12).InitItemTypeAction;
-	var InitPlaceAction = __webpack_require__(12).InitPlaceAction;
+	/**
+	 * Created by gougoumemeda on 16/4/25.
+	 */
 
-	var ItemStore = __webpack_require__(14);
-	var PlaceStore = __webpack_require__(15);
+	'use strict';
+
+	var AppDispatcher = __webpack_require__(2);
+
+	var InitFindingAction = {
+	    fetchData: function fetchData() {
+	        $.get('/getfindings/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FINDING_INITIALIZATION',
+	                findingArray: data
+	            });
+	        });
+	        $.get('/getfounds/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FOUND_INITIALIZATION',
+	                foundArray: data
+	            });
+	        });
+	    }
+	};
+
+	var InitItemTypeAction = {
+	    fetchData: function fetchData() {
+	        $.get('/getitems/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'ITEM_TYPE_INITIALIZATION',
+	                itemTypes: data
+	            });
+	        });
+	    }
+	};
+
+	var InitPlaceAction = {
+	    fetchData: function fetchData() {
+	        $.get('/getplaces/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'PLACE_INITIALIZATION',
+	                places: data
+	            });
+	        });
+	    }
+	};
+
+	module.exports = {
+	    InitFindingAction: InitFindingAction,
+	    InitItemTypeAction: InitItemTypeAction,
+	    InitPlaceAction: InitPlaceAction
+	};
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var InitItemTypeAction = __webpack_require__(14).InitItemTypeAction;
+	var InitPlaceAction = __webpack_require__(14).InitPlaceAction;
+
+	var ItemStore = __webpack_require__(11);
+	var PlaceStore = __webpack_require__(12);
 
 	var FindingTypeRow = React.createClass({displayName: "FindingTypeRow",
 	    render: function() {
@@ -1282,197 +1477,6 @@
 	});
 
 	module.exports = Finding;
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gougoumemeda on 16/4/25.
-	 */
-
-	'use strict';
-
-	var AppDispatcher = __webpack_require__(2);
-
-	var InitFindingAction = {
-	    fetchData: function fetchData() {
-	        $.get('/getfindings/', function (data) {
-	            AppDispatcher.dispatch({
-	                actionType: 'FINDING_INITIALIZATION',
-	                findingArray: data
-	            });
-	        });
-	        $.get('/getfounds/', function (data) {
-	            AppDispatcher.dispatch({
-	                actionType: 'FOUND_INITIALIZATION',
-	                foundArray: data
-	            });
-	        });
-	    }
-	};
-
-	var InitItemTypeAction = {
-	    fetchData: function fetchData() {
-	        AppDispatcher.dispatch({
-	            actionType: 'ITEM_TYPE_INITIALIZATION',
-	            itemTypes: []
-	        });
-	    }
-	};
-
-	var InitPlaceAction = {
-	    fetchData: function fetchData() {
-	        AppDispatcher.dispatch({
-	            actionType: 'PLACE_INITIALIZATION',
-	            places: []
-	        });
-	    }
-	};
-
-	module.exports = {
-	    InitFindingAction: InitFindingAction,
-	    InitItemTypeAction: InitItemTypeAction,
-	    InitPlaceAction: InitPlaceAction
-	};
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gougoumemeda on 16/4/25.
-	 */
-
-	'use strict';
-
-	var EventEmitter = __webpack_require__(7).EventEmitter;
-	var assign = __webpack_require__(8);
-
-	var FoundStore = assign({}, EventEmitter.prototype, {
-
-	    /*
-	     Each finding format:
-	     {
-	         description: string
-	         img: string
-	         user_phone: string
-	         lost_time:
-	         lost_place:
-	         state:
-	     }
-	     */
-
-	    founds: [],
-	    getFoundsWithAmount: function getFoundsWithAmount() {
-	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.founds.count : arguments[0];
-
-	        return this.founds.slice(0, amount);
-	    },
-
-	    setFounds: function setFounds(array) {
-	        this.founds = array;
-	    },
-
-	    appendNewFound: function appendNewFound(json) {
-	        this.founds.append(json);
-	    },
-
-	    emitChange: function emitChange() {
-	        this.emit('change');
-	    },
-
-	    addChangeListener: function addChangeListener(callback) {
-	        this.on('change', callback);
-	    },
-
-	    removeChangeListener: function removeChangeListener(callback) {
-	        this.removeListener('change', callback);
-	    }
-
-	});
-
-	module.exports = FoundStore;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gougoumemeda on 16/4/25.
-	 */
-
-	'use strict';
-
-	var EventEmitter = __webpack_require__(7).EventEmitter;
-	var assign = __webpack_require__(8);
-
-	var ItemStore = assign({}, EventEmitter.prototype, {
-	    descriptions: [],
-
-	    getDescriptions: function getDescriptions() {
-	        return this.descriptions;
-	    },
-
-	    setDescriptions: function setDescriptions(array) {
-	        this.descriptions = array;
-	    },
-
-	    emitChange: function emitChange() {
-	        this.emit('change');
-	    },
-
-	    addChangeListener: function addChangeListener(callback) {
-	        this.on('change', callback);
-	    },
-
-	    removeChangeListener: function removeChangeListener(callback) {
-	        this.removeListener('change', callback);
-	    }
-
-	});
-
-	module.exports = ItemStore;
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gougoumemeda on 16/4/25.
-	 */
-
-	'use strict';
-
-	var EventEmitter = __webpack_require__(7).EventEmitter;
-	var assign = __webpack_require__(8);
-
-	var PlaceStore = assign({}, EventEmitter.prototype, {
-	    descriptions: [],
-
-	    getDescriptions: function getDescriptions() {
-	        return this.descriptions;
-	    },
-
-	    setDescriptions: function setDescriptions(array) {
-	        this.descriptions = array;
-	    },
-
-	    emitChange: function emitChange() {
-	        this.emit('change');
-	    },
-
-	    addChangeListener: function addChangeListener(callback) {
-	        this.on('change', callback);
-	    },
-
-	    removeChangeListener: function removeChangeListener(callback) {
-	        this.removeListener('change', callback);
-	    }
-
-	});
-
-	module.exports = PlaceStore;
 
 /***/ }
 /******/ ]);
