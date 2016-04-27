@@ -1,6 +1,6 @@
-var InitItemTypeAction = require('../flux/action/initializationAction').InitItemTypeAction;
-var InitPlaceAction = require('../flux/action/initializationAction').InitPlaceAction;
-var InitFindingAction = require('../flux/action/initializationAction').InitFindingAction;
+var ItemTypeAction = require('../flux/action/initializationAction').ItemTypeAction;
+var PlaceAction = require('../flux/action/initializationAction').PlaceAction;
+var FindingAction = require('../flux/action/initializationAction').FindingAction;
 
 var ItemStore = require('../flux/store/itemStore');
 var PlaceStore = require('../flux/store/placeStore');
@@ -128,9 +128,9 @@ var Finding = React.createClass({
         FindingStore.addChangeListener(this._onFindingChange);
         ItemStore.addSelectListener(this._onItemSelectChange);
         PlaceStore.addSelectListener(this._onPlaceSelectChange);
-        InitItemTypeAction.fetchData();
-        InitPlaceAction.fetchData();
-        InitFindingAction.fetchData();
+        ItemTypeAction.fetchData();
+        PlaceAction.fetchData();
+        FindingAction.fetchData();
     },
 
     componentWillUnmount: function() {
@@ -159,14 +159,14 @@ var Finding = React.createClass({
         this.setState({
             selectedItemTypes: ItemStore.getSelectedItems()
         });
-        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
     },
 
     _onPlaceSelectChange: function() {
         this.setState({
             selectedPlaces: PlaceStore.getSelectedPlaces()
         });
-        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
     },
 
     _onFindingChange: function() {
@@ -176,11 +176,11 @@ var Finding = React.createClass({
     },
 
     selectItemTypeHandler: function(event) {
-        InitItemTypeAction.select(idOperation.decodeId(event.target.id));
+        ItemTypeAction.select(idOperation.decodeId(event.target.id));
     },
 
     selectPlaceHandler: function(event) {
-        InitPlaceAction.select(idOperation.decodeId(event.target.id));
+        PlaceAction.select(idOperation.decodeId(event.target.id));
     },
 
     render: function() {

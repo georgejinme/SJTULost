@@ -4,7 +4,7 @@
 
 var AppDispatcher = require('../dispatcher/dispatcher');
 
-var InitFindingAction = {
+var FindingAction = {
     fetchData: function() {
         $.get('/getfindings/', function(data) {
             AppDispatcher.dispatch({
@@ -27,7 +27,7 @@ var InitFindingAction = {
     }
 };
 
-var InitFoundAction = {
+var FoundAction = {
     fetchData: function() {
         $.get('/getfounds/', function(data) {
             AppDispatcher.dispatch({
@@ -40,7 +40,7 @@ var InitFoundAction = {
 
 
 
-var InitItemTypeAction = {
+var ItemTypeAction = {
     fetchData: function() {
         $.get('/getitems/', function(data) {
             AppDispatcher.dispatch({
@@ -57,7 +57,7 @@ var InitItemTypeAction = {
     }
 };
 
-var InitPlaceAction = {
+var PlaceAction = {
     fetchData: function() {
         $.get('/getplaces/', function(data){
             AppDispatcher.dispatch({
@@ -75,8 +75,8 @@ var InitPlaceAction = {
 };
 
 module.exports = {
-    InitFindingAction: InitFindingAction,
-    InitFoundAction: InitFoundAction,
-    InitItemTypeAction: InitItemTypeAction,
-    InitPlaceAction: InitPlaceAction
+    FindingAction: FindingAction,
+    FoundAction: FoundAction,
+    ItemTypeAction: ItemTypeAction,
+    PlaceAction: PlaceAction
 };

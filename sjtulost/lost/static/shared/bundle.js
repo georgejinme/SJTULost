@@ -1336,8 +1336,8 @@
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var InitFindingAction = __webpack_require__(14).InitFindingAction;
-	var InitFoundAction = __webpack_require__(14).InitFoundAction;
+	var FindingAction = __webpack_require__(14).FindingAction;
+	var FoundAction = __webpack_require__(14).FoundAction;
 	var FindingStore = __webpack_require__(9);
 	var FoundStore = __webpack_require__(10);
 
@@ -1416,8 +1416,8 @@
 	    componentDidMount: function() {
 	        FindingStore.addChangeListener(this._onFindingChange);
 	        FoundStore.addChangeListener(this._onFoundChange);
-	        InitFindingAction.fetchData();
-	        InitFoundAction.fetchData();
+	        FindingAction.fetchData();
+	        FoundAction.fetchData();
 	    },
 
 	    componentWillUnmount: function() {
@@ -1476,7 +1476,7 @@
 
 	var AppDispatcher = __webpack_require__(2);
 
-	var InitFindingAction = {
+	var FindingAction = {
 	    fetchData: function fetchData() {
 	        $.get('/getfindings/', function (data) {
 	            AppDispatcher.dispatch({
@@ -1499,7 +1499,7 @@
 	    }
 	};
 
-	var InitFoundAction = {
+	var FoundAction = {
 	    fetchData: function fetchData() {
 	        $.get('/getfounds/', function (data) {
 	            AppDispatcher.dispatch({
@@ -1510,7 +1510,7 @@
 	    }
 	};
 
-	var InitItemTypeAction = {
+	var ItemTypeAction = {
 	    fetchData: function fetchData() {
 	        $.get('/getitems/', function (data) {
 	            AppDispatcher.dispatch({
@@ -1527,7 +1527,7 @@
 	    }
 	};
 
-	var InitPlaceAction = {
+	var PlaceAction = {
 	    fetchData: function fetchData() {
 	        $.get('/getplaces/', function (data) {
 	            AppDispatcher.dispatch({
@@ -1545,19 +1545,19 @@
 	};
 
 	module.exports = {
-	    InitFindingAction: InitFindingAction,
-	    InitFoundAction: InitFoundAction,
-	    InitItemTypeAction: InitItemTypeAction,
-	    InitPlaceAction: InitPlaceAction
+	    FindingAction: FindingAction,
+	    FoundAction: FoundAction,
+	    ItemTypeAction: ItemTypeAction,
+	    PlaceAction: PlaceAction
 	};
 
 /***/ },
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var InitItemTypeAction = __webpack_require__(14).InitItemTypeAction;
-	var InitPlaceAction = __webpack_require__(14).InitPlaceAction;
-	var InitFindingAction = __webpack_require__(14).InitFindingAction;
+	var ItemTypeAction = __webpack_require__(14).ItemTypeAction;
+	var PlaceAction = __webpack_require__(14).PlaceAction;
+	var FindingAction = __webpack_require__(14).FindingAction;
 
 	var ItemStore = __webpack_require__(11);
 	var PlaceStore = __webpack_require__(12);
@@ -1685,9 +1685,9 @@
 	        FindingStore.addChangeListener(this._onFindingChange);
 	        ItemStore.addSelectListener(this._onItemSelectChange);
 	        PlaceStore.addSelectListener(this._onPlaceSelectChange);
-	        InitItemTypeAction.fetchData();
-	        InitPlaceAction.fetchData();
-	        InitFindingAction.fetchData();
+	        ItemTypeAction.fetchData();
+	        PlaceAction.fetchData();
+	        FindingAction.fetchData();
 	    },
 
 	    componentWillUnmount: function() {
@@ -1716,14 +1716,14 @@
 	        this.setState({
 	            selectedItemTypes: ItemStore.getSelectedItems()
 	        });
-	        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
 	    },
 
 	    _onPlaceSelectChange: function() {
 	        this.setState({
 	            selectedPlaces: PlaceStore.getSelectedPlaces()
 	        });
-	        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
 	    },
 
 	    _onFindingChange: function() {
@@ -1733,11 +1733,11 @@
 	    },
 
 	    selectItemTypeHandler: function(event) {
-	        InitItemTypeAction.select(idOperation.decodeId(event.target.id));
+	        ItemTypeAction.select(idOperation.decodeId(event.target.id));
 	    },
 
 	    selectPlaceHandler: function(event) {
-	        InitPlaceAction.select(idOperation.decodeId(event.target.id));
+	        PlaceAction.select(idOperation.decodeId(event.target.id));
 	    },
 
 	    render: function() {
