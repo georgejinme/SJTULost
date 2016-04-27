@@ -12,6 +12,18 @@ var InitFindingAction = {
                 findingArray: data
             });
         });
+    },
+
+    fetchDataWithFilter: function(item, place) {
+        $.post('/getfindingswithfilter/',{
+            'item': item,
+            'place': place
+        },function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'FINDING_UPDATE',
+                findingArray: data
+            });
+        });
     }
 };
 

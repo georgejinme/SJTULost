@@ -70,16 +70,40 @@ var PlaceStore = assign({}, EventEmitter.prototype, {
         return this.selectedPlaces
     },
 
+    getSelectedPlacesId: function() {
+        var ids = [];
+        var all = false;
+        if (this.selectedPlaces[0]){
+            all = true;
+        }
+        for (var i = 1; i < this.places.length; ++i) {
+            if (all || this.selectedPlaces[i]) ids.push(this.places[i]['id'])
+        }
+        return ids;
+    },
+
     emitChange: function () {
         this.emit('change');
+    },
+
+    emitSelect: function() {
+        this.emit('select');
     },
 
     addChangeListener: function(callback) {
         this.on('change', callback);
     },
 
+    addSelectListener: function(callback) {
+        this.on('select', callback);
+    },
+
     removeChangeListener: function(callback) {
         this.removeListener('change', callback);
+    },
+
+    removeSelectListener: function(callback) {
+        this.removeListener('select', callback);
     }
 
 });

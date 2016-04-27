@@ -15,6 +15,7 @@ AppDispatcher.register(function (action) {
             break;
 
         case 'FINDING_INITIALIZATION':
+        case 'FINDING_UPDATE':
             FindingStore.setFindings(action.findingArray);
             FindingStore.emitChange();
             break;
@@ -36,12 +37,12 @@ AppDispatcher.register(function (action) {
 
         case 'ITEM_TYPE_SELECT':
             ItemStore.selectItem(action.id);
-            ItemStore.emitChange();
+            ItemStore.emitSelect();
             break;
 
         case 'PLACE_SELECT':
             PlaceStore.selectPlace(action.id);
-            PlaceStore.emitChange();
+            PlaceStore.emitSelect();
             break;
 
         default:

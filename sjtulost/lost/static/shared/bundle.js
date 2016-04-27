@@ -183,6 +183,7 @@
 	            break;
 
 	        case 'FINDING_INITIALIZATION':
+	        case 'FINDING_UPDATE':
 	            FindingStore.setFindings(action.findingArray);
 	            FindingStore.emitChange();
 	            break;
@@ -204,12 +205,12 @@
 
 	        case 'ITEM_TYPE_SELECT':
 	            ItemStore.selectItem(action.id);
-	            ItemStore.emitChange();
+	            ItemStore.emitSelect();
 	            break;
 
 	        case 'PLACE_SELECT':
 	            PlaceStore.selectPlace(action.id);
-	            PlaceStore.emitChange();
+	            PlaceStore.emitSelect();
 	            break;
 
 	        default:
@@ -1175,16 +1176,40 @@
 	        return this.selectedItems;
 	    },
 
+	    getSelectedItemsId: function getSelectedItemsId() {
+	        var ids = [];
+	        var all = false;
+	        if (this.selectedItems[0]) {
+	            all = true;
+	        }
+	        for (var i = 1; i < this.items.length; ++i) {
+	            if (all || this.selectedItems[i]) ids.push(this.items[i]['id']);
+	        }
+	        return ids;
+	    },
+
 	    emitChange: function emitChange() {
 	        this.emit('change');
+	    },
+
+	    emitSelect: function emitSelect() {
+	        this.emit('select');
 	    },
 
 	    addChangeListener: function addChangeListener(callback) {
 	        this.on('change', callback);
 	    },
 
+	    addSelectListener: function addSelectListener(callback) {
+	        this.on('select', callback);
+	    },
+
 	    removeChangeListener: function removeChangeListener(callback) {
 	        this.removeListener('change', callback);
+	    },
+
+	    removeSelectListener: function removeSelectListener(callback) {
+	        this.removeListener('select', callback);
 	    }
 
 	});
@@ -1267,16 +1292,40 @@
 	        return this.selectedPlaces;
 	    },
 
+	    getSelectedPlacesId: function getSelectedPlacesId() {
+	        var ids = [];
+	        var all = false;
+	        if (this.selectedPlaces[0]) {
+	            all = true;
+	        }
+	        for (var i = 1; i < this.places.length; ++i) {
+	            if (all || this.selectedPlaces[i]) ids.push(this.places[i]['id']);
+	        }
+	        return ids;
+	    },
+
 	    emitChange: function emitChange() {
 	        this.emit('change');
+	    },
+
+	    emitSelect: function emitSelect() {
+	        this.emit('select');
 	    },
 
 	    addChangeListener: function addChangeListener(callback) {
 	        this.on('change', callback);
 	    },
 
+	    addSelectListener: function addSelectListener(callback) {
+	        this.on('select', callback);
+	    },
+
 	    removeChangeListener: function removeChangeListener(callback) {
 	        this.removeListener('change', callback);
+	    },
+
+	    removeSelectListener: function removeSelectListener(callback) {
+	        this.removeListener('select', callback);
 	    }
 
 	});
@@ -1435,6 +1484,18 @@
 	                findingArray: data
 	            });
 	        });
+	    },
+
+	    fetchDataWithFilter: function fetchDataWithFilter(item, place) {
+	        $.post('/getfindingswithfilter/', {
+	            'item': item,
+	            'place': place
+	        }, function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FINDING_UPDATE',
+	                findingArray: data
+	            });
+	        });
 	    }
 	};
 
@@ -1521,7 +1582,7 @@
 	                        this.props.data.map(function(val, index){
 	                            return (
 	                                React.createElement("li", {className: classes(index)}, 
-	                                    React.createElement("a", {id: idOperation.encodeId('type', index), 
+	                                    React.createElement("a", {id: idOperation.encodeId('type', val['id']), 
 	                                       href: "javascript:void(0);", 
 	                                       onClick: handler}, val['description']
 	                                    )
@@ -1622,6 +1683,8 @@
 	        ItemStore.addChangeListener(this._onItemChange);
 	        PlaceStore.addChangeListener(this._onPlaceChange);
 	        FindingStore.addChangeListener(this._onFindingChange);
+	        ItemStore.addSelectListener(this._onItemSelectChange);
+	        PlaceStore.addSelectListener(this._onPlaceSelectChange);
 	        InitItemTypeAction.fetchData();
 	        InitPlaceAction.fetchData();
 	        InitFindingAction.fetchData();
@@ -1631,6 +1694,8 @@
 	        ItemStore.removeChangeListener(this._onItemChange);
 	        PlaceStore.removeChangeListener(this._onPlaceChange);
 	        FindingStore.removeChangeListener(this._onFindingChange);
+	        ItemStore.removeSelectListener(this._onItemSelectChange);
+	        PlaceStore.removeSelectListener(this._onItemSelectChange)
 	    },
 
 	    _onItemChange: function () {
@@ -1645,6 +1710,20 @@
 	            places: PlaceStore.getPlaces(),
 	            selectedPlaces: PlaceStore.getSelectedPlaces()
 	        });
+	    },
+
+	    _onItemSelectChange: function() {
+	        this.setState({
+	            selectedItemTypes: ItemStore.getSelectedItems()
+	        });
+	        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+	    },
+
+	    _onPlaceSelectChange: function() {
+	        this.setState({
+	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	        });
+	        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
 	    },
 
 	    _onFindingChange: function() {

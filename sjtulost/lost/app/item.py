@@ -1,6 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from lost.models import ItemType
 
+def get_item_type_by_id(i):
+    return ItemType.objects.get(id=i)
 
 def get_all_item_types(request):
     item_types = ItemType.objects.all()

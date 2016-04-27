@@ -70,17 +70,41 @@ var ItemStore = assign({}, EventEmitter.prototype, {
         return this.selectedItems
     },
 
+    getSelectedItemsId: function() {
+        var ids = [];
+        var all = false;
+        if (this.selectedItems[0]){
+            all = true;
+        }
+        for (var i = 1; i < this.items.length; ++i) {
+            if (all || this.selectedItems[i]) ids.push(this.items[i]['id'])
+        }
+        return ids;
+    },
+
 
     emitChange: function () {
         this.emit('change');
+    },
+
+    emitSelect: function() {
+        this.emit('select');
     },
 
     addChangeListener: function(callback) {
         this.on('change', callback);
     },
 
+    addSelectListener: function(callback) {
+        this.on('select', callback);
+    },
+
     removeChangeListener: function(callback) {
         this.removeListener('change', callback);
+    },
+
+    removeSelectListener: function(callback) {
+        this.removeListener('select', callback);
     }
 
 });

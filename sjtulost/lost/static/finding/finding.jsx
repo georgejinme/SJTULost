@@ -25,7 +25,7 @@ var FindingTypeRow = React.createClass({
                         this.props.data.map(function(val, index){
                             return (
                                 <li className={classes(index)}>
-                                    <a id = {idOperation.encodeId('type', index)}
+                                    <a id = {idOperation.encodeId('type', val['id'])}
                                        href = "javascript:void(0);"
                                        onClick = {handler}>{val['description']}
                                     </a>
@@ -126,6 +126,8 @@ var Finding = React.createClass({
         ItemStore.addChangeListener(this._onItemChange);
         PlaceStore.addChangeListener(this._onPlaceChange);
         FindingStore.addChangeListener(this._onFindingChange);
+        ItemStore.addSelectListener(this._onItemSelectChange);
+        PlaceStore.addSelectListener(this._onPlaceSelectChange);
         InitItemTypeAction.fetchData();
         InitPlaceAction.fetchData();
         InitFindingAction.fetchData();
@@ -135,6 +137,8 @@ var Finding = React.createClass({
         ItemStore.removeChangeListener(this._onItemChange);
         PlaceStore.removeChangeListener(this._onPlaceChange);
         FindingStore.removeChangeListener(this._onFindingChange);
+        ItemStore.removeSelectListener(this._onItemSelectChange);
+        PlaceStore.removeSelectListener(this._onItemSelectChange)
     },
 
     _onItemChange: function () {
@@ -149,6 +153,20 @@ var Finding = React.createClass({
             places: PlaceStore.getPlaces(),
             selectedPlaces: PlaceStore.getSelectedPlaces()
         });
+    },
+
+    _onItemSelectChange: function() {
+        this.setState({
+            selectedItemTypes: ItemStore.getSelectedItems()
+        });
+        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+    },
+
+    _onPlaceSelectChange: function() {
+        this.setState({
+            selectedPlaces: PlaceStore.getSelectedPlaces()
+        });
+        InitFindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
     },
 
     _onFindingChange: function() {
