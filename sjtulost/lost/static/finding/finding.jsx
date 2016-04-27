@@ -6,8 +6,17 @@ var ItemStore = require('../flux/store/itemStore');
 var PlaceStore = require('../flux/store/placeStore');
 var FindingStore = require('../flux/store/findingStore');
 
+var idOperation = require('../shared/util');
+
 var FindingTypeRow = React.createClass({
+    getSelectedClass: function(id) {
+        if (this.props.selectedData[id] == true) return 'active';
+        else return '';
+    },
+
     render: function() {
+        var handler = this.props.handler;
+        var classes = this.getSelectedClass;
         return (
             <div className="row">
                 <p className="col-lg-2 col-md-2 col-sm-2 findingTypeLabel">{ this.props.typeName }</p>
@@ -15,7 +24,12 @@ var FindingTypeRow = React.createClass({
                     {
                         this.props.data.map(function(val, index){
                             return (
-                                <li><a>{val['description']}</a></li>
+                                <li className={classes(index)}>
+                                    <a id = {idOperation.encodeId('type', index)}
+                                       href = "javascript:void(0);"
+                                       onClick = {handler}>{val['description']}
+                                    </a>
+                                </li>
                             )
                         })
                     }
@@ -32,10 +46,14 @@ var FindingType = React.createClass({
                 <FindingTypeRow
                     typeName = "物品类别"
                     data = {this.props.itemTypes}
+                    selectedData = {this.props.selectedItemTypes}
+                    handler = {this.props.selectItemTypeHandler}
                 />
                 <FindingTypeRow
                     typeName = "地点"
                     data = {this.props.places}
+                    selectedData = {this.props.selectedPlaces}
+                    handler = {this.props.selectPlaceHandler}
                 />
             </div>
         )
@@ -98,7 +116,9 @@ var Finding = React.createClass({
         return {
             itemTypes: ItemStore.getItems(),
             places: PlaceStore.getPlaces(),
-            findings: FindingStore.getFindingsWithAmount()
+            findings: FindingStore.getFindingsWithAmount(),
+            selectedItemTypes: ItemStore.getSelectedItems(),
+            selectedPlaces: PlaceStore.getSelectedPlaces()
         }
     },
 
@@ -119,13 +139,15 @@ var Finding = React.createClass({
 
     _onItemChange: function () {
         this.setState({
-            itemTypes: ItemStore.getItems()
+            itemTypes: ItemStore.getItems(),
+            selectedItemTypes: ItemStore.getSelectedItems()
         });
     },
 
     _onPlaceChange: function() {
         this.setState({
-            places: PlaceStore.getPlaces()
+            places: PlaceStore.getPlaces(),
+            selectedPlaces: PlaceStore.getSelectedPlaces()
         });
     },
 
@@ -135,12 +157,24 @@ var Finding = React.createClass({
         })
     },
 
+    selectItemTypeHandler: function(event) {
+        InitItemTypeAction.select(idOperation.decodeId(event.target.id));
+    },
+
+    selectPlaceHandler: function(event) {
+        InitPlaceAction.select(idOperation.decodeId(event.target.id));
+    },
+
     render: function() {
         return (
             <div className="findingContent">
                 <FindingType
                     itemTypes = {this.state.itemTypes}
                     places = {this.state.places}
+                    selectedItemTypes = {this.state.selectedItemTypes}
+                    selectedPlaces = {this.state.selectedPlaces}
+                    selectItemTypeHandler = {this.selectItemTypeHandler}
+                    selectPlaceHandler = {this.selectPlaceHandler}
                 />
                 <hr/>
                 <FindingSection

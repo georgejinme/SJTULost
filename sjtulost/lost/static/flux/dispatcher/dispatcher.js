@@ -34,6 +34,16 @@ AppDispatcher.register(function (action) {
             PlaceStore.emitChange();
             break;
 
+        case 'ITEM_TYPE_SELECT':
+            ItemStore.selectItem(action.id);
+            ItemStore.emitChange();
+            break;
+
+        case 'PLACE_SELECT':
+            PlaceStore.selectPlace(action.id);
+            PlaceStore.emitChange();
+            break;
+
         default:
         // no op
     }

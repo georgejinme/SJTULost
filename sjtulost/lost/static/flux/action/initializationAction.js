@@ -12,6 +12,11 @@ var InitFindingAction = {
                 findingArray: data
             });
         });
+    }
+};
+
+var InitFoundAction = {
+    fetchData: function() {
         $.get('/getfounds/', function(data) {
             AppDispatcher.dispatch({
                 actionType: 'FOUND_INITIALIZATION',
@@ -21,6 +26,8 @@ var InitFindingAction = {
     }
 };
 
+
+
 var InitItemTypeAction = {
     fetchData: function() {
         $.get('/getitems/', function(data) {
@@ -29,6 +36,12 @@ var InitItemTypeAction = {
                 itemTypes: data
             })
         });
+    },
+    select: function(id) {
+        AppDispatcher.dispatch({
+            actionType: 'ITEM_TYPE_SELECT',
+            id: id
+        })
     }
 };
 
@@ -40,11 +53,18 @@ var InitPlaceAction = {
                 places: data
             })
         });
+    },
+    select: function(id) {
+        AppDispatcher.dispatch({
+            actionType: 'PLACE_SELECT',
+            id: id
+        })
     }
 };
 
 module.exports = {
     InitFindingAction: InitFindingAction,
+    InitFoundAction: InitFoundAction,
     InitItemTypeAction: InitItemTypeAction,
     InitPlaceAction: InitPlaceAction
 };

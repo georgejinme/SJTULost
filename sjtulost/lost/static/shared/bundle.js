@@ -202,6 +202,16 @@
 	            PlaceStore.emitChange();
 	            break;
 
+	        case 'ITEM_TYPE_SELECT':
+	            ItemStore.selectItem(action.id);
+	            ItemStore.emitChange();
+	            break;
+
+	        case 'PLACE_SELECT':
+	            PlaceStore.selectPlace(action.id);
+	            PlaceStore.emitChange();
+	            break;
+
 	        default:
 	        // no op
 	    }
@@ -1109,9 +1119,44 @@
 	        id:
 	        description:
 	      }
+	       selectedItems: [Bool]
 	     */
 
 	    items: [],
+	    selectedItems: [],
+
+	    selectItem: function selectItem(id) {
+	        if (this.selectedItems[0] == true) {
+	            if (id != 0) {
+	                this.selectedItems[0] = false;
+	                this.selectedItems[id] = true;
+	            }
+	        } else {
+	            if (id != 0) {
+	                if (this.countSelectedItems() > 1 || this.selectedItems[id] == false) {
+	                    this.selectedItems[id] = !this.selectedItems[id];
+	                }
+	            } else {
+	                this.clearSelectedItems();
+	            }
+	        }
+	    },
+
+	    clearSelectedItems: function clearSelectedItems() {
+	        this.selectedItems = [];
+	        for (var i = 0; i < this.items.length; ++i) {
+	            this.selectedItems.push(false);
+	        }
+	        this.selectedItems[0] = true;
+	    },
+
+	    countSelectedItems: function countSelectedItems() {
+	        var count = 0;
+	        for (var i = 0; i < this.selectedItems.length; ++i) {
+	            if (this.selectedItems[i] == true) ++count;
+	        }
+	        return count;
+	    },
 
 	    getItems: function getItems() {
 	        return this.items;
@@ -1119,6 +1164,15 @@
 
 	    setItems: function setItems(array) {
 	        this.items = array;
+	        this.items.unshift({
+	            'id': 0,
+	            'description': '全部'
+	        });
+	        this.clearSelectedItems();
+	    },
+
+	    getSelectedItems: function getSelectedItems() {
+	        return this.selectedItems;
 	    },
 
 	    emitChange: function emitChange() {
@@ -1157,9 +1211,44 @@
 	        id:
 	        description:
 	    }
+	     selectedPlaces: [Bool]
 	     */
 
 	    places: [],
+	    selectedPlaces: [],
+
+	    selectPlace: function selectPlace(id) {
+	        if (this.selectedPlaces[0] == true) {
+	            if (id != 0) {
+	                this.selectedPlaces[0] = false;
+	                this.selectedPlaces[id] = true;
+	            }
+	        } else {
+	            if (id != 0) {
+	                if (this.countSelectedPlaces() > 1 || this.selectedPlaces[id] == false) {
+	                    this.selectedPlaces[id] = !this.selectedPlaces[id];
+	                }
+	            } else {
+	                this.clearSelectedPlaces();
+	            }
+	        }
+	    },
+
+	    clearSelectedPlaces: function clearSelectedPlaces() {
+	        this.selectedPlaces = [];
+	        for (var i = 0; i < this.places.length; ++i) {
+	            this.selectedPlaces.push(false);
+	        }
+	        this.selectedPlaces[0] = true;
+	    },
+
+	    countSelectedPlaces: function countSelectedPlaces() {
+	        var count = 0;
+	        for (var i = 0; i < this.selectedPlaces.length; ++i) {
+	            if (this.selectedPlaces[i] == true) ++count;
+	        }
+	        return count;
+	    },
 
 	    getPlaces: function getPlaces() {
 	        return this.places;
@@ -1167,6 +1256,15 @@
 
 	    setPlaces: function setPlaces(array) {
 	        this.places = array;
+	        this.places.unshift({
+	            'id': 0,
+	            'description': '全部'
+	        });
+	        this.clearSelectedPlaces();
+	    },
+
+	    getSelectedPlaces: function getSelectedPlaces() {
+	        return this.selectedPlaces;
 	    },
 
 	    emitChange: function emitChange() {
@@ -1190,6 +1288,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var InitFindingAction = __webpack_require__(14).InitFindingAction;
+	var InitFoundAction = __webpack_require__(14).InitFoundAction;
 	var FindingStore = __webpack_require__(9);
 	var FoundStore = __webpack_require__(10);
 
@@ -1268,7 +1367,8 @@
 	    componentDidMount: function() {
 	        FindingStore.addChangeListener(this._onFindingChange);
 	        FoundStore.addChangeListener(this._onFoundChange);
-	        InitFindingAction.fetchData()
+	        InitFindingAction.fetchData();
+	        InitFoundAction.fetchData();
 	    },
 
 	    componentWillUnmount: function() {
@@ -1335,6 +1435,11 @@
 	                findingArray: data
 	            });
 	        });
+	    }
+	};
+
+	var InitFoundAction = {
+	    fetchData: function fetchData() {
 	        $.get('/getfounds/', function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FOUND_INITIALIZATION',
@@ -1352,6 +1457,12 @@
 	                itemTypes: data
 	            });
 	        });
+	    },
+	    select: function select(id) {
+	        AppDispatcher.dispatch({
+	            actionType: 'ITEM_TYPE_SELECT',
+	            id: id
+	        });
 	    }
 	};
 
@@ -1363,11 +1474,18 @@
 	                places: data
 	            });
 	        });
+	    },
+	    select: function select(id) {
+	        AppDispatcher.dispatch({
+	            actionType: 'PLACE_SELECT',
+	            id: id
+	        });
 	    }
 	};
 
 	module.exports = {
 	    InitFindingAction: InitFindingAction,
+	    InitFoundAction: InitFoundAction,
 	    InitItemTypeAction: InitItemTypeAction,
 	    InitPlaceAction: InitPlaceAction
 	};
@@ -1384,8 +1502,17 @@
 	var PlaceStore = __webpack_require__(12);
 	var FindingStore = __webpack_require__(9);
 
+	var idOperation = __webpack_require__(16);
+
 	var FindingTypeRow = React.createClass({displayName: "FindingTypeRow",
+	    getSelectedClass: function(id) {
+	        if (this.props.selectedData[id] == true) return 'active';
+	        else return '';
+	    },
+
 	    render: function() {
+	        var handler = this.props.handler;
+	        var classes = this.getSelectedClass;
 	        return (
 	            React.createElement("div", {className: "row"}, 
 	                React.createElement("p", {className: "col-lg-2 col-md-2 col-sm-2 findingTypeLabel"},  this.props.typeName), 
@@ -1393,7 +1520,12 @@
 	                    
 	                        this.props.data.map(function(val, index){
 	                            return (
-	                                React.createElement("li", null, React.createElement("a", null, val['description']))
+	                                React.createElement("li", {className: classes(index)}, 
+	                                    React.createElement("a", {id: idOperation.encodeId('type', index), 
+	                                       href: "javascript:void(0);", 
+	                                       onClick: handler}, val['description']
+	                                    )
+	                                )
 	                            )
 	                        })
 	                    
@@ -1409,11 +1541,15 @@
 	            React.createElement("div", {className: "findingType"}, 
 	                React.createElement(FindingTypeRow, {
 	                    typeName: "物品类别", 
-	                    data: this.props.itemTypes}
+	                    data: this.props.itemTypes, 
+	                    selectedData: this.props.selectedItemTypes, 
+	                    handler: this.props.selectItemTypeHandler}
 	                ), 
 	                React.createElement(FindingTypeRow, {
 	                    typeName: "地点", 
-	                    data: this.props.places}
+	                    data: this.props.places, 
+	                    selectedData: this.props.selectedPlaces, 
+	                    handler: this.props.selectPlaceHandler}
 	                )
 	            )
 	        )
@@ -1476,7 +1612,9 @@
 	        return {
 	            itemTypes: ItemStore.getItems(),
 	            places: PlaceStore.getPlaces(),
-	            findings: FindingStore.getFindingsWithAmount()
+	            findings: FindingStore.getFindingsWithAmount(),
+	            selectedItemTypes: ItemStore.getSelectedItems(),
+	            selectedPlaces: PlaceStore.getSelectedPlaces()
 	        }
 	    },
 
@@ -1497,13 +1635,15 @@
 
 	    _onItemChange: function () {
 	        this.setState({
-	            itemTypes: ItemStore.getItems()
+	            itemTypes: ItemStore.getItems(),
+	            selectedItemTypes: ItemStore.getSelectedItems()
 	        });
 	    },
 
 	    _onPlaceChange: function() {
 	        this.setState({
-	            places: PlaceStore.getPlaces()
+	            places: PlaceStore.getPlaces(),
+	            selectedPlaces: PlaceStore.getSelectedPlaces()
 	        });
 	    },
 
@@ -1513,12 +1653,24 @@
 	        })
 	    },
 
+	    selectItemTypeHandler: function(event) {
+	        InitItemTypeAction.select(idOperation.decodeId(event.target.id));
+	    },
+
+	    selectPlaceHandler: function(event) {
+	        InitPlaceAction.select(idOperation.decodeId(event.target.id));
+	    },
+
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingContent"}, 
 	                React.createElement(FindingType, {
 	                    itemTypes: this.state.itemTypes, 
-	                    places: this.state.places}
+	                    places: this.state.places, 
+	                    selectedItemTypes: this.state.selectedItemTypes, 
+	                    selectedPlaces: this.state.selectedPlaces, 
+	                    selectItemTypeHandler: this.selectItemTypeHandler, 
+	                    selectPlaceHandler: this.selectPlaceHandler}
 	                ), 
 	                React.createElement("hr", null), 
 	                React.createElement(FindingSection, {
@@ -1530,6 +1682,28 @@
 	});
 
 	module.exports = Finding;
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/26.
+	 */
+
+	'use strict';
+
+	var idOperation = {
+	    encodeId: function encodeId(type, id) {
+	        return type + '|' + id;
+	    },
+
+	    decodeId: function decodeId(str) {
+	        return str.split('|')[1];
+	    }
+	};
+
+	module.exports = idOperation;
 
 /***/ }
 /******/ ]);

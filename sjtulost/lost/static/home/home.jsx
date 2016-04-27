@@ -1,4 +1,5 @@
 var InitFindingAction = require('../flux/action/initializationAction').InitFindingAction;
+var InitFoundAction = require('../flux/action/initializationAction').InitFoundAction;
 var FindingStore = require('../flux/store/findingStore');
 var FoundStore = require('../flux/store/foundStore');
 
@@ -77,7 +78,8 @@ var HomePage = React.createClass({
     componentDidMount: function() {
         FindingStore.addChangeListener(this._onFindingChange);
         FoundStore.addChangeListener(this._onFoundChange);
-        InitFindingAction.fetchData()
+        InitFindingAction.fetchData();
+        InitFoundAction.fetchData();
     },
 
     componentWillUnmount: function() {
