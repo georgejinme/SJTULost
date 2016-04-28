@@ -31,26 +31,28 @@ def findings():
     return finding_format(findings_array)
 
 def findings_with_item(item):
-    findings_list = []
+    findings_list = Finding.objects.none()
     for each in item:
         item = Item.get_item_type_by_id(int(each))
-        item_findings = item.finding_set.all().order_by('-lost_time')
-        findings_list = list(set(findings_list).union(set(item_findings)))
-    return findings_list
+        item_findings = item.finding_set.all()
+        findings_list = findings_list | item_findings
+    return findings_list.distinct()
 
 def findings_with_place(place):
-    findings_list = []
+    findings_list = Finding.objects.none()
     for each in place:
         item = Place.get_place_by_id(int(each))
-        place_findings = item.finding_set.all().order_by('-lost_time')
-        findings_list = list(set(findings_list).union(set(place_findings)))
-    return findings_list
+        place_findings = item.finding_set.all()
+        findings_list = findings_list | place_findings
+    return findings_list.distinct()
 
 
 def findings_with_item_and_place(item, place):
     item_findings = findings_with_item(item)
     place_findings = findings_with_place(place)
-    findings_list = list(set(item_findings).intersection(set(place_findings)))
+    print item_findings
+    print place_findings
+    findings_list = (item_findings & place_findings).order_by('-lost_time')
     return finding_format(findings_list)
 
 

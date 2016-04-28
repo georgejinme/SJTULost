@@ -29,27 +29,27 @@ def founds():
 
 
 def founds_with_item(item):
-    founds_list = []
+    founds_list = Found.objects.none()
     for each in item:
         item = Item.get_item_type_by_id(int(each))
-        item_founds = item.found_set.all().order_by('-found_time')
-        founds_list = list(set(founds_list).union(set(item_founds)))
-    return founds_list
+        item_founds = item.found_set.all()
+        founds_list = founds_list | item_founds
+    return founds_list.distinct()
 
 
 def founds_with_place(place):
-    founds_list = []
+    founds_list = Found.objects.none()
     for each in place:
         item = Place.get_place_by_id(int(each))
-        place_founds = item.found_set.all().order_by('-found_time')
-        founds_list = list(set(founds_list).union(set(place_founds)))
-    return founds_list
+        place_founds = item.found_set.all()
+        founds_list = founds_list | place_founds
+    return founds_list.distinct()
 
 
 def founds_with_item_and_place(item, place):
     item_founds = founds_with_item(item)
     place_founds = founds_with_place(place)
-    founds_list = list(set(item_founds).intersection(set(place_founds)))
+    founds_list = (item_founds & place_founds).order_by('-found_time')
     return found_format(founds_list)
 
 
