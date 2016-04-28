@@ -10,6 +10,7 @@ var UserInfoStore = require('../flux/store/userInfoStore');
 
 var Homepage = require('../home/home');
 var Finding = require('../finding/finding');
+var Found = require('../found/found');
 
 var Navigation = React.createClass({
     getInitialState: function() {
@@ -49,7 +50,7 @@ var Navigation = React.createClass({
                                 <a href = "/finding/" target = "_blank">丢失</a>
                             </li>
                             <li>
-                                <a href = "#" target = "_blank">拾物</a>
+                                <a href = "/found/" target = "_blank">拾物</a>
                             </li>
                             <li>
                                 <a href = "#" target = "_blank">排行</a>
@@ -64,7 +65,7 @@ var Navigation = React.createClass({
             </div>
         )
     }
-})
+});
 
 var App = React.createClass({
     render: function() {
@@ -82,9 +83,16 @@ var App = React.createClass({
                     <Finding />
                 </div>
             )
+        } else if (window.location.href == constant['dev-prefix'] + '/found/') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <Found />
+                </div>
+            )
         }
     }
-})
+});
 
 React.render(
     <App />,

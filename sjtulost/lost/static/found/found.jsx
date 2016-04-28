@@ -1,14 +1,14 @@
 var ItemTypeAction = require('../flux/action/initializationAction').ItemTypeAction;
 var PlaceAction = require('../flux/action/initializationAction').PlaceAction;
-var FindingAction = require('../flux/action/initializationAction').FindingAction;
+var FoundAction = require('../flux/action/initializationAction').FoundAction;
 
 var ItemStore = require('../flux/store/itemStore');
 var PlaceStore = require('../flux/store/placeStore');
-var FindingStore = require('../flux/store/findingStore');
+var FoundStore = require('../flux/store/foundStore');
 
 var idOperation = require('../shared/util');
 
-var FindingTypeRow = React.createClass({
+var FoundTypeRow = React.createClass({
     getSelectedClass: function(id) {
         if (this.props.selectedData[id] == true) return 'active';
         else return '';
@@ -19,8 +19,8 @@ var FindingTypeRow = React.createClass({
         var classes = this.getSelectedClass;
         return (
             <div className="row">
-                <p className="col-lg-2 col-md-2 col-sm-2 findingTypeLabel">{ this.props.typeName }</p>
-                <ul className="nav nav-pills col-lg-10 col-md-10 col-sm-10 findingTypeNav">
+                <p className="col-lg-2 col-md-2 col-sm-2 foundTypeLabel">{ this.props.typeName }</p>
+                <ul className="nav nav-pills col-lg-10 col-md-10 col-sm-10 foundTypeNav">
                     {
                         this.props.data.map(function(val, index){
                             return (
@@ -39,17 +39,17 @@ var FindingTypeRow = React.createClass({
     }
 });
 
-var FindingType = React.createClass({
+var FoundType = React.createClass({
     render: function() {
         return (
-            <div className="findingType">
-                <FindingTypeRow
+            <div className="foundType">
+                <FoundTypeRow
                     typeName = "物品类别"
                     data = {this.props.itemTypes}
                     selectedData = {this.props.selectedItemTypes}
                     handler = {this.props.selectItemTypeHandler}
                 />
-                <FindingTypeRow
+                <FoundTypeRow
                     typeName = "地点"
                     data = {this.props.places}
                     selectedData = {this.props.selectedPlaces}
@@ -60,7 +60,7 @@ var FindingType = React.createClass({
     }
 });
 
-var FindingItem = React.createClass({
+var FoundItem = React.createClass({
     badgeColor: function() {
         if (this.props.json['state'] == 0) return 'label-danger label';
         else return 'label-success label';
@@ -72,33 +72,32 @@ var FindingItem = React.createClass({
     },
     render: function() {
         return (
-            <div className="row findingItem">
-                <div className="col-lg-3 col-md-3 col-sm-3 findingItemImage">
+            <div className="row foundItem">
+                <div className="col-lg-3 col-md-3 col-sm-3 foundItemImage">
                     <img src = {this.props.json['img']} className="img-rounded" />
                 </div>
-                <div className="col-lg-9 col-md-9 col-sm-9 findingItemDetail">
-                    <p className="findingItemTitle">{this.props.json['description']}</p>
+                <div className="col-lg-9 col-md-9 col-sm-9 foundItemDetail">
+                    <p className="foundItemTitle">{this.props.json['description']}</p>
                     <span className={this.badgeColor()}>{this.badgeText()}</span>
-                    <p className="findingItemInfo">物品类别: {this.props.json['item_type']}</p>
-                    <p className="findingItemInfo">遗失时间: {this.props.json['time']}</p>
-                    <p className="findingItemInfo">遗失地点: {this.props.json['place']}. {this.props.json['place_detail']}</p>
-                    <p className="findingItemInfo">联系电话: {this.props.json['user_phone']}</p>
-                    <p className="findingItemInfo findingItemPay">酬金: {this.props.json['pay']} 元</p>
+                    <p className="foundItemInfo">物品类别: {this.props.json['item_type']}</p>
+                    <p className="foundItemInfo">拾物时间: {this.props.json['time']}</p>
+                    <p className="foundItemInfo">拾物地点: {this.props.json['place']}. {this.props.json['place_detail']}</p>
+                    <p className="foundItemInfo">联系电话: {this.props.json['user_phone']}</p>
                 </div>
             </div>
         )
     }
 });
 
-var FindingSection = React.createClass({
+var FoundSection = React.createClass({
     render: function() {
         return (
-            <div className="findingSection">
+            <div className="foundSection">
                 {
                     this.props.data.map(function(val, index) {
                         return (
                             <div>
-                                <FindingItem
+                                <FoundItem
                                     json = {val}
                                 />
                                 <hr/>
@@ -111,12 +110,15 @@ var FindingSection = React.createClass({
     }
 });
 
-var Finding = React.createClass({
+
+
+
+var Found = React.createClass({
     getInitialState: function() {
         return {
             itemTypes: ItemStore.getItems(),
             places: PlaceStore.getPlaces(),
-            findings: FindingStore.getFindingsWithAmount(),
+            founds: FoundStore.getFoundsWithAmount(),
             selectedItemTypes: ItemStore.getSelectedItems(),
             selectedPlaces: PlaceStore.getSelectedPlaces()
         }
@@ -125,18 +127,18 @@ var Finding = React.createClass({
     componentDidMount: function() {
         ItemStore.addChangeListener(this._onItemChange);
         PlaceStore.addChangeListener(this._onPlaceChange);
-        FindingStore.addChangeListener(this._onFindingChange);
+        FoundStore.addChangeListener(this._onFoundChange);
         ItemStore.addSelectListener(this._onItemSelectChange);
         PlaceStore.addSelectListener(this._onPlaceSelectChange);
         ItemTypeAction.fetchData();
         PlaceAction.fetchData();
-        FindingAction.fetchData();
+        FoundAction.fetchData();
     },
 
     componentWillUnmount: function() {
         ItemStore.removeChangeListener(this._onItemChange);
         PlaceStore.removeChangeListener(this._onPlaceChange);
-        FindingStore.removeChangeListener(this._onFindingChange);
+        FoundStore.removeChangeListener(this._onFoundChange);
         ItemStore.removeSelectListener(this._onItemSelectChange);
         PlaceStore.removeSelectListener(this._onItemSelectChange)
     },
@@ -159,19 +161,19 @@ var Finding = React.createClass({
         this.setState({
             selectedItemTypes: ItemStore.getSelectedItems()
         });
-        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
     },
 
     _onPlaceSelectChange: function() {
         this.setState({
             selectedPlaces: PlaceStore.getSelectedPlaces()
         });
-        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
     },
 
-    _onFindingChange: function() {
+    _onFoundChange: function() {
         this.setState({
-            findings: FindingStore.getFindingsWithAmount()
+            founds: FoundStore.getFoundsWithAmount()
         })
     },
 
@@ -185,8 +187,8 @@ var Finding = React.createClass({
 
     render: function() {
         return (
-            <div className="findingContent">
-                <FindingType
+            <div className="foundContent">
+                <FoundType
                     itemTypes = {this.state.itemTypes}
                     places = {this.state.places}
                     selectedItemTypes = {this.state.selectedItemTypes}
@@ -195,12 +197,12 @@ var Finding = React.createClass({
                     selectPlaceHandler = {this.selectPlaceHandler}
                 />
                 <hr/>
-                <FindingSection
-                    data = {this.state.findings}
+                <FoundSection
+                    data = {this.state.founds}
                 />
             </div>
         )
     }
 });
 
-module.exports = Finding;
+module.exports = Found;

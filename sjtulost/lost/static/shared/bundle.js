@@ -56,6 +56,7 @@
 
 	var Homepage = __webpack_require__(13);
 	var Finding = __webpack_require__(15);
+	var Found = __webpack_require__(17);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -95,7 +96,7 @@
 	                                React.createElement("a", {href: "/finding/", target: "_blank"}, "丢失")
 	                            ), 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "#", target: "_blank"}, "拾物")
+	                                React.createElement("a", {href: "/found/", target: "_blank"}, "拾物")
 	                            ), 
 	                            React.createElement("li", null, 
 	                                React.createElement("a", {href: "#", target: "_blank"}, "排行")
@@ -110,7 +111,7 @@
 	            )
 	        )
 	    }
-	})
+	});
 
 	var App = React.createClass({displayName: "App",
 	    render: function() {
@@ -128,9 +129,16 @@
 	                    React.createElement(Finding, null)
 	                )
 	            )
+	        } else if (window.location.href == constant['dev-prefix'] + '/found/') {
+	            return (
+	                React.createElement("div", {className: "container"}, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(Found, null)
+	                )
+	            )
 	        }
 	    }
-	})
+	});
 
 	React.render(
 	    React.createElement(App, null),
@@ -189,6 +197,7 @@
 	            break;
 
 	        case 'FOUND_INITIALIZATION':
+	        case 'FOUND_UPDATE':
 	            FoundStore.setFounds(action.foundArray);
 	            FoundStore.emitChange();
 	            break;
@@ -1080,10 +1089,6 @@
 	        this.founds = array;
 	    },
 
-	    appendNewFound: function appendNewFound(json) {
-	        this.founds.append(json);
-	    },
-
 	    emitChange: function emitChange() {
 	        this.emit('change');
 	    },
@@ -1507,6 +1512,17 @@
 	                foundArray: data
 	            });
 	        });
+	    },
+	    fetchDataWithFilter: function fetchDataWithFilter(item, place) {
+	        $.post('/getfoundswithfilter/', {
+	            'item': item,
+	            'place': place
+	        }, function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FOUND_UPDATE',
+	                foundArray: data
+	            });
+	        });
 	    }
 	};
 
@@ -1638,7 +1654,7 @@
 	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
 	                    React.createElement("p", {className: "findingItemInfo"}, "物品类别: ", this.props.json['item_type']), 
 	                    React.createElement("p", {className: "findingItemInfo"}, "遗失时间: ", this.props.json['time']), 
-	                    React.createElement("p", {className: "findingItemInfo"}, "遗失地点: ", this.props.json['place'], ". ", this.props.json['lost_place_detail']), 
+	                    React.createElement("p", {className: "findingItemInfo"}, "遗失地点: ", this.props.json['place'], ". ", this.props.json['place_detail']), 
 	                    React.createElement("p", {className: "findingItemInfo"}, "联系电话: ", this.props.json['user_phone']), 
 	                    React.createElement("p", {className: "findingItemInfo findingItemPay"}, "酬金: ", this.props.json['pay'], " 元")
 	                )
@@ -1783,6 +1799,219 @@
 	};
 
 	module.exports = idOperation;
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ItemTypeAction = __webpack_require__(14).ItemTypeAction;
+	var PlaceAction = __webpack_require__(14).PlaceAction;
+	var FoundAction = __webpack_require__(14).FoundAction;
+
+	var ItemStore = __webpack_require__(11);
+	var PlaceStore = __webpack_require__(12);
+	var FoundStore = __webpack_require__(10);
+
+	var idOperation = __webpack_require__(16);
+
+	var FoundTypeRow = React.createClass({displayName: "FoundTypeRow",
+	    getSelectedClass: function(id) {
+	        if (this.props.selectedData[id] == true) return 'active';
+	        else return '';
+	    },
+
+	    render: function() {
+	        var handler = this.props.handler;
+	        var classes = this.getSelectedClass;
+	        return (
+	            React.createElement("div", {className: "row"}, 
+	                React.createElement("p", {className: "col-lg-2 col-md-2 col-sm-2 foundTypeLabel"},  this.props.typeName), 
+	                React.createElement("ul", {className: "nav nav-pills col-lg-10 col-md-10 col-sm-10 foundTypeNav"}, 
+	                    
+	                        this.props.data.map(function(val, index){
+	                            return (
+	                                React.createElement("li", {className: classes(index)}, 
+	                                    React.createElement("a", {id: idOperation.encodeId('type', val['id']), 
+	                                       href: "javascript:void(0);", 
+	                                       onClick: handler}, val['description']
+	                                    )
+	                                )
+	                            )
+	                        })
+	                    
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var FoundType = React.createClass({displayName: "FoundType",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "foundType"}, 
+	                React.createElement(FoundTypeRow, {
+	                    typeName: "物品类别", 
+	                    data: this.props.itemTypes, 
+	                    selectedData: this.props.selectedItemTypes, 
+	                    handler: this.props.selectItemTypeHandler}
+	                ), 
+	                React.createElement(FoundTypeRow, {
+	                    typeName: "地点", 
+	                    data: this.props.places, 
+	                    selectedData: this.props.selectedPlaces, 
+	                    handler: this.props.selectPlaceHandler}
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var FoundItem = React.createClass({displayName: "FoundItem",
+	    badgeColor: function() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';
+	        else return 'label-success label';
+	    },
+
+	    badgeText: function() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';
+	        else return 'Completed'
+	    },
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "row foundItem"}, 
+	                React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3 foundItemImage"}, 
+	                    React.createElement("img", {src: this.props.json['img'], className: "img-rounded"})
+	                ), 
+	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9 foundItemDetail"}, 
+	                    React.createElement("p", {className: "foundItemTitle"}, this.props.json['description']), 
+	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                    React.createElement("p", {className: "foundItemInfo"}, "物品类别: ", this.props.json['item_type']), 
+	                    React.createElement("p", {className: "foundItemInfo"}, "拾物时间: ", this.props.json['time']), 
+	                    React.createElement("p", {className: "foundItemInfo"}, "拾物地点: ", this.props.json['place'], ". ", this.props.json['place_detail']), 
+	                    React.createElement("p", {className: "foundItemInfo"}, "联系电话: ", this.props.json['user_phone'])
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var FoundSection = React.createClass({displayName: "FoundSection",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "foundSection"}, 
+	                
+	                    this.props.data.map(function(val, index) {
+	                        return (
+	                            React.createElement("div", null, 
+	                                React.createElement(FoundItem, {
+	                                    json: val}
+	                                ), 
+	                                React.createElement("hr", null)
+	                            )
+	                        )
+	                    })
+	                
+	            )
+	        )
+	    }
+	});
+
+
+
+
+	var Found = React.createClass({displayName: "Found",
+	    getInitialState: function() {
+	        return {
+	            itemTypes: ItemStore.getItems(),
+	            places: PlaceStore.getPlaces(),
+	            founds: FoundStore.getFoundsWithAmount(),
+	            selectedItemTypes: ItemStore.getSelectedItems(),
+	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	        }
+	    },
+
+	    componentDidMount: function() {
+	        ItemStore.addChangeListener(this._onItemChange);
+	        PlaceStore.addChangeListener(this._onPlaceChange);
+	        FoundStore.addChangeListener(this._onFoundChange);
+	        ItemStore.addSelectListener(this._onItemSelectChange);
+	        PlaceStore.addSelectListener(this._onPlaceSelectChange);
+	        ItemTypeAction.fetchData();
+	        PlaceAction.fetchData();
+	        FoundAction.fetchData();
+	    },
+
+	    componentWillUnmount: function() {
+	        ItemStore.removeChangeListener(this._onItemChange);
+	        PlaceStore.removeChangeListener(this._onPlaceChange);
+	        FoundStore.removeChangeListener(this._onFoundChange);
+	        ItemStore.removeSelectListener(this._onItemSelectChange);
+	        PlaceStore.removeSelectListener(this._onItemSelectChange)
+	    },
+
+	    _onItemChange: function () {
+	        this.setState({
+	            itemTypes: ItemStore.getItems(),
+	            selectedItemTypes: ItemStore.getSelectedItems()
+	        });
+	    },
+
+	    _onPlaceChange: function() {
+	        this.setState({
+	            places: PlaceStore.getPlaces(),
+	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	        });
+	    },
+
+	    _onItemSelectChange: function() {
+	        this.setState({
+	            selectedItemTypes: ItemStore.getSelectedItems()
+	        });
+	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+	    },
+
+	    _onPlaceSelectChange: function() {
+	        this.setState({
+	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	        });
+	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+	    },
+
+	    _onFoundChange: function() {
+	        this.setState({
+	            founds: FoundStore.getFoundsWithAmount()
+	        })
+	    },
+
+	    selectItemTypeHandler: function(event) {
+	        ItemTypeAction.select(idOperation.decodeId(event.target.id));
+	    },
+
+	    selectPlaceHandler: function(event) {
+	        PlaceAction.select(idOperation.decodeId(event.target.id));
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "foundContent"}, 
+	                React.createElement(FoundType, {
+	                    itemTypes: this.state.itemTypes, 
+	                    places: this.state.places, 
+	                    selectedItemTypes: this.state.selectedItemTypes, 
+	                    selectedPlaces: this.state.selectedPlaces, 
+	                    selectItemTypeHandler: this.selectItemTypeHandler, 
+	                    selectPlaceHandler: this.selectPlaceHandler}
+	                ), 
+	                React.createElement("hr", null), 
+	                React.createElement(FoundSection, {
+	                    data: this.state.founds}
+	                )
+	            )
+	        )
+	    }
+	});
+
+	module.exports = Found;
 
 /***/ }
 /******/ ]);

@@ -21,6 +21,7 @@ AppDispatcher.register(function (action) {
             break;
 
         case 'FOUND_INITIALIZATION':
+        case 'FOUND_UPDATE':
             FoundStore.setFounds(action.foundArray);
             FoundStore.emitChange();
             break;

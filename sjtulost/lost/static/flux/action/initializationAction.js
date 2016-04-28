@@ -35,6 +35,17 @@ var FoundAction = {
                 foundArray: data
             })
         })
+    },
+    fetchDataWithFilter: function(item, place) {
+        $.post('/getfoundswithfilter/',{
+            'item': item,
+            'place': place
+        },function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'FOUND_UPDATE',
+                foundArray: data
+            });
+        });
     }
 };
 

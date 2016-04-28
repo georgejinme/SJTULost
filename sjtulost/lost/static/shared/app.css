@@ -132,5 +132,79 @@
     color: #e08600;
 }
 
+/*
+    For Founding
+*/
+
+.foundContent {
+    margin-top: 90px;
+}
+
+.foundContent .foundType {
+    width: 60%;
+}
+
+.foundContent .foundTypeLabel {
+    height: 30px;
+    line-height: 30px;
+}
+
+.foundContent .foundTypeNav li a{
+    color: brown;
+    height: 30px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.foundContent .foundTypeNav li.active a {
+    color: white;
+    background-color: brown;
+    line-height: 30px;
+    height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.foundSection {
+    margin-top: 30px;
+}
+
+.foundSection .foundItem .foundItemImage img{
+    height: 250px;
+    width: 100%;
+}
+
+.foundSection .foundItem .foundItemDetail {
+    height: 250px;
+}
+
+.foundSection .foundItem .foundItemDetail p {
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+.foundSection .foundItem .foundItemDetail .foundItemTitle {
+    color: brown;
+    line-height:30px;
+    height: 60px;
+    overflow: hidden;
+    font-size: 15px;
+}
+
+.foundSection .foundItem .foundItemDetail .foundItemInfo {
+    line-height: 44px;
+    height:44px;
+    overflow: hidden;
+    font-size: 13px;
+}
+
+.foundSection .foundItem .foundItemDetail .foundItemPay {
+    color: #e08600;
+}
+
 
 

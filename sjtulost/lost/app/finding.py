@@ -34,7 +34,7 @@ def findings_with_item(item):
     findings_list = []
     for each in item:
         item = Item.get_item_type_by_id(int(each))
-        item_findings = item.finding_set.all()
+        item_findings = item.finding_set.all().order_by('-lost_time')
         findings_list = list(set(findings_list).union(set(item_findings)))
     return findings_list
 
@@ -42,14 +42,12 @@ def findings_with_place(place):
     findings_list = []
     for each in place:
         item = Place.get_place_by_id(int(each))
-        place_findings = item.finding_set.all()
+        place_findings = item.finding_set.all().order_by('-lost_time')
         findings_list = list(set(findings_list).union(set(place_findings)))
     return findings_list
 
 
 def findings_with_item_and_place(item, place):
-    print item, place
-    findings_list = []
     item_findings = findings_with_item(item)
     place_findings = findings_with_place(place)
     findings_list = list(set(item_findings).intersection(set(place_findings)))

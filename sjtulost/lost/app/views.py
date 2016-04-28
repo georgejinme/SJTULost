@@ -8,3 +8,5 @@ def finding(request):
 def home(request):
     return render(request, 'main.html')
 
+def found(request):
+    return render(request, 'main.html')
