@@ -19,6 +19,7 @@ def found_format(founds_array):
                          'time': time.timeString(f.found_time),
                          'place': f.place_id.description,
                          'place_detail': f.place_detail,
+                         'detail': f.detail,
                          'state': f.state}) for f in founds_array]
     return founds_dict
 

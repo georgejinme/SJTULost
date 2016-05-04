@@ -20,6 +20,7 @@ var FindingStore = assign({}, EventEmitter.prototype, {
         time:
         place:
         place_detail:
+        detail:
         pay:
         state:
      }

@@ -54,10 +54,10 @@
 	var JaccountLoginActions = __webpack_require__(1);
 	var UserInfoStore = __webpack_require__(6);
 
-	var Homepage = __webpack_require__(13);
-	var Finding = __webpack_require__(15);
-	var Found = __webpack_require__(17);
-	var Rank = __webpack_require__(18);
+	var Homepage = __webpack_require__(14);
+	var Finding = __webpack_require__(16);
+	var Found = __webpack_require__(18);
+	var Rank = __webpack_require__(19);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -190,7 +190,7 @@
 	var FoundStore = __webpack_require__(10);
 	var ItemStore = __webpack_require__(11);
 	var PlaceStore = __webpack_require__(12);
-	var RankStore = __webpack_require__(19);
+	var RankStore = __webpack_require__(13);
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
@@ -1030,6 +1030,7 @@
 	        time:
 	        place:
 	        place_detail:
+	        detail:
 	        pay:
 	        state:
 	     }
@@ -1088,6 +1089,7 @@
 	         time:
 	         place:
 	         place_detail:
+	         detail:
 	         state:
 	     }
 	     */
@@ -1355,8 +1357,54 @@
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var FindingAction = __webpack_require__(14).FindingAction;
-	var FoundAction = __webpack_require__(14).FoundAction;
+	/**
+	 * Created by gougoumemeda on 16/5/4.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+	var RankStore = assign({}, EventEmitter.prototype, {
+	    /*
+	        each rank:
+	        {
+	            name:
+	            student_id:
+	            times:
+	        }
+	     */
+	    ranks: [],
+
+	    getRanks: function getRanks() {
+	        return this.ranks;
+	    },
+
+	    setRanks: function setRanks(array) {
+	        this.ranks = array;
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+	});
+
+	module.exports = RankStore;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var FindingAction = __webpack_require__(15).FindingAction;
+	var FoundAction = __webpack_require__(15).FoundAction;
 	var FindingStore = __webpack_require__(9);
 	var FoundStore = __webpack_require__(10);
 
@@ -1484,7 +1532,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1594,18 +1642,18 @@
 	};
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ItemTypeAction = __webpack_require__(14).ItemTypeAction;
-	var PlaceAction = __webpack_require__(14).PlaceAction;
-	var FindingAction = __webpack_require__(14).FindingAction;
+	var ItemTypeAction = __webpack_require__(15).ItemTypeAction;
+	var PlaceAction = __webpack_require__(15).PlaceAction;
+	var FindingAction = __webpack_require__(15).FindingAction;
 
 	var ItemStore = __webpack_require__(11);
 	var PlaceStore = __webpack_require__(12);
 	var FindingStore = __webpack_require__(9);
 
-	var idOperation = __webpack_require__(16);
+	var idOperation = __webpack_require__(17);
 
 	var FindingTypeRow = React.createClass({displayName: "FindingTypeRow",
 	    getSelectedClass: function(index) {
@@ -1805,7 +1853,7 @@
 	module.exports = Finding;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	/**
@@ -1827,18 +1875,18 @@
 	module.exports = idOperation;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ItemTypeAction = __webpack_require__(14).ItemTypeAction;
-	var PlaceAction = __webpack_require__(14).PlaceAction;
-	var FoundAction = __webpack_require__(14).FoundAction;
+	var ItemTypeAction = __webpack_require__(15).ItemTypeAction;
+	var PlaceAction = __webpack_require__(15).PlaceAction;
+	var FoundAction = __webpack_require__(15).FoundAction;
 
 	var ItemStore = __webpack_require__(11);
 	var PlaceStore = __webpack_require__(12);
 	var FoundStore = __webpack_require__(10);
 
-	var idOperation = __webpack_require__(16);
+	var idOperation = __webpack_require__(17);
 
 	var FoundTypeRow = React.createClass({displayName: "FoundTypeRow",
 	    getSelectedClass: function(index) {
@@ -2040,12 +2088,12 @@
 	module.exports = Found;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	var RankAction = __webpack_require__(14).RankAction;
-	var RankStore = __webpack_require__(19);
+	var RankAction = __webpack_require__(15).RankAction;
+	var RankStore = __webpack_require__(13);
 
 	var RankBody = React.createClass({displayName: "RankBody",
 	    getRankClass: function(index) {
@@ -2142,52 +2190,6 @@
 
 	module.exports = Rank;
 
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gougoumemeda on 16/5/4.
-	 */
-
-	'use strict';
-
-	var EventEmitter = __webpack_require__(7).EventEmitter;
-	var assign = __webpack_require__(8);
-	var RankStore = assign({}, EventEmitter.prototype, {
-	    /*
-	        each rank:
-	        {
-	            name:
-	            student_id:
-	            times:
-	        }
-	     */
-	    ranks: [],
-
-	    getRanks: function getRanks() {
-	        return this.ranks;
-	    },
-
-	    setRanks: function setRanks(array) {
-	        this.ranks = array;
-	    },
-
-	    emitChange: function emitChange() {
-	        this.emit('change');
-	    },
-
-	    addChangeListener: function addChangeListener(callback) {
-	        this.on('change', callback);
-	    },
-
-	    removeChangeListener: function removeChangeListener(callback) {
-	        this.removeListener('change', callback);
-	    }
-	});
-
-	module.exports = RankStore;
 
 /***/ }
 /******/ ]);

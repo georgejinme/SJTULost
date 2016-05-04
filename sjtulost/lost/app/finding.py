@@ -22,6 +22,7 @@ def finding_format(findings_array):
                            'time': time.timeString(f.lost_time),
                            'place': finding_places(f),
                            'place_detail': f.place_detail,
+                           'detail': f.detail,
                            'pay': f.pay,
                            'state': f.state}) for f in findings_array]
     return findings_dict
