@@ -206,5 +206,27 @@
     color: #e08600;
 }
 
+/*
+   rank
+*/
+.rankContent{
+    margin-top: 90px;
+}
+
+.rankContent .rankTable {
+    text-align: center;
+}
+
+.rankContent .rankBody tr{
+    background-color: white !important;
+}
+
+.rankContent .rankBody tr:hover{
+    background-color: #f5f5f5 !important;
+}
+
+
+
+
 
 

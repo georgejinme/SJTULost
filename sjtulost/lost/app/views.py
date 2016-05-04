@@ -10,3 +10,6 @@ def home(request):
 
 def found(request):
     return render(request, 'main.html')
+
+def rank(request):
+    return render(request, 'main.html')

@@ -22,11 +22,13 @@ urlpatterns = [
     url(r'^$', 'lost.app.views.home', name='home'),
     url(r'^finding/', 'lost.app.views.finding', name='finding'),
     url(r'^found/', 'lost.app.views.found', name='found'),
+    url(r'^rank/', 'lost.app.views.rank', name='rank'),
 
     url(r'^getfindings/', 'lost.app.finding.get_all_findings', name='get_all_findings'),
     url(r'^getfounds/', 'lost.app.found.get_all_founds', name='get_all_founds'),
     url(r'^getitems/', 'lost.app.item.get_all_item_types', name = 'get_all_item_types'),
     url(r'^getplaces/', 'lost.app.place.get_all_places', name='get_all_places'),
+    url(r'^getrank/', 'lost.app.rank.get_all_ranks', name='get_all_ranks'),
 
     url(r'^getfindingswithfilter/', 'lost.app.finding.get_findings_with_filter', name='get_findings_with_filter'),
     url(r'^getfoundswithfilter/', 'lost.app.found.get_founds_with_filter', name='get_founds_with_filter'),

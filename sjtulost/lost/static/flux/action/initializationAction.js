@@ -85,9 +85,21 @@ var PlaceAction = {
     }
 };
 
+var RankAction = {
+    fetchData: function() {
+        $.get('/getrank/', function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'RANK_INITIALIZATION',
+                ranks: data
+            })
+        })
+    }
+};
+
 module.exports = {
     FindingAction: FindingAction,
     FoundAction: FoundAction,
     ItemTypeAction: ItemTypeAction,
-    PlaceAction: PlaceAction
+    PlaceAction: PlaceAction,
+    RankAction: RankAction
 };

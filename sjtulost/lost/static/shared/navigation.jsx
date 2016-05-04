@@ -11,6 +11,7 @@ var UserInfoStore = require('../flux/store/userInfoStore');
 var Homepage = require('../home/home');
 var Finding = require('../finding/finding');
 var Found = require('../found/found');
+var Rank = require('../rank/rank');
 
 var Navigation = React.createClass({
     getInitialState: function() {
@@ -53,7 +54,7 @@ var Navigation = React.createClass({
                                 <a href = "/found/" target = "_blank">拾物</a>
                             </li>
                             <li>
-                                <a href = "#" target = "_blank">排行</a>
+                                <a href = "/rank/" target = "_blank">排行</a>
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
@@ -88,6 +89,13 @@ var App = React.createClass({
                 <div className="container">
                     <Navigation />
                     <Found />
+                </div>
+            )
+        } else if (window.location.href == constant['dev-prefix'] + '/rank/') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <Rank />
                 </div>
             )
         }

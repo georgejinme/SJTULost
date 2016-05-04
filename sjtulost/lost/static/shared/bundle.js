@@ -57,6 +57,7 @@
 	var Homepage = __webpack_require__(13);
 	var Finding = __webpack_require__(15);
 	var Found = __webpack_require__(17);
+	var Rank = __webpack_require__(18);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -99,7 +100,7 @@
 	                                React.createElement("a", {href: "/found/", target: "_blank"}, "拾物")
 	                            ), 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "#", target: "_blank"}, "排行")
+	                                React.createElement("a", {href: "/rank/", target: "_blank"}, "排行")
 	                            )
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
@@ -134,6 +135,13 @@
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Found, null)
+	                )
+	            )
+	        } else if (window.location.href == constant['dev-prefix'] + '/rank/') {
+	            return (
+	                React.createElement("div", {className: "container"}, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(Rank, null)
 	                )
 	            )
 	        }
@@ -182,6 +190,7 @@
 	var FoundStore = __webpack_require__(10);
 	var ItemStore = __webpack_require__(11);
 	var PlaceStore = __webpack_require__(12);
+	var RankStore = __webpack_require__(19);
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
@@ -220,6 +229,11 @@
 	        case 'PLACE_SELECT':
 	            PlaceStore.selectPlace(action.id);
 	            PlaceStore.emitSelect();
+	            break;
+
+	        case 'RANK_INITIALIZATION':
+	            RankStore.setRanks(action.ranks);
+	            RankStore.emitChange();
 	            break;
 
 	        default:
@@ -1560,11 +1574,23 @@
 	    }
 	};
 
+	var RankAction = {
+	    fetchData: function fetchData() {
+	        $.get('/getrank/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'RANK_INITIALIZATION',
+	                ranks: data
+	            });
+	        });
+	    }
+	};
+
 	module.exports = {
 	    FindingAction: FindingAction,
 	    FoundAction: FoundAction,
 	    ItemTypeAction: ItemTypeAction,
-	    PlaceAction: PlaceAction
+	    PlaceAction: PlaceAction,
+	    RankAction: RankAction
 	};
 
 /***/ },
@@ -2012,6 +2038,149 @@
 	});
 
 	module.exports = Found;
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var RankAction = __webpack_require__(14).RankAction;
+	var RankStore = __webpack_require__(19);
+
+	var RankBody = React.createClass({displayName: "RankBody",
+	    render: function() {
+	        return (
+	            React.createElement("tbody", {className: "rankBody"}, 
+	            
+	                this.props.data.map(function(val, index) {
+	                    return (
+	                        React.createElement("tr", null, 
+	                            React.createElement("td", null, React.createElement("span", {className: "label label-success"}, val['no'])), 
+	                            React.createElement("td", null, val['name']), 
+	                            React.createElement("td", null, val['student_id']), 
+	                            React.createElement("td", null, val['times'])
+	                        )
+	                    )
+	                })
+	            
+	            )
+	        )
+	    }
+	});
+
+	var RankHeader = React.createClass({displayName: "RankHeader",
+	    render: function() {
+	        return (
+	            React.createElement("thead", null, 
+	                React.createElement("tr", null, 
+	                    React.createElement("td", null, "排行"), 
+	                    React.createElement("td", null, "姓名"), 
+	                    React.createElement("td", null, "学号"), 
+	                    React.createElement("td", null, "拾物次数")
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var RankTable = React.createClass({displayName: "RankTable",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "rankTable"}, 
+	                React.createElement("table", {className: "table table-striped table-hover "}, 
+	                    React.createElement(RankHeader, null), 
+	                    React.createElement(RankBody, {
+	                        data: this.props.ranks}
+	                    )
+	                )
+	            )
+	        )
+	    }
+	});
+
+
+	var Rank = React.createClass({displayName: "Rank",
+	    getInitialState: function() {
+	        return {
+	            ranks: RankStore.getRanks()
+	        }
+	    },
+
+	    componentDidMount: function() {
+	        RankAction.fetchData();
+	        RankStore.addChangeListener(this._onRanksChange)
+	    },
+
+	    componentWillUnmount: function() {
+	        RankStore.removeChangeListener(this._onRanksChange)
+	    },
+
+	    _onRanksChange: function() {
+	        this.setState({
+	            ranks: RankStore.getRanks()
+	        })
+	    },
+
+	    render: function(){
+	        return (
+	            React.createElement("div", {className: "rankContent"}, 
+	                React.createElement(RankTable, {
+	                    ranks: this.state.ranks}
+	                )
+	            )
+	        )
+	    }
+	});
+
+	module.exports = Rank;
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/5/4.
+	 */
+
+	'use strict';
+
+	var EventEmitter = __webpack_require__(7).EventEmitter;
+	var assign = __webpack_require__(8);
+	var RankStore = assign({}, EventEmitter.prototype, {
+	    /*
+	        each rank:
+	        {
+	            no:
+	            name:
+	            student_id:
+	            times:
+	        }
+	     */
+	    ranks: [],
+
+	    getRanks: function getRanks() {
+	        return this.ranks;
+	    },
+
+	    setRanks: function setRanks(array) {
+	        this.ranks = array;
+	    },
+
+	    emitChange: function emitChange() {
+	        this.emit('change');
+	    },
+
+	    addChangeListener: function addChangeListener(callback) {
+	        this.on('change', callback);
+	    },
+
+	    removeChangeListener: function removeChangeListener(callback) {
+	        this.removeListener('change', callback);
+	    }
+	});
+
+	module.exports = RankStore;
 
 /***/ }
 /******/ ]);

@@ -6,6 +6,7 @@ var FindingStore = require('../store/findingStore');
 var FoundStore = require('../store/foundStore');
 var ItemStore = require('../store/itemStore');
 var PlaceStore = require('../store/placeStore');
+var RankStore = require('../store/rankStore');
 
 AppDispatcher.register(function (action) {
     switch(action.actionType) {
@@ -44,6 +45,11 @@ AppDispatcher.register(function (action) {
         case 'PLACE_SELECT':
             PlaceStore.selectPlace(action.id);
             PlaceStore.emitSelect();
+            break;
+
+        case 'RANK_INITIALIZATION':
+            RankStore.setRanks(action.ranks);
+            RankStore.emitChange();
             break;
 
         default:
