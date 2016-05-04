@@ -3,14 +3,22 @@ var RankAction = require('../flux/action/initializationAction').RankAction;
 var RankStore = require('../flux/store/rankStore');
 
 var RankBody = React.createClass({
+    getRankClass: function(index) {
+        if (index == 1) return "label label-success";
+        else if (index <= 3) return "label label-primary";
+        else if (index <= 10) return "label label-warning";
+        else return "label label-default"
+    },
+
     render: function() {
+        var getRankClass = this.getRankClass;
         return (
             <tbody className="rankBody">
             {
                 this.props.data.map(function(val, index) {
                     return (
                         <tr>
-                            <td><span className="label label-success">{val['no']}</span></td>
+                            <td><span className={getRankClass(index + 1)}>{index + 1}</span></td>
                             <td>{val['name']}</td>
                             <td>{val['student_id']}</td>
                             <td>{val['times']}</td>

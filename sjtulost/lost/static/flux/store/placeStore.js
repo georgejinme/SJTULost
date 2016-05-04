@@ -20,16 +20,16 @@ var PlaceStore = assign({}, EventEmitter.prototype, {
     places: [],
     selectedPlaces: [],
 
-    selectPlace: function(id) {
+    selectPlace: function(index) {
         if (this.selectedPlaces[0] == true) {
-            if (id != 0) {
+            if (index != 0) {
                 this.selectedPlaces[0] = false;
-                this.selectedPlaces[id] = true;
+                this.selectedPlaces[index] = true;
             }
         } else {
-            if (id != 0) {
-                if (this.countSelectedPlaces() > 1 || this.selectedPlaces[id] == false){
-                    this.selectedPlaces[id] = !this.selectedPlaces[id];
+            if (index != 0) {
+                if (this.countSelectedPlaces() > 1 || this.selectedPlaces[index] == false){
+                    this.selectedPlaces[index] = !this.selectedPlaces[index];
                 }
             } else {
                 this.clearSelectedPlaces();

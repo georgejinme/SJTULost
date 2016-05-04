@@ -1145,16 +1145,16 @@
 	    items: [],
 	    selectedItems: [],
 
-	    selectItem: function selectItem(id) {
+	    selectItem: function selectItem(index) {
 	        if (this.selectedItems[0] == true) {
-	            if (id != 0) {
+	            if (index != 0) {
 	                this.selectedItems[0] = false;
-	                this.selectedItems[id] = true;
+	                this.selectedItems[index] = true;
 	            }
 	        } else {
-	            if (id != 0) {
-	                if (this.countSelectedItems() > 1 || this.selectedItems[id] == false) {
-	                    this.selectedItems[id] = !this.selectedItems[id];
+	            if (index != 0) {
+	                if (this.countSelectedItems() > 1 || this.selectedItems[index] == false) {
+	                    this.selectedItems[index] = !this.selectedItems[index];
 	                }
 	            } else {
 	                this.clearSelectedItems();
@@ -1261,16 +1261,16 @@
 	    places: [],
 	    selectedPlaces: [],
 
-	    selectPlace: function selectPlace(id) {
+	    selectPlace: function selectPlace(index) {
 	        if (this.selectedPlaces[0] == true) {
-	            if (id != 0) {
+	            if (index != 0) {
 	                this.selectedPlaces[0] = false;
-	                this.selectedPlaces[id] = true;
+	                this.selectedPlaces[index] = true;
 	            }
 	        } else {
-	            if (id != 0) {
-	                if (this.countSelectedPlaces() > 1 || this.selectedPlaces[id] == false) {
-	                    this.selectedPlaces[id] = !this.selectedPlaces[id];
+	            if (index != 0) {
+	                if (this.countSelectedPlaces() > 1 || this.selectedPlaces[index] == false) {
+	                    this.selectedPlaces[index] = !this.selectedPlaces[index];
 	                }
 	            } else {
 	                this.clearSelectedPlaces();
@@ -1608,8 +1608,8 @@
 	var idOperation = __webpack_require__(16);
 
 	var FindingTypeRow = React.createClass({displayName: "FindingTypeRow",
-	    getSelectedClass: function(id) {
-	        if (this.props.selectedData[id] == true) return 'active';
+	    getSelectedClass: function(index) {
+	        if (this.props.selectedData[index] == true) return 'active';
 	        else return '';
 	    },
 
@@ -1624,7 +1624,7 @@
 	                        this.props.data.map(function(val, index){
 	                            return (
 	                                React.createElement("li", {className: classes(index)}, 
-	                                    React.createElement("a", {id: idOperation.encodeId('type', val['id']), 
+	                                    React.createElement("a", {id: idOperation.encodeId('type', index), 
 	                                       href: "javascript:void(0);", 
 	                                       onClick: handler}, val['description']
 	                                    )
@@ -1841,8 +1841,8 @@
 	var idOperation = __webpack_require__(16);
 
 	var FoundTypeRow = React.createClass({displayName: "FoundTypeRow",
-	    getSelectedClass: function(id) {
-	        if (this.props.selectedData[id] == true) return 'active';
+	    getSelectedClass: function(index) {
+	        if (this.props.selectedData[index] == true) return 'active';
 	        else return '';
 	    },
 
@@ -1857,7 +1857,7 @@
 	                        this.props.data.map(function(val, index){
 	                            return (
 	                                React.createElement("li", {className: classes(index)}, 
-	                                    React.createElement("a", {id: idOperation.encodeId('type', val['id']), 
+	                                    React.createElement("a", {id: idOperation.encodeId('type', index), 
 	                                       href: "javascript:void(0);", 
 	                                       onClick: handler}, val['description']
 	                                    )
@@ -2048,14 +2048,22 @@
 	var RankStore = __webpack_require__(19);
 
 	var RankBody = React.createClass({displayName: "RankBody",
+	    getRankClass: function(index) {
+	        if (index == 1) return "label label-success";
+	        else if (index <= 3) return "label label-primary";
+	        else if (index <= 10) return "label label-warning";
+	        else return "label label-default"
+	    },
+
 	    render: function() {
+	        var getRankClass = this.getRankClass;
 	        return (
 	            React.createElement("tbody", {className: "rankBody"}, 
 	            
 	                this.props.data.map(function(val, index) {
 	                    return (
 	                        React.createElement("tr", null, 
-	                            React.createElement("td", null, React.createElement("span", {className: "label label-success"}, val['no'])), 
+	                            React.createElement("td", null, React.createElement("span", {className: getRankClass(index + 1)}, index + 1)), 
 	                            React.createElement("td", null, val['name']), 
 	                            React.createElement("td", null, val['student_id']), 
 	                            React.createElement("td", null, val['times'])
@@ -2151,7 +2159,6 @@
 	    /*
 	        each rank:
 	        {
-	            no:
 	            name:
 	            student_id:
 	            times:

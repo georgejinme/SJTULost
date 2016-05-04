@@ -20,16 +20,16 @@ var ItemStore = assign({}, EventEmitter.prototype, {
     items: [],
     selectedItems: [],
 
-    selectItem: function(id) {
+    selectItem: function(index) {
         if (this.selectedItems[0] == true) {
-            if (id != 0) {
+            if (index != 0) {
                 this.selectedItems[0] = false;
-                this.selectedItems[id] = true;
+                this.selectedItems[index] = true;
             }
         } else {
-            if (id != 0) {
-                if (this.countSelectedItems() > 1 || this.selectedItems[id] == false){
-                    this.selectedItems[id] = !this.selectedItems[id];
+            if (index != 0) {
+                if (this.countSelectedItems() > 1 || this.selectedItems[index] == false){
+                    this.selectedItems[index] = !this.selectedItems[index];
                 }
             } else {
                 this.clearSelectedItems();

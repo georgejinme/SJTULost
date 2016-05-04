@@ -9,8 +9,8 @@ var FindingStore = require('../flux/store/findingStore');
 var idOperation = require('../shared/util');
 
 var FindingTypeRow = React.createClass({
-    getSelectedClass: function(id) {
-        if (this.props.selectedData[id] == true) return 'active';
+    getSelectedClass: function(index) {
+        if (this.props.selectedData[index] == true) return 'active';
         else return '';
     },
 
@@ -25,7 +25,7 @@ var FindingTypeRow = React.createClass({
                         this.props.data.map(function(val, index){
                             return (
                                 <li className={classes(index)}>
-                                    <a id = {idOperation.encodeId('type', val['id'])}
+                                    <a id = {idOperation.encodeId('type', index)}
                                        href = "javascript:void(0);"
                                        onClick = {handler}>{val['description']}
                                     </a>

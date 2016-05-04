@@ -6,18 +6,11 @@ import lost.util.time as time
 
 
 def get_all_ranks(request):
-    ranks_array = [
-        {
-            'no': 1,
-            'name': '金嘉骏',
-            'student_id': 5130309578,
-            'times': 4
-        },
-        {
-            'no': 2,
-            'name': '胡逸飞',
-            'student_id': 5130309538,
-            'times': 1
-        }
-    ]
-    return JsonResponse(ranks_array, safe=False)
+    users = User.objects.all()
+    users_dict = [dict({
+        'name': u.name,
+        'student_id': u.student_number,
+        'times': len(u.finding_set.all())
+    }) for u in users]
+    sorted_rank = sorted(users_dict, key=lambda x: x['times'], reverse=True)
+    return JsonResponse(sorted_rank, safe=False)

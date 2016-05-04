@@ -9,7 +9,6 @@ var RankStore = assign({}, EventEmitter.prototype, {
     /*
         each rank:
         {
-            no:
             name:
             student_id:
             times:
