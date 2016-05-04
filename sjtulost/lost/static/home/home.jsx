@@ -18,7 +18,7 @@ var HomepageItems = React.createClass({
     render: function() {
         return (
             <div className="homepageItem">
-                <a href = {'/' + this.props.url + '/' + this.props.json['id']} >
+                <a href = {'/' + this.props.url + '/' + this.props.json['id']} target="_blank">
                 <span className={this.badgeColor()}>{this.badgeText()}</span>
                 <img src={this.props.json['img']} className="img-rounded homepageItemImage" />
                 <div className="homepageItemDetail">
@@ -34,7 +34,7 @@ var HomepageItems = React.createClass({
 
 var HomepageRow = React.createClass({
     render: function() {
-        var url = this.props.url
+        var url = this.props.url;
         return (
             <div className="row">
                 {

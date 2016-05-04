@@ -20,9 +20,11 @@ urlpatterns = [
     #url(r'^initdb/', 'lost.db.initdb.init_database', name='init_database'),
 
     url(r'^$', 'lost.app.views.home', name='home'),
-    url(r'^finding/', 'lost.app.views.finding', name='finding'),
-    url(r'^found/', 'lost.app.views.found', name='found'),
-    url(r'^rank/', 'lost.app.views.rank', name='rank'),
+    url(r'^finding/$', 'lost.app.views.finding', name='finding'),
+    url(r'^found/$', 'lost.app.views.found', name='found'),
+    url(r'^rank/$', 'lost.app.views.rank', name='rank'),
+
+    url(r'^findingview/(\d+)/$', 'lost.app.views.findingview', name='findingview'),
 
     url(r'^getfindings/', 'lost.app.finding.get_all_findings', name='get_all_findings'),
     url(r'^getfounds/', 'lost.app.found.get_all_founds', name='get_all_founds'),

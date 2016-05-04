@@ -58,6 +58,7 @@
 	var Finding = __webpack_require__(16);
 	var Found = __webpack_require__(18);
 	var Rank = __webpack_require__(19);
+	var FindingView = __webpack_require__(20);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -115,33 +116,42 @@
 	});
 
 	var App = React.createClass({displayName: "App",
+	    url: window.location.href.split('/')[3],
+
 	    render: function() {
-	        if (window.location.href == constant['dev-prefix'] + '/') {
+	        if (this.url == '') {
 	            return (
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Homepage, null)
 	                )
 	            )
-	        } else if (window.location.href == constant['dev-prefix'] + '/finding/'){
+	        } else if (this.url == 'finding'){
 	            return (
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Finding, null)
 	                )
 	            )
-	        } else if (window.location.href == constant['dev-prefix'] + '/found/') {
+	        } else if (this.url == 'found') {
 	            return (
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Found, null)
 	                )
 	            )
-	        } else if (window.location.href == constant['dev-prefix'] + '/rank/') {
+	        } else if (this.url == 'rank') {
 	            return (
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Rank, null)
+	                )
+	            )
+	        } else if (this.url == 'findingview') {
+	            return (
+	                React.createElement("div", {className: "container"}, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(FindingView, null)
 	                )
 	            )
 	        }
@@ -1423,7 +1433,7 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "homepageItem"}, 
-	                React.createElement("a", {href: '/' + this.props.url + '/' + this.props.json['id']}, 
+	                React.createElement("a", {href: '/' + this.props.url + '/' + this.props.json['id'], target: "_blank"}, 
 	                React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
 	                React.createElement("img", {src: this.props.json['img'], className: "img-rounded homepageItemImage"}), 
 	                React.createElement("div", {className: "homepageItemDetail"}, 
@@ -1439,7 +1449,7 @@
 
 	var HomepageRow = React.createClass({displayName: "HomepageRow",
 	    render: function() {
-	        var url = this.props.url
+	        var url = this.props.url;
 	        return (
 	            React.createElement("div", {className: "row"}, 
 	                
@@ -2197,6 +2207,60 @@
 
 	module.exports = Rank;
 
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	
+	var FindingViewBody = React.createClass({displayName: "FindingViewBody",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "findingViewBody"}, 
+	                React.createElement("p", null, "title"), 
+	                React.createElement("img", {src: "/static/image/qwt.jpg"}), 
+	                React.createElement("hr", null), 
+	                React.createElement("p", null, "ajsdfkjas ewjfwljeflkjdflskdjflsdkfjlekjwfjlksdnvklsnvlsknfajhldfkajhsdfkajsdhf")
+	            )
+	        )
+	    }
+	});
+
+	var FindingViewHeader = React.createClass({displayName: "FindingViewHeader",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "findingViewHeader"}, 
+	                React.createElement("span", {className: "label-danger label"}, "Uncompleted"), 
+	                React.createElement("p", null, "物品类别: 手表"), 
+	                React.createElement("p", null, "遗失时间: 2015/02/03"), 
+	                React.createElement("p", null, "遗失地点: 二餐"), 
+	                React.createElement("p", null, "详细位置: 二餐新疆餐厅!dssssdsdfsdfsdfsdf东方闪电是第三点收到"), 
+	                React.createElement("p", null, "联系电话: 19102391029"), 
+	                React.createElement("p", null, "酬金: 80 元"), 
+	                React.createElement("a", {href: "#", className: "btn btn-success"}, "我捡到了!")
+	            )
+	        )
+	    }
+	});
+
+	var FindingView = React.createClass({displayName: "FindingView",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "findingViewContent"}, 
+	                React.createElement("div", {className: "row"}, 
+	                    React.createElement("div", {className: "col-lg-8 col-md-8 col-sm-8"}, 
+	                        React.createElement(FindingViewBody, null)
+	                    ), 
+	                    React.createElement("div", {className: "col-lg-4 col-md-4 col-sm-4"}, 
+	                        React.createElement(FindingViewHeader, null)
+	                    )
+	                )
+	            )
+	        )
+	    }
+	});
+
+	module.exports = FindingView;
 
 /***/ }
 /******/ ]);

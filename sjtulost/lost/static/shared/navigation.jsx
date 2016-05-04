@@ -12,6 +12,7 @@ var Homepage = require('../home/home');
 var Finding = require('../finding/finding');
 var Found = require('../found/found');
 var Rank = require('../rank/rank');
+var FindingView = require('../finding/findingview');
 
 var Navigation = React.createClass({
     getInitialState: function() {
@@ -69,33 +70,42 @@ var Navigation = React.createClass({
 });
 
 var App = React.createClass({
+    url: window.location.href.split('/')[3],
+
     render: function() {
-        if (window.location.href == constant['dev-prefix'] + '/') {
+        if (this.url == '') {
             return (
                 <div className="container">
                     <Navigation />
                     <Homepage />
                 </div>
             )
-        } else if (window.location.href == constant['dev-prefix'] + '/finding/'){
+        } else if (this.url == 'finding'){
             return (
                 <div className="container">
                     <Navigation />
                     <Finding />
                 </div>
             )
-        } else if (window.location.href == constant['dev-prefix'] + '/found/') {
+        } else if (this.url == 'found') {
             return (
                 <div className="container">
                     <Navigation />
                     <Found />
                 </div>
             )
-        } else if (window.location.href == constant['dev-prefix'] + '/rank/') {
+        } else if (this.url == 'rank') {
             return (
                 <div className="container">
                     <Navigation />
                     <Rank />
+                </div>
+            )
+        } else if (this.url == 'findingview') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <FindingView />
                 </div>
             )
         }
