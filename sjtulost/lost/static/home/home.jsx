@@ -18,6 +18,7 @@ var HomepageItems = React.createClass({
     render: function() {
         return (
             <div className="homepageItem">
+                <a href = {'/' + this.props.url + '/' + this.props.json['id']} >
                 <span className={this.badgeColor()}>{this.badgeText()}</span>
                 <img src={this.props.json['img']} className="img-rounded homepageItemImage" />
                 <div className="homepageItemDetail">
@@ -25,6 +26,7 @@ var HomepageItems = React.createClass({
                     <p className="homepageItemDetailInfo">遗失时间: {this.props.json['time']}</p>
                     <p className="homepageItemDetailInfo">遗失地点: {this.props.json['place']}</p>
                 </div>
+                    </a>
             </div>
         )
     }
@@ -32,6 +34,7 @@ var HomepageItems = React.createClass({
 
 var HomepageRow = React.createClass({
     render: function() {
+        var url = this.props.url
         return (
             <div className="row">
                 {
@@ -40,6 +43,7 @@ var HomepageRow = React.createClass({
                         <div className="col-lg-3 col-md-3 col-sm-3">
                             <HomepageItems
                                 json = {val}
+                                url = {url}
                             />
                         </div>
                     )
@@ -58,6 +62,7 @@ var HomepageSection = React.createClass({
                 <hr/>
                 <HomepageRow
                     data = {this.props.data}
+                    url = {this.props.url}
                 />
             </div>
         )
@@ -105,6 +110,7 @@ var HomePage = React.createClass({
                 <HomepageSection
                     title = "最新丢失"
                     data = {this.state.findings}
+                    url = 'findingview'
                 />
                 <br/>
                 <br/>
@@ -112,6 +118,7 @@ var HomePage = React.createClass({
                 <HomepageSection
                     title = "最新拾遗"
                     data = {this.state.founds}
+                    url = 'foundview'
                 />
                 <br/>
                 <br/>

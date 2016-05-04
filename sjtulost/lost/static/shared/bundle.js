@@ -1423,6 +1423,7 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "homepageItem"}, 
+	                React.createElement("a", {href: '/' + this.props.url + '/' + this.props.json['id']}, 
 	                React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
 	                React.createElement("img", {src: this.props.json['img'], className: "img-rounded homepageItemImage"}), 
 	                React.createElement("div", {className: "homepageItemDetail"}, 
@@ -1430,6 +1431,7 @@
 	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
 	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['place'])
 	                )
+	                    )
 	            )
 	        )
 	    }
@@ -1437,6 +1439,7 @@
 
 	var HomepageRow = React.createClass({displayName: "HomepageRow",
 	    render: function() {
+	        var url = this.props.url
 	        return (
 	            React.createElement("div", {className: "row"}, 
 	                
@@ -1444,7 +1447,8 @@
 	                    return (
 	                        React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3"}, 
 	                            React.createElement(HomepageItems, {
-	                                json: val}
+	                                json: val, 
+	                                url: url}
 	                            )
 	                        )
 	                    )
@@ -1462,7 +1466,8 @@
 	                React.createElement("h1", null,  this.props.title, " "), 
 	                React.createElement("hr", null), 
 	                React.createElement(HomepageRow, {
-	                    data: this.props.data}
+	                    data: this.props.data, 
+	                    url: this.props.url}
 	                )
 	            )
 	        )
@@ -1509,14 +1514,16 @@
 	            React.createElement("div", {className: "homepageContent"}, 
 	                React.createElement(HomepageSection, {
 	                    title: "最新丢失", 
-	                    data: this.state.findings}
+	                    data: this.state.findings, 
+	                    url: "findingview"}
 	                ), 
 	                React.createElement("br", null), 
 	                React.createElement("br", null), 
 	                React.createElement("br", null), 
 	                React.createElement(HomepageSection, {
 	                    title: "最新拾遗", 
-	                    data: this.state.founds}
+	                    data: this.state.founds, 
+	                    url: "foundview"}
 	                ), 
 	                React.createElement("br", null), 
 	                React.createElement("br", null), 

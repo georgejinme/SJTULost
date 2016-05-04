@@ -40,6 +40,7 @@
     white-space: pre-wrap;
     width: 100%;
     margin-bottom: 0px;
+    color: #666666;
 }
 
 .homepageItem .homepageItemDetail .homepageItemDetailTitle {
@@ -57,6 +58,12 @@
     overflow: hidden;
     font-size: 13px;
 }
+
+.homepageItem a:hover{
+    text-decoration: none;
+}
+
+
 
 /*
     For Finding
@@ -131,6 +138,7 @@
 .findingSection .findingItem .findingItemDetail .findingItemPay {
     color: #e08600;
 }
+
 
 /*
     For Founding
