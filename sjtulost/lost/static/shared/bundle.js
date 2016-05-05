@@ -117,6 +117,7 @@
 
 	var App = React.createClass({displayName: "App",
 	    url: window.location.href.split('/')[3],
+	    id: window.location.href.split('/')[4],
 
 	    render: function() {
 	        if (this.url == '') {
@@ -151,7 +152,9 @@
 	            return (
 	                React.createElement("div", {className: "container"}, 
 	                    React.createElement(Navigation, null), 
-	                    React.createElement(FindingView, null)
+	                    React.createElement(FindingView, {
+	                        id: this.id}
+	                    )
 	                )
 	            )
 	        }
@@ -2217,10 +2220,12 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingViewBody"}, 
-	                React.createElement("p", null, "title"), 
-	                React.createElement("img", {src: "/static/image/qwt.jpg"}), 
+	                React.createElement("p", {className: "findingViewBodyTitle"}, "上透漏哈不哈来咯干你的老婆不要咯"), 
+	                React.createElement("div", {className: "findingViewBodyImage"}, 
+	                    React.createElement("img", {src: "/static/image/qwt.jpg"})
+	                ), 
 	                React.createElement("hr", null), 
-	                React.createElement("p", null, "ajsdfkjas ewjfwljeflkjdflskdjflsdkfjlekjwfjlksdnvklsnvlsknfajhldfkajhsdfkajsdhf")
+	                React.createElement("p", null, "ajsdfkjas ewjfwljeflkjdflskdjflsdkfjlekjwfjlksdnvklsnvlsknfajhldfkajhsdfkajsdhfjklaf aldjflajefoiwejflksadjfk埃里克森大教室了vs第三点收到收到收到收到收到收到收到访问")
 	            )
 	        )
 	    }
@@ -2244,6 +2249,8 @@
 	});
 
 	var FindingView = React.createClass({displayName: "FindingView",
+	    
+
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingViewContent"}, 

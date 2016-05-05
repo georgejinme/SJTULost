@@ -71,6 +71,7 @@ var Navigation = React.createClass({
 
 var App = React.createClass({
     url: window.location.href.split('/')[3],
+    id: window.location.href.split('/')[4],
 
     render: function() {
         if (this.url == '') {
@@ -105,7 +106,9 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <FindingView />
+                    <FindingView
+                        id = {this.id}
+                    />
                 </div>
             )
         }

@@ -3,10 +3,12 @@ var FindingViewBody = React.createClass({
     render: function() {
         return (
             <div className="findingViewBody">
-                <p>title</p>
-                <img src="/static/image/qwt.jpg" />
+                <p className="findingViewBodyTitle">上透漏哈不哈来咯干你的老婆不要咯</p>
+                <div className="findingViewBodyImage">
+                    <img src="/static/image/qwt.jpg" />
+                </div>
                 <hr/>
-                <p>ajsdfkjas ewjfwljeflkjdflskdjflsdkfjlekjwfjlksdnvklsnvlsknfajhldfkajhsdfkajsdhf</p>
+                <p>ajsdfkjas ewjfwljeflkjdflskdjflsdkfjlekjwfjlksdnvklsnvlsknfajhldfkajhsdfkajsdhfjklaf aldjflajefoiwejflksadjfk埃里克森大教室了vs第三点收到收到收到收到收到收到收到访问</p>
             </div>
         )
     }
@@ -30,6 +32,8 @@ var FindingViewHeader = React.createClass({
 });
 
 var FindingView = React.createClass({
+    
+
     render: function() {
         return (
             <div className="findingViewContent">
