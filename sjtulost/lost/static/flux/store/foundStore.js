@@ -24,6 +24,22 @@ var FoundStore = assign({}, EventEmitter.prototype, {
      */
 
     founds: [],
+
+    getDefaultFound: function() {
+        return {
+            id: 0,
+            description: '',
+            img: '',
+            item_type: '',
+            user_phone: '',
+            time: '0000/00/00 00:00:00',
+            place: '',
+            place_detail: '',
+            detail: '',
+            state: 0
+        }
+    },
+
     getFoundsWithAmount: function(amount=this.founds.count) {
         return this.founds.slice(0, amount);
     },

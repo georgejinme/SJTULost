@@ -4,6 +4,8 @@ import lost.app.item as Item
 import lost.app.place as Place
 import lost.util.time as time
 
+# internal function
+
 def finding_places(finding):
     finding_places_array = [p.description for p in finding.place_ids.all()]
     return ",".join(finding_places_array)
@@ -56,6 +58,11 @@ def findings_with_item_and_place(item, place):
     findings_list = (item_findings & place_findings).order_by('-lost_time')
     return finding_format(findings_list)
 
+def findings_with_id(finding_id):
+    return finding_format([Finding.objects.get(id = finding_id)])
+
+
+# external function
 
 def get_all_findings(request):
     return JsonResponse(findings(), safe=False)
@@ -65,6 +72,10 @@ def get_findings_with_filter(request):
     item = request.POST.getlist('item[]')
     place = request.POST.getlist('place[]')
     return JsonResponse(findings_with_item_and_place(item, place), safe=False)
+
+def get_findings_with_id(request):
+    finding_id = request.POST['id']
+    return JsonResponse(findings_with_id(finding_id), safe=False)
 
 
 

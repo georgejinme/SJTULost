@@ -1,48 +1,89 @@
+var FindingAction = require('../flux/action/initializationAction').FindingAction;
+var FindingStore = require('../flux/store/findingStore');
 
 var FindingViewBody = React.createClass({
     render: function() {
         return (
             <div className="findingViewBody">
-                <p className="findingViewBodyTitle">上透漏哈不哈来咯干你的老婆不要咯</p>
+                <p className="findingViewBodyTitle">{this.props.json['description']}</p>
                 <div className="findingViewBodyImage">
-                    <img src="/static/image/qwt.jpg" />
+                    <img src={this.props.json['img']} />
                 </div>
                 <hr/>
-                <p>ajsdfkjas ewjfwljeflkjdflskdjflsdkfjlekjwfjlksdnvklsnvlsknfajhldfkajhsdfkajsdhfjklaf aldjflajefoiwejflksadjfk埃里克森大教室了vs第三点收到收到收到收到收到收到收到访问</p>
+                <p>{this.props.json['detail']}</p>
             </div>
         )
     }
 });
 
 var FindingViewHeader = React.createClass({
+    badgeColor: function() {
+        if (this.props.json['state'] == 0) return 'label-danger label';
+        else return 'label-success label';
+    },
+
+    badgeText: function() {
+        if (this.props.json['state'] == 0) return 'Uncompleted';
+        else return 'Completed'
+    },
+
+    buttonActive: function() {
+        if (this.props.json['state'] == 0) return 'btn btn-success findingViewHeaderButton';
+        else return 'btn btn-success disabled findingViewHeaderButton'
+    },
+
     render: function() {
-        return (
+        return(
             <div className="findingViewHeader">
-                <span className="label-danger label">Uncompleted</span>
-                <p>物品类别: 手表</p>
-                <p>遗失时间: 2015/02/03</p>
-                <p>遗失地点: 二餐</p>
-                <p>详细位置: 二餐新疆餐厅!dssssdsdfsdfsdfsdf东方闪电是第三点收到</p>
-                <p>联系电话: 19102391029</p>
-                <p>酬金: 80 元</p>
-                <a href="#" className="btn btn-success">我捡到了!</a>
+                <span className={this.badgeColor()}>{this.badgeText()}</span>
+                <p>物品类别: {this.props.json['item_type']}</p>
+                <p>遗失时间: {this.props.json['time']}</p>
+                <p>遗失地点: {this.props.json['place']}</p>
+                <p>详细位置: {this.props.json['place_detail']}</p>
+                <p>联系电话: {this.props.json['user_phone']}</p>
+                <p>酬金: {this.props.json['pay']} 元</p>
+                <a href="#" className={this.buttonActive()}>我捡到了!</a>
             </div>
+
         )
     }
 });
 
 var FindingView = React.createClass({
-    
+    getInitialState: function() {
+        return {
+            finding: FindingStore.getFirstFinding()
+        }
+    },
+
+    componentDidMount: function() {
+        FindingStore.addChangeListener(this._onFindingChange);
+        FindingAction.fetchDataWithId(this.props.id)
+    },
+
+    componentWillUnmount: function() {
+        FindingStore.removeChangeListener(this._onFindingChange);
+    },
+
+    _onFindingChange: function() {
+        this.setState({
+            finding: FindingStore.getFirstFinding()
+        })
+    },
 
     render: function() {
         return (
             <div className="findingViewContent">
                 <div className="row">
                     <div className="col-lg-8 col-md-8 col-sm-8">
-                        <FindingViewBody />
+                        <FindingViewBody
+                            json = {this.state.finding}
+                        />
                     </div>
                     <div className="col-lg-4 col-md-4 col-sm-4">
-                        <FindingViewHeader />
+                        <FindingViewHeader
+                            json = {this.state.finding}
+                        />
                     </div>
                 </div>
             </div>

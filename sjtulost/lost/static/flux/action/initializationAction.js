@@ -24,6 +24,18 @@ var FindingAction = {
                 findingArray: data
             });
         });
+    },
+
+    fetchDataWithId: function(id) {
+        $.post('/getfindingswithid/', {
+            'id': id
+        }, function(data) {
+            console.log(data)
+            AppDispatcher.dispatch({
+                actionType: 'FINDING_VIEWING',
+                findingArray: data
+            })
+        })
     }
 };
 

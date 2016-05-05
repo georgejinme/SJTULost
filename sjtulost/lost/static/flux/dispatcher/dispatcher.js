@@ -17,6 +17,7 @@ AppDispatcher.register(function (action) {
 
         case 'FINDING_INITIALIZATION':
         case 'FINDING_UPDATE':
+        case 'FINDING_VIEWING':
             FindingStore.setFindings(action.findingArray);
             FindingStore.emitChange();
             break;

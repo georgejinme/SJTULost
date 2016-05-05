@@ -214,6 +214,7 @@
 
 	        case 'FINDING_INITIALIZATION':
 	        case 'FINDING_UPDATE':
+	        case 'FINDING_VIEWING':
 	            FindingStore.setFindings(action.findingArray);
 	            FindingStore.emitChange();
 	            break;
@@ -1051,6 +1052,22 @@
 
 	    findings: [],
 
+	    getDefaultFinding: function getDefaultFinding() {
+	        return {
+	            id: 0,
+	            description: '',
+	            img: '',
+	            item_type: '',
+	            user_phone: '',
+	            time: '0000/00/00 00:00:00',
+	            place: '',
+	            place_detail: '',
+	            detail: '',
+	            pay: 0,
+	            state: 0
+	        };
+	    },
+
 	    getFindingsWithAmount: function getFindingsWithAmount() {
 	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.findings.count : arguments[0];
 
@@ -1059,6 +1076,10 @@
 
 	    setFindings: function setFindings(array) {
 	        this.findings = array;
+	    },
+
+	    getFirstFinding: function getFirstFinding() {
+	        if (this.findings.length == 0) return this.getDefaultFinding();else return this.findings[0];
 	    },
 
 	    emitChange: function emitChange() {
@@ -1108,6 +1129,22 @@
 	     */
 
 	    founds: [],
+
+	    getDefaultFound: function getDefaultFound() {
+	        return {
+	            id: 0,
+	            description: '',
+	            img: '',
+	            item_type: '',
+	            user_phone: '',
+	            time: '0000/00/00 00:00:00',
+	            place: '',
+	            place_detail: '',
+	            detail: '',
+	            state: 0
+	        };
+	    },
+
 	    getFoundsWithAmount: function getFoundsWithAmount() {
 	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.founds.count : arguments[0];
 
@@ -1580,6 +1617,18 @@
 	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FINDING_UPDATE',
+	                findingArray: data
+	            });
+	        });
+	    },
+
+	    fetchDataWithId: function fetchDataWithId(id) {
+	        $.post('/getfindingswithid/', {
+	            'id': id
+	        }, function (data) {
+	            console.log(data);
+	            AppDispatcher.dispatch({
+	                actionType: 'FINDING_VIEWING',
 	                findingArray: data
 	            });
 	        });
@@ -2213,53 +2262,94 @@
 
 /***/ },
 /* 20 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
+	var FindingAction = __webpack_require__(15).FindingAction;
+	var FindingStore = __webpack_require__(9);
+
 	var FindingViewBody = React.createClass({displayName: "FindingViewBody",
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingViewBody"}, 
-	                React.createElement("p", {className: "findingViewBodyTitle"}, "上透漏哈不哈来咯干你的老婆不要咯"), 
+	                React.createElement("p", {className: "findingViewBodyTitle"}, this.props.json['description']), 
 	                React.createElement("div", {className: "findingViewBodyImage"}, 
-	                    React.createElement("img", {src: "/static/image/qwt.jpg"})
+	                    React.createElement("img", {src: this.props.json['img']})
 	                ), 
 	                React.createElement("hr", null), 
-	                React.createElement("p", null, "ajsdfkjas ewjfwljeflkjdflskdjflsdkfjlekjwfjlksdnvklsnvlsknfajhldfkajhsdfkajsdhfjklaf aldjflajefoiwejflksadjfk埃里克森大教室了vs第三点收到收到收到收到收到收到收到访问")
+	                React.createElement("p", null, this.props.json['detail'])
 	            )
 	        )
 	    }
 	});
 
 	var FindingViewHeader = React.createClass({displayName: "FindingViewHeader",
+	    badgeColor: function() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';
+	        else return 'label-success label';
+	    },
+
+	    badgeText: function() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';
+	        else return 'Completed'
+	    },
+
+	    buttonActive: function() {
+	        if (this.props.json['state'] == 0) return 'btn btn-success findingViewHeaderButton';
+	        else return 'btn btn-success disabled findingViewHeaderButton'
+	    },
+
 	    render: function() {
-	        return (
+	        return(
 	            React.createElement("div", {className: "findingViewHeader"}, 
-	                React.createElement("span", {className: "label-danger label"}, "Uncompleted"), 
-	                React.createElement("p", null, "物品类别: 手表"), 
-	                React.createElement("p", null, "遗失时间: 2015/02/03"), 
-	                React.createElement("p", null, "遗失地点: 二餐"), 
-	                React.createElement("p", null, "详细位置: 二餐新疆餐厅!dssssdsdfsdfsdfsdf东方闪电是第三点收到"), 
-	                React.createElement("p", null, "联系电话: 19102391029"), 
-	                React.createElement("p", null, "酬金: 80 元"), 
-	                React.createElement("a", {href: "#", className: "btn btn-success"}, "我捡到了!")
+	                React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                React.createElement("p", null, "物品类别: ", this.props.json['item_type']), 
+	                React.createElement("p", null, "遗失时间: ", this.props.json['time']), 
+	                React.createElement("p", null, "遗失地点: ", this.props.json['place']), 
+	                React.createElement("p", null, "详细位置: ", this.props.json['place_detail']), 
+	                React.createElement("p", null, "联系电话: ", this.props.json['user_phone']), 
+	                React.createElement("p", null, "酬金: ", this.props.json['pay'], " 元"), 
+	                React.createElement("a", {href: "#", className: this.buttonActive()}, "我捡到了!")
 	            )
+
 	        )
 	    }
 	});
 
 	var FindingView = React.createClass({displayName: "FindingView",
-	    
+	    getInitialState: function() {
+	        return {
+	            finding: FindingStore.getFirstFinding()
+	        }
+	    },
+
+	    componentDidMount: function() {
+	        FindingStore.addChangeListener(this._onFindingChange);
+	        FindingAction.fetchDataWithId(this.props.id)
+	    },
+
+	    componentWillUnmount: function() {
+	        FindingStore.removeChangeListener(this._onFindingChange);
+	    },
+
+	    _onFindingChange: function() {
+	        this.setState({
+	            finding: FindingStore.getFirstFinding()
+	        })
+	    },
 
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "findingViewContent"}, 
 	                React.createElement("div", {className: "row"}, 
 	                    React.createElement("div", {className: "col-lg-8 col-md-8 col-sm-8"}, 
-	                        React.createElement(FindingViewBody, null)
+	                        React.createElement(FindingViewBody, {
+	                            json: this.state.finding}
+	                        )
 	                    ), 
 	                    React.createElement("div", {className: "col-lg-4 col-md-4 col-sm-4"}, 
-	                        React.createElement(FindingViewHeader, null)
+	                        React.createElement(FindingViewHeader, {
+	                            json: this.state.finding}
+	                        )
 	                    )
 	                )
 	            )

@@ -28,12 +28,33 @@ var FindingStore = assign({}, EventEmitter.prototype, {
 
     findings: [],
 
+    getDefaultFinding: function() {
+        return {
+            id: 0,
+            description: '',
+            img: '',
+            item_type: '',
+            user_phone: '',
+            time: '0000/00/00 00:00:00',
+            place: '',
+            place_detail: '',
+            detail: '',
+            pay: 0,
+            state: 0
+        }
+    },
+
     getFindingsWithAmount: function(amount=this.findings.count) {
         return this.findings.slice(0, amount);
     },
 
     setFindings: function(array) {
         this.findings = array;
+    },
+
+    getFirstFinding: function() {
+        if (this.findings.length == 0) return this.getDefaultFinding();
+        else return this.findings[0]
     },
 
     emitChange: function () {

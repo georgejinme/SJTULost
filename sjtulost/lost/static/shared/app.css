@@ -249,7 +249,9 @@
     width: 100%;
 }
 
-
+.findingViewHeader .findingViewHeaderButton {
+    width: 100%;
+}
 
 .findingViewBody {
     background-color: #eeeeee;
@@ -262,6 +264,12 @@
     color: brown;
     text-align: center;
     font-size: 30px;
+}
+
+.findingViewBody p{
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
 }
 
 .findingViewBody .findingViewBodyImage{
@@ -278,6 +286,7 @@
 .findingViewBody hr {
     border-top-color: #cccccc;
 }
+
 
 
 

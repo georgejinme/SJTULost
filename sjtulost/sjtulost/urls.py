@@ -35,5 +35,7 @@ urlpatterns = [
     url(r'^getfindingswithfilter/', 'lost.app.finding.get_findings_with_filter', name='get_findings_with_filter'),
     url(r'^getfoundswithfilter/', 'lost.app.found.get_founds_with_filter', name='get_founds_with_filter'),
 
+    url(r'^getfindingswithid/', 'lost.app.finding.get_findings_with_id', name='get_findings_with_id'),
+
     url(r'^admin/', include(admin.site.urls)),
 ]
