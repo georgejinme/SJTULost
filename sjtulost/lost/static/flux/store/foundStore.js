@@ -48,6 +48,11 @@ var FoundStore = assign({}, EventEmitter.prototype, {
         this.founds = array;
     },
 
+    getFirstFound: function() {
+        if (this.founds.length == 0) return this.getDefaultFound();
+        else return this.founds[0]
+    },
+
     emitChange: function () {
         this.emit('change');
     },

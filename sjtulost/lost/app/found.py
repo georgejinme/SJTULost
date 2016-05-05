@@ -4,6 +4,7 @@ import lost.app.item as Item
 import lost.app.place as Place
 import lost.util.time as time
 
+# internal function
 
 def found_item_types(found):
     found_item_types_array = [i.description for i in found.type_id.all()]
@@ -53,6 +54,11 @@ def founds_with_item_and_place(item, place):
     founds_list = (item_founds & place_founds).order_by('-found_time')
     return found_format(founds_list)
 
+def founds_with_id(found_id):
+    return found_format([Found.objects.get(id = found_id)])
+
+
+# external function
 
 def get_all_founds(request):
     return JsonResponse(founds(), safe=False)
@@ -62,6 +68,11 @@ def get_founds_with_filter(request):
     item = request.POST.getlist('item[]')
     place = request.POST.getlist('place[]')
     return JsonResponse(founds_with_item_and_place(item, place), safe=False)
+
+
+def get_founds_with_id(request):
+    found_id = request.POST['id']
+    return JsonResponse(founds_with_id(found_id), safe=False)
 
 
 

@@ -13,6 +13,7 @@ var Finding = require('../finding/finding');
 var Found = require('../found/found');
 var Rank = require('../rank/rank');
 var FindingView = require('../finding/findingview');
+var FoundView = require('../found/foundview');
 
 var Navigation = React.createClass({
     getInitialState: function() {
@@ -107,6 +108,15 @@ var App = React.createClass({
                 <div className="container">
                     <Navigation />
                     <FindingView
+                        id = {this.id}
+                    />
+                </div>
+            )
+        } else if (this.url == 'foundview') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <FoundView
                         id = {this.id}
                     />
                 </div>

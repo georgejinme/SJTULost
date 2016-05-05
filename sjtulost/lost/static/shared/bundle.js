@@ -59,6 +59,7 @@
 	var Found = __webpack_require__(18);
 	var Rank = __webpack_require__(19);
 	var FindingView = __webpack_require__(20);
+	var FoundView = __webpack_require__(21);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -157,6 +158,15 @@
 	                    )
 	                )
 	            )
+	        } else if (this.url == 'foundview') {
+	            return (
+	                React.createElement("div", {className: "container"}, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(FoundView, {
+	                        id: this.id}
+	                    )
+	                )
+	            )
 	        }
 	    }
 	});
@@ -221,6 +231,7 @@
 
 	        case 'FOUND_INITIALIZATION':
 	        case 'FOUND_UPDATE':
+	        case 'FOUND_VIEWING':
 	            FoundStore.setFounds(action.foundArray);
 	            FoundStore.emitChange();
 	            break;
@@ -1155,6 +1166,10 @@
 	        this.founds = array;
 	    },
 
+	    getFirstFound: function getFirstFound() {
+	        if (this.founds.length == 0) return this.getDefaultFound();else return this.founds[0];
+	    },
+
 	    emitChange: function emitChange() {
 	        this.emit('change');
 	    },
@@ -1474,14 +1489,14 @@
 	        return (
 	            React.createElement("div", {className: "homepageItem"}, 
 	                React.createElement("a", {href: '/' + this.props.url + '/' + this.props.json['id'], target: "_blank"}, 
-	                React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
-	                React.createElement("img", {src: this.props.json['img'], className: "img-rounded homepageItemImage"}), 
-	                React.createElement("div", {className: "homepageItemDetail"}, 
-	                    React.createElement("p", {className: "homepageItemDetailTitle"}, this.props.json['description']), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
-	                    React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['place'])
-	                )
+	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                    React.createElement("img", {src: this.props.json['img'], className: "img-rounded homepageItemImage"}), 
+	                    React.createElement("div", {className: "homepageItemDetail"}, 
+	                        React.createElement("p", {className: "homepageItemDetailTitle"}, this.props.json['description']), 
+	                        React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
+	                        React.createElement("p", {className: "homepageItemDetailInfo"}, "遗失地点: ", this.props.json['place'])
 	                    )
+	                )
 	            )
 	        )
 	    }
@@ -1626,7 +1641,6 @@
 	        $.post('/getfindingswithid/', {
 	            'id': id
 	        }, function (data) {
-	            console.log(data);
 	            AppDispatcher.dispatch({
 	                actionType: 'FINDING_VIEWING',
 	                findingArray: data
@@ -1651,6 +1665,17 @@
 	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FOUND_UPDATE',
+	                foundArray: data
+	            });
+	        });
+	    },
+
+	    fetchDataWithId: function fetchDataWithId(id) {
+	        $.post('/getfoundswithid/', {
+	            'id': id
+	        }, function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FOUND_VIEWING',
 	                foundArray: data
 	            });
 	        });
@@ -2358,6 +2383,104 @@
 	});
 
 	module.exports = FindingView;
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var FoundAction = __webpack_require__(15).FoundAction;
+	var FoundStore = __webpack_require__(10);
+
+	var FoundViewBody = React.createClass({displayName: "FoundViewBody",
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "foundViewBody"}, 
+	                React.createElement("p", {className: "foundViewBodyTitle"}, this.props.json['description']), 
+	                React.createElement("div", {className: "foundViewBodyImage"}, 
+	                    React.createElement("img", {src: this.props.json['img']})
+	                ), 
+	                React.createElement("hr", null), 
+	                React.createElement("p", null, this.props.json['detail'])
+	            )
+	        )
+	    }
+	});
+
+	var FoundViewHeader = React.createClass({displayName: "FoundViewHeader",
+	    badgeColor: function() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';
+	        else return 'label-success label';
+	    },
+
+	    badgeText: function() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';
+	        else return 'Completed'
+	    },
+
+	    buttonActive: function() {
+	        if (this.props.json['state'] == 0) return 'btn btn-success foundViewHeaderButton';
+	        else return 'btn btn-success disabled foundViewHeaderButton'
+	    },
+
+	    render: function() {
+	        return(
+	            React.createElement("div", {className: "foundViewHeader"}, 
+	                React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                React.createElement("p", null, "物品类别: ", this.props.json['item_type']), 
+	                React.createElement("p", null, "拾物时间: ", this.props.json['time']), 
+	                React.createElement("p", null, "拾物地点: ", this.props.json['place']), 
+	                React.createElement("p", null, "详细位置: ", this.props.json['place_detail']), 
+	                React.createElement("p", null, "联系电话: ", this.props.json['user_phone']), 
+	                React.createElement("a", {href: "#", className: this.buttonActive()}, "这是我丢的东西!")
+	            )
+
+	        )
+	    }
+	});
+
+	var FoundView = React.createClass({displayName: "FoundView",
+	    getInitialState: function() {
+	        return {
+	            found: FoundStore.getFirstFound()
+	        }
+	    },
+
+	    componentDidMount: function() {
+	        FoundStore.addChangeListener(this._onFoundChange);
+	        FoundAction.fetchDataWithId(this.props.id)
+	    },
+
+	    componentWillUnmount: function() {
+	        FoundStore.removeChangeListener(this._onFoundChange);
+	    },
+
+	    _onFoundChange: function() {
+	        this.setState({
+	            found: FoundStore.getFirstFound()
+	        })
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "foundViewContent"}, 
+	                React.createElement("div", {className: "row"}, 
+	                    React.createElement("div", {className: "col-lg-8 col-md-8 col-sm-8"}, 
+	                        React.createElement(FoundViewBody, {
+	                            json: this.state.found}
+	                        )
+	                    ), 
+	                    React.createElement("div", {className: "col-lg-4 col-md-4 col-sm-4"}, 
+	                        React.createElement(FoundViewHeader, {
+	                            json: this.state.found}
+	                        )
+	                    )
+	                )
+	            )
+	        )
+	    }
+	});
+
+	module.exports = FoundView;
 
 /***/ }
 /******/ ]);

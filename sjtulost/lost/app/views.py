@@ -16,3 +16,6 @@ def rank(request):
 
 def findingview(request, id):
     return render(request, 'main.html')
+
+def foundview(request, id):
+    return render(request, 'main.html')

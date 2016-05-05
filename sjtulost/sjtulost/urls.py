@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^rank/$', 'lost.app.views.rank', name='rank'),
 
     url(r'^findingview/(\d+)/$', 'lost.app.views.findingview', name='findingview'),
+    url(r'^foundview/(\d+)/$', 'lost.app.views.foundview', name='foundview'),
 
     url(r'^getfindings/', 'lost.app.finding.get_all_findings', name='get_all_findings'),
     url(r'^getfounds/', 'lost.app.found.get_all_founds', name='get_all_founds'),
@@ -36,6 +37,7 @@ urlpatterns = [
     url(r'^getfoundswithfilter/', 'lost.app.found.get_founds_with_filter', name='get_founds_with_filter'),
 
     url(r'^getfindingswithid/', 'lost.app.finding.get_findings_with_id', name='get_findings_with_id'),
+    url(r'^getfoundswithid/', 'lost.app.found.get_founds_with_id', name='get_founds_with_id'),
 
     url(r'^admin/', include(admin.site.urls)),
 ]

@@ -30,7 +30,6 @@ var FindingAction = {
         $.post('/getfindingswithid/', {
             'id': id
         }, function(data) {
-            console.log(data)
             AppDispatcher.dispatch({
                 actionType: 'FINDING_VIEWING',
                 findingArray: data
@@ -58,6 +57,17 @@ var FoundAction = {
                 foundArray: data
             });
         });
+    },
+
+    fetchDataWithId: function(id) {
+        $.post('/getfoundswithid/', {
+            'id': id
+        }, function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'FOUND_VIEWING',
+                foundArray: data
+            })
+        })
     }
 };
 

@@ -19,14 +19,14 @@ var HomepageItems = React.createClass({
         return (
             <div className="homepageItem">
                 <a href = {'/' + this.props.url + '/' + this.props.json['id']} target="_blank">
-                <span className={this.badgeColor()}>{this.badgeText()}</span>
-                <img src={this.props.json['img']} className="img-rounded homepageItemImage" />
-                <div className="homepageItemDetail">
-                    <p className="homepageItemDetailTitle">{this.props.json['description']}</p>
-                    <p className="homepageItemDetailInfo">遗失时间: {this.props.json['time']}</p>
-                    <p className="homepageItemDetailInfo">遗失地点: {this.props.json['place']}</p>
-                </div>
-                    </a>
+                    <span className={this.badgeColor()}>{this.badgeText()}</span>
+                    <img src={this.props.json['img']} className="img-rounded homepageItemImage" />
+                    <div className="homepageItemDetail">
+                        <p className="homepageItemDetailTitle">{this.props.json['description']}</p>
+                        <p className="homepageItemDetailInfo">遗失时间: {this.props.json['time']}</p>
+                        <p className="homepageItemDetailInfo">遗失地点: {this.props.json['place']}</p>
+                    </div>
+                </a>
             </div>
         )
     }

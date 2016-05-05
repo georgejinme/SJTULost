@@ -287,6 +287,60 @@
     border-top-color: #cccccc;
 }
 
+/*
+    foundview
+*/
+
+.foundViewContent {
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.foundViewHeader {
+    background-color: #eeeeee;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.foundViewHeader .foundViewHeaderButton {
+    width: 100%;
+}
+
+.foundViewBody {
+    background-color: #eeeeee;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.foundViewBody .foundViewBodyTitle{
+    color: brown;
+    text-align: center;
+    font-size: 30px;
+}
+
+.foundViewBody p{
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+}
+
+.foundViewBody .foundViewBodyImage{
+    width: 100%;
+    max-height: 500px;
+    text-align: center;
+}
+
+.foundViewBody .foundViewBodyImage img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.foundViewBody hr {
+    border-top-color: #cccccc;
+}
+
 
 
 
