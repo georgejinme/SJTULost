@@ -51,7 +51,7 @@
 	    'dev-prefix': 'http://127.0.0.1:8888'
 	};
 
-	var JaccountLoginActions = __webpack_require__(1);
+	var UserActions = __webpack_require__(22);
 	var UserInfoStore = __webpack_require__(6);
 
 	var Homepage = __webpack_require__(14);
@@ -64,12 +64,13 @@
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
 	        return {
-	            name: UserInfoStore.getUserName()
+	            userInfo: UserInfoStore.getUserInfo()
 	        }
 	    },
 
 	    componentDidMount: function() {
 	        UserInfoStore.addChangeListener(this._onChange);
+	        UserActions.fetchData();
 	    },
 
 	    componentWillUnmount: function() {
@@ -78,12 +79,13 @@
 
 	    _onChange: function () {
 	        this.setState({
-	            name: UserInfoStore.getUserName()
+	            userInfo: UserInfoStore.getUserInfo()
 	        });
 	    },
 
-	    login: function() {
-	        JaccountLoginActions.login()
+	    getUrl: function() {
+	        if (this.state.userInfo['student_number'] == '') return '/loginwithjaccount/';
+	        else return '#'
 	    },
 
 	    render: function() {
@@ -107,7 +109,7 @@
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
 	                            React.createElement("li", null, React.createElement("a", {href: "#"}, "发布")), 
-	                            React.createElement("li", null, React.createElement("a", {href: "javascript:void(0);", onClick:  this.login},  this.state.name))
+	                            React.createElement("li", null, React.createElement("a", {href: this.getUrl()},  this.state.userInfo['name'] ))
 	                        )
 	                    )
 	                )
@@ -178,31 +180,7 @@
 
 
 /***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Created by gougoumemeda on 16/4/22.
-	 */
-	'use strict';
-
-	var AppDispatcher = __webpack_require__(2);
-
-	var JaccountLoginActions = {
-	    login: function login() {
-	        window.location.href = '/loginwithjaccount/';
-	        //$.get('/loginwithjaccount/', function(data){
-	        //    AppDispatcher.dispatch({
-	        //        actionType: 'JACCOUNT_LOGIN',
-	        //        name: "JIN JIAJUN"
-	        //    });
-	        //});
-	    }
-	};
-
-	module.exports = JaccountLoginActions;
-
-/***/ },
+/* 1 */,
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -220,8 +198,8 @@
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
-	        case 'JACCOUNT_LOGIN':
-	            UserInfoStore.setUserName(action.name);
+	        case 'USER_INFO_INITIALIZATION':
+	            UserInfoStore.setUserInfo(action.userInfo);
 	            UserInfoStore.emitChange();
 	            break;
 
@@ -615,57 +593,23 @@
 	var assign = __webpack_require__(8);
 
 	var UserInfoStore = assign({}, EventEmitter.prototype, {
-	    name: "使用Jaccount登录",
-	    phone: "",
-	    studentId: "",
-	    recommend_ids: [],
 
-	    getUserName: function getUserName() {
-	        return this.name;
-	    },
+	    /*
+	        {
+	            name:
+	            phone:
+	            student_number:
+	        }
+	     */
 
-	    setUserName: function setUserName(name) {
-	        this.name = name;
-	    },
-
-	    getUserPhone: function getUserPhone() {
-	        return this.phone;
-	    },
-
-	    setUserPhone: function setUserPhone(phone) {
-	        this.phone = phone;
-	    },
-
-	    getUserStudentId: function getUserStudentId() {
-	        return this.studentId;
-	    },
-
-	    setUserStudentId: function setUserStudentId(id) {
-	        this.studentId = id;
-	    },
-
-	    getUserRecommend: function getUserRecommend() {
-	        return this.recommend_ids;
-	    },
-
-	    setUserRecommend: function setUserRecommend(ids) {
-	        this.recommend_ids = ids;
-	    },
+	    userInfo: {},
 
 	    getUserInfo: function getUserInfo() {
-	        return {
-	            name: this.getUserName(),
-	            phone: this.getUserPhone(),
-	            student_id: this.getUserStudentId(),
-	            recommend_ids: this.getUserRecommend()
-	        };
+	        return this.userInfo;
 	    },
 
 	    setUserInfo: function setUserInfo(json) {
-	        if (json['name']) this.setUserName(json['name']);
-	        if (json['phone']) this.setUserPhone(json['phone']);
-	        if (json['student_id']) this.setUserStudentId(json['student_id']);
-	        if (json['recommend_ids']) this.setUserRecommend(json['recommend_ids']);
+	        this.userInfo = json;
 	    },
 
 	    emitChange: function emitChange() {
@@ -2488,6 +2432,30 @@
 	});
 
 	module.exports = FoundView;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/22.
+	 */
+	'use strict';
+
+	var AppDispatcher = __webpack_require__(2);
+
+	var UserActions = {
+	    fetchData: function fetchData() {
+	        $.get('/getuserinfo/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'USER_INFO_INITIALIZATION',
+	                userInfo: data
+	            });
+	        });
+	    }
+	};
+
+	module.exports = UserActions;
 
 /***/ }
 /******/ ]);

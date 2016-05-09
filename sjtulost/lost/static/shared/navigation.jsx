@@ -5,7 +5,7 @@ var constant = {
     'dev-prefix': 'http://127.0.0.1:8888'
 };
 
-var JaccountLoginActions = require('../flux/action/loginAction');
+var UserActions = require('../flux/action/userAction');
 var UserInfoStore = require('../flux/store/userInfoStore');
 
 var Homepage = require('../home/home');
@@ -18,12 +18,13 @@ var FoundView = require('../found/foundview');
 var Navigation = React.createClass({
     getInitialState: function() {
         return {
-            name: UserInfoStore.getUserName()
+            userInfo: UserInfoStore.getUserInfo()
         }
     },
 
     componentDidMount: function() {
         UserInfoStore.addChangeListener(this._onChange);
+        UserActions.fetchData();
     },
 
     componentWillUnmount: function() {
@@ -32,12 +33,13 @@ var Navigation = React.createClass({
 
     _onChange: function () {
         this.setState({
-            name: UserInfoStore.getUserName()
+            userInfo: UserInfoStore.getUserInfo()
         });
     },
 
-    login: function() {
-        JaccountLoginActions.login()
+    getUrl: function() {
+        if (this.state.userInfo['student_number'] == '') return '/loginwithjaccount/';
+        else return '#'
     },
 
     render: function() {
@@ -61,7 +63,7 @@ var Navigation = React.createClass({
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
                             <li><a href="#">发布</a></li>
-                            <li><a href="javascript:void(0);" onClick = { this.login }>{ this.state.name }</a></li>
+                            <li><a href={this.getUrl()}>{ this.state.userInfo['name'] }</a></li>
                         </ul>
                     </div>
                 </div>

@@ -10,8 +10,8 @@ var RankStore = require('../store/rankStore');
 
 AppDispatcher.register(function (action) {
     switch(action.actionType) {
-        case 'JACCOUNT_LOGIN':
-            UserInfoStore.setUserName(action.name);
+        case 'USER_INFO_INITIALIZATION':
+            UserInfoStore.setUserInfo(action.userInfo);
             UserInfoStore.emitChange();
             break;
 

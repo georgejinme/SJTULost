@@ -5,57 +5,23 @@ var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 
 var UserInfoStore = assign({}, EventEmitter.prototype, {
-    name: "使用Jaccount登录",
-    phone: "",
-    studentId: "",
-    recommend_ids: [],
 
-    getUserName: function() {
-        return this.name;
-    },
+    /*
+        {
+            name:
+            phone:
+            student_number:
+        }
+     */
 
-    setUserName: function(name) {
-        this.name = name;
-    },
-
-    getUserPhone: function() {
-        return this.phone;
-    },
-
-    setUserPhone: function(phone) {
-        this.phone = phone;
-    },
-
-    getUserStudentId: function() {
-        return this.studentId;
-    },
-
-    setUserStudentId: function(id) {
-        this.studentId = id;
-    },
-
-    getUserRecommend: function() {
-        return this.recommend_ids;
-    },
-
-    setUserRecommend: function(ids) {
-        this.recommend_ids = ids;
-    },
+    userInfo: {},
 
     getUserInfo: function () {
-        return {
-            name: this.getUserName(),
-            phone: this.getUserPhone(),
-            student_id: this.getUserStudentId(),
-            recommend_ids: this.getUserRecommend()
-        };
+        return this.userInfo
     },
 
     setUserInfo: function(json) {
-        if (json['name']) this.setUserName(json['name']);
-        if (json['phone']) this.setUserPhone(json['phone']);
-        if (json['student_id']) this.setUserStudentId(json['student_id']);
-        if (json['recommend_ids']) this.setUserRecommend(json['recommend_ids']);
+        this.userInfo = json
     },
 
     emitChange: function () {

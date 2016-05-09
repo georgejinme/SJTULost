@@ -1,5 +1,7 @@
+#coding:utf-8
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 import json
+from lost.models import User
 from rauth import OAuth2Service
 
 CLIENT_ID = 'jaseieelost20160504'
@@ -21,6 +23,8 @@ jaccount = OAuth2Service(
     base_url=BASE_URL
 )
 
+# login
+
 def login_with_jaccount(request):
     params = {
         'scope': ['basic essential profile'],
@@ -34,7 +38,6 @@ def login_with_jaccount(request):
 
 
 def get_access_token(request):
-    print 123
     code_str = request.GET['code']
     data = {
         'code': code_str,
@@ -42,6 +45,44 @@ def get_access_token(request):
         'redirect_uri': GET_ACCESS_TOKEN_URI
     }
     session = jaccount.get_auth_session(data = data, decoder=json.loads)
-    print session.get('me/profile', params={'access_token': session.access_token}).json()
+    user_info = session.get('me/profile', params={'access_token': session.access_token}).json()
+
+    id = check_user_exists_in_databases(user_info)
+    request.session['user_id'] = id
 
     return HttpResponseRedirect(REDIRECT_URI)
+
+def check_user_exists_in_databases(user_info):
+    stu_id = user_info['entities'][0]['code']
+    user_name = user_info['entities'][0]['name']
+    user = User.objects.filter(student_number = stu_id)
+    if len(user) == 0:
+        new_user = User(phone = 0, name = user_name, student_number = stu_id)
+        new_user.save()
+        return new_user.id
+    return user.id
+
+
+# get user information
+
+
+def user_info(sid):
+    user = User.objects.get(id = sid)
+    user_dict = {
+        'name': user.name,
+        'phone': user.phone,
+        'student_number': user.student_number
+    }
+    return user_dict
+
+
+def get_user_info(request):
+    if request.session.get('user_id', '') != '':
+        return JsonResponse(user_info(request.session['user_id']), safe=False)
+    else:
+        return JsonResponse({
+            'name': '使用Jaccount登录',
+            'phone': '',
+            'student_number': ''
+        }, safe=False)
+
