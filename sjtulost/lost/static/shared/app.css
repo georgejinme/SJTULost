@@ -253,6 +253,11 @@
     width: 100%;
 }
 
+.findingViewHeader p{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .findingViewBody {
     background-color: #eeeeee;
     padding: 20px;
@@ -307,6 +312,11 @@
     width: 100%;
 }
 
+.foundViewHeader p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .foundViewBody {
     background-color: #eeeeee;
     padding: 20px;
@@ -340,6 +350,7 @@
 .foundViewBody hr {
     border-top-color: #cccccc;
 }
+
 
 
 
