@@ -77,7 +77,9 @@ var FindingItem = React.createClass({
                     <img src = {this.props.json['img']} className="img-rounded" />
                 </div>
                 <div className="col-lg-9 col-md-9 col-sm-9 findingItemDetail">
-                    <p className="findingItemTitle">{this.props.json['description']}</p>
+                    <a href = {'/findingview/' + this.props.json['id']} target = '_blank'>
+                        <p className="findingItemTitle">{this.props.json['description']}</p>
+                    </a>
                     <span className={this.badgeColor()}>{this.badgeText()}</span>
                     <p className="findingItemInfo">物品类别: {this.props.json['item_type']}</p>
                     <p className="findingItemInfo">遗失时间: {this.props.json['time']}</p>

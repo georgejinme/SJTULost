@@ -139,6 +139,10 @@
     color: #e08600;
 }
 
+.findingSection .findingItem a:hover{
+    text-decoration: none;
+}
+
 
 /*
     For Founding
@@ -212,6 +216,10 @@
 
 .foundSection .foundItem .foundItemDetail .foundItemPay {
     color: #e08600;
+}
+
+.foundSection .foundItem a:hover{
+    text-decoration: none;
 }
 
 /*

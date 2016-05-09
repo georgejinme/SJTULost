@@ -1818,7 +1818,9 @@
 	                    React.createElement("img", {src: this.props.json['img'], className: "img-rounded"})
 	                ), 
 	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9 findingItemDetail"}, 
-	                    React.createElement("p", {className: "findingItemTitle"}, this.props.json['description']), 
+	                    React.createElement("a", {href: '/findingview/' + this.props.json['id'], target: "_blank"}, 
+	                        React.createElement("p", {className: "findingItemTitle"}, this.props.json['description'])
+	                    ), 
 	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
 	                    React.createElement("p", {className: "findingItemInfo"}, "物品类别: ", this.props.json['item_type']), 
 	                    React.createElement("p", {className: "findingItemInfo"}, "遗失时间: ", this.props.json['time']), 
@@ -2051,7 +2053,9 @@
 	                    React.createElement("img", {src: this.props.json['img'], className: "img-rounded"})
 	                ), 
 	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9 foundItemDetail"}, 
-	                    React.createElement("p", {className: "foundItemTitle"}, this.props.json['description']), 
+	                    React.createElement("a", {href: '/foundview/' + this.props.json['id'], target: "_blank"}, 
+	                        React.createElement("p", {className: "foundItemTitle"}, this.props.json['description'])
+	                    ), 
 	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
 	                    React.createElement("p", {className: "foundItemInfo"}, "物品类别: ", this.props.json['item_type']), 
 	                    React.createElement("p", {className: "foundItemInfo"}, "拾物时间: ", this.props.json['time']), 
