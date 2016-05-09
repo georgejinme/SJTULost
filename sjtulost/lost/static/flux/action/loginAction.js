@@ -5,10 +5,13 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 
 var JaccountLoginActions = {
     login: function () {
-        AppDispatcher.dispatch({
-            actionType: 'JACCOUNT_LOGIN',
-            name: "JIN JIAJUN"
-        });
+        window.location.href = '/loginwithjaccount/';
+        //$.get('/loginwithjaccount/', function(data){
+        //    AppDispatcher.dispatch({
+        //        actionType: 'JACCOUNT_LOGIN',
+        //        name: "JIN JIAJUN"
+        //    });
+        //});
     }
 };
 

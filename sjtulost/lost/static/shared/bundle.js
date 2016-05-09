@@ -190,10 +190,13 @@
 
 	var JaccountLoginActions = {
 	    login: function login() {
-	        AppDispatcher.dispatch({
-	            actionType: 'JACCOUNT_LOGIN',
-	            name: "JIN JIAJUN"
-	        });
+	        window.location.href = '/loginwithjaccount/';
+	        //$.get('/loginwithjaccount/', function(data){
+	        //    AppDispatcher.dispatch({
+	        //        actionType: 'JACCOUNT_LOGIN',
+	        //        name: "JIN JIAJUN"
+	        //    });
+	        //});
 	    }
 	};
 
