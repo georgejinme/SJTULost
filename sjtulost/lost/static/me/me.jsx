@@ -1,11 +1,18 @@
 var idOperation = require('../shared/util');
 
+var UserActions = require('../flux/action/userAction');
+var UserInfoStore = require('../flux/store/userInfoStore');
+
 
 var MeInformation = React.createClass({
     render: function() {
         return (
             <div>
-                111
+                <h1>{this.props.json['name']}</h1>
+                <hr/>
+                <p>手机: {this.props.json['phone']}</p>
+                <p>学号: {this.props.json['student_number']}</p>
+                <a href="#" className="btn btn-primary">编辑</a>
             </div>
         )
     }
@@ -66,7 +73,9 @@ var MeDisplay = React.createClass({
         if (this.props.selected == 0) {
             return (
                 <div>
-                    <MeInformation />
+                    <MeInformation
+                        json = {this.props.userInfo}
+                    />
                 </div>
             )
         } else if (this.props.selected == 1) {
@@ -92,8 +101,24 @@ var MeDisplay = React.createClass({
 var Me = React.createClass({
     getInitialState: function() {
         return {
-            selectedNavItem: 0
+            selectedNavItem: 0,
+            userInfo: UserInfoStore.getUserInfo()
         }
+    },
+
+    componentDidMount: function() {
+        UserInfoStore.addChangeListener(this._onChange);
+        UserActions.fetchData();
+    },
+
+    componentWillUnmount: function() {
+        UserInfoStore.removeChangeListener(this._onChange);
+    },
+
+    _onChange: function () {
+        this.setState({
+            userInfo: UserInfoStore.getUserInfo()
+        });
     },
 
     meNavClick: function(ev){
@@ -115,6 +140,7 @@ var Me = React.createClass({
                 <div className="col-lg-9 col-md-9 col-sm-9">
                     <MeDisplay
                         selected = {this.state.selectedNavItem}
+                        userInfo = {this.state.userInfo}
                     />
                 </div>
             </div>

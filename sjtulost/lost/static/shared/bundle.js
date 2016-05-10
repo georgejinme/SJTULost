@@ -2470,12 +2470,19 @@
 
 	var idOperation = __webpack_require__(17);
 
+	var UserActions = __webpack_require__(1);
+	var UserInfoStore = __webpack_require__(6);
+
 
 	var MeInformation = React.createClass({displayName: "MeInformation",
 	    render: function() {
 	        return (
 	            React.createElement("div", null, 
-	                "111"
+	                React.createElement("h1", null, this.props.json['name']), 
+	                React.createElement("hr", null), 
+	                React.createElement("p", null, "手机: ", this.props.json['phone']), 
+	                React.createElement("p", null, "学号: ", this.props.json['student_number']), 
+	                React.createElement("a", {href: "#", className: "btn btn-primary"}, "编辑")
 	            )
 	        )
 	    }
@@ -2536,7 +2543,9 @@
 	        if (this.props.selected == 0) {
 	            return (
 	                React.createElement("div", null, 
-	                    React.createElement(MeInformation, null)
+	                    React.createElement(MeInformation, {
+	                        json: this.props.userInfo}
+	                    )
 	                )
 	            )
 	        } else if (this.props.selected == 1) {
@@ -2562,8 +2571,24 @@
 	var Me = React.createClass({displayName: "Me",
 	    getInitialState: function() {
 	        return {
-	            selectedNavItem: 0
+	            selectedNavItem: 0,
+	            userInfo: UserInfoStore.getUserInfo()
 	        }
+	    },
+
+	    componentDidMount: function() {
+	        UserInfoStore.addChangeListener(this._onChange);
+	        UserActions.fetchData();
+	    },
+
+	    componentWillUnmount: function() {
+	        UserInfoStore.removeChangeListener(this._onChange);
+	    },
+
+	    _onChange: function () {
+	        this.setState({
+	            userInfo: UserInfoStore.getUserInfo()
+	        });
 	    },
 
 	    meNavClick: function(ev){
@@ -2584,7 +2609,8 @@
 	                ), 
 	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9"}, 
 	                    React.createElement(MeDisplay, {
-	                        selected: this.state.selectedNavItem}
+	                        selected: this.state.selectedNavItem, 
+	                        userInfo: this.state.userInfo}
 	                    )
 	                )
 	            )
