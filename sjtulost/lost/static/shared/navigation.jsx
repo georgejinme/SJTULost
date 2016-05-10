@@ -126,7 +126,7 @@ var App = React.createClass({
             )
         } else if (this.url == 'me') {
             return (
-                <div className="container">
+                <div className="meContainer">
                     <Navigation />
                     <Me />
                 </div>

@@ -172,7 +172,7 @@
 	            )
 	        } else if (this.url == 'me') {
 	            return (
-	                React.createElement("div", {className: "container"}, 
+	                React.createElement("div", {className: "meContainer"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Me, null)
 	                )
@@ -2466,13 +2466,128 @@
 
 /***/ },
 /* 22 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
-	var Me = React.createClass({displayName: "Me",
+	var idOperation = __webpack_require__(17);
+
+
+	var MeInformation = React.createClass({displayName: "MeInformation",
 	    render: function() {
 	        return (
-	            React.createElement("div", null)
+	            React.createElement("div", null, 
+	                "111"
+	            )
+	        )
+	    }
+	});
+
+	var MeFinding = React.createClass({displayName: "MeFinding",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                "222"
+	            )
+	        )
+	    }
+	});
+
+	var MeFound = React.createClass({displayName: "MeFound",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                "333"
+	            )
+	        )
+	    }
+	});
+
+
+
+	var MeNavigation = React.createClass({displayName: "MeNavigation",
+	    getNavClass: function(selected) {
+	        if (selected == this.props.selected) return "active";
+	        else return ""
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("ul", {className: "nav nav-pills nav-stacked meNav"}, 
+	                React.createElement("li", {className: this.getNavClass(0)}, 
+	                    React.createElement("a", {href: "#", id: idOperation.encodeId('meNav', 0), onClick: this.props.navClick}, "我的信息")
+	                ), 
+	                React.createElement("li", {className: this.getNavClass(1)}, 
+	                    React.createElement("a", {href: "#", id: idOperation.encodeId('meNav', 1), onClick: this.props.navClick}, "我丢失过")
+	                ), 
+	                React.createElement("li", {className: this.getNavClass(2)}, 
+	                    React.createElement("a", {href: "#", id: idOperation.encodeId('meNav', 2), onClick: this.props.navClick}, "我拾到过")
+	                ), 
+	                React.createElement("li", {className: this.getNavClass(3)}, 
+	                    React.createElement("a", {href: "#", id: idOperation.encodeId('meNav', 3), onClick: this.props.navClick}, "退出登录")
+	                )
+	            )
+	        )
+	    }
+	});
+
+
+
+	var MeDisplay = React.createClass({displayName: "MeDisplay",
+	    render: function() {
+	        if (this.props.selected == 0) {
+	            return (
+	                React.createElement("div", null, 
+	                    React.createElement(MeInformation, null)
+	                )
+	            )
+	        } else if (this.props.selected == 1) {
+	            return (
+	                React.createElement("div", null, 
+	                    React.createElement(MeFinding, null)
+	                )
+	            )
+	        } else if (this.props.selected == 2) {
+	            return (
+	                React.createElement("div", null, 
+	                    React.createElement(MeFound, null)
+	                )
+	            )
+	        } else {
+	            return (
+	                React.createElement("div", null)
+	            )
+	        }
+	    }
+	});
+
+	var Me = React.createClass({displayName: "Me",
+	    getInitialState: function() {
+	        return {
+	            selectedNavItem: 0
+	        }
+	    },
+
+	    meNavClick: function(ev){
+	        var id = idOperation.decodeId(ev.target.id);
+	        this.setState({
+	            selectedNavItem: id
+	        })
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "meContent row"}, 
+	                React.createElement("div", {className: "col-lg-3 col-md-3 col-sm-3"}, 
+	                    React.createElement(MeNavigation, {
+	                        selected: this.state.selectedNavItem, 
+	                        navClick: this.meNavClick}
+	                    )
+	                ), 
+	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9"}, 
+	                    React.createElement(MeDisplay, {
+	                        selected: this.state.selectedNavItem}
+	                    )
+	                )
+	            )
 	        )
 	    }
 	});

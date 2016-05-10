@@ -359,6 +359,32 @@
     border-top-color: #cccccc;
 }
 
+/*
+    Me
+*/
+
+.meContainer {
+    position: relative;
+    width: 99%;
+    margin: auto;
+}
+
+.meContent{
+    margin-top: 71px;
+}
+
+.meNav a {
+    color: brown;
+}
+
+.meNav li.active a{
+    background-color: brown;
+}
+
+.meNav li.active a:hover {
+    background-color: brown;
+}
+
 
 
 
