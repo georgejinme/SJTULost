@@ -385,6 +385,19 @@
     background-color: brown;
 }
 
+.meInfo input{
+    width: 50%;
+}
+
+.meInfo input:focus{
+    box-shadow: inset 0 -2px 0 brown !important;
+}
+
+.meInfo .btn {
+    width: 50%;
+    margin-top: 20px;
+}
+
 
 
 

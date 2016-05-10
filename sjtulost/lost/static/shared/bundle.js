@@ -2477,12 +2477,18 @@
 	var MeInformation = React.createClass({displayName: "MeInformation",
 	    render: function() {
 	        return (
-	            React.createElement("div", null, 
+	            React.createElement("div", {className: "meInfo"}, 
 	                React.createElement("h1", null, this.props.json['name']), 
 	                React.createElement("hr", null), 
-	                React.createElement("p", null, "手机: ", this.props.json['phone']), 
-	                React.createElement("p", null, "学号: ", this.props.json['student_number']), 
-	                React.createElement("a", {href: "#", className: "btn btn-primary"}, "编辑")
+	                React.createElement("div", {className: "form-group"}, 
+	                    React.createElement("label", {className: "control-label", htmlFor: "focusedInput"}, "联系方式"), 
+	                    React.createElement("input", {className: "form-control", id: "focusedInput1", type: "text", value: this.props.json['phone']})
+	                ), 
+	                React.createElement("div", {className: "form-group"}, 
+	                    React.createElement("label", {className: "control-label", htmlFor: "focusedInput"}, "学号"), 
+	                    React.createElement("input", {className: "form-control", id: "focusedInput2", type: "text", value: this.props.json['student_number']})
+	                ), 
+	                React.createElement("a", {href: "#", className: "btn btn-success"}, "修改完成")
 	            )
 	        )
 	    }

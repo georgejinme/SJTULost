@@ -7,12 +7,18 @@ var UserInfoStore = require('../flux/store/userInfoStore');
 var MeInformation = React.createClass({
     render: function() {
         return (
-            <div>
+            <div className="meInfo">
                 <h1>{this.props.json['name']}</h1>
                 <hr/>
-                <p>手机: {this.props.json['phone']}</p>
-                <p>学号: {this.props.json['student_number']}</p>
-                <a href="#" className="btn btn-primary">编辑</a>
+                <div className="form-group">
+                    <label className="control-label" htmlFor="focusedInput">联系方式</label>
+                    <input className="form-control" id="focusedInput1" type="text" value={this.props.json['phone']}/>
+                </div>
+                <div className="form-group">
+                    <label className="control-label" htmlFor="focusedInput">学号</label>
+                    <input className="form-control" id="focusedInput2" type="text" value={this.props.json['student_number']}/>
+                </div>
+                <a href="#" className="btn btn-success">修改完成</a>
             </div>
         )
     }
