@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^finding/$', 'lost.app.views.finding', name='finding'),
     url(r'^found/$', 'lost.app.views.found', name='found'),
     url(r'^rank/$', 'lost.app.views.rank', name='rank'),
+    url(r'^me/$', 'lost.app.views.me', name='me'),
 
     url(r'^loginwithjaccount/$', 'lost.app.user.login_with_jaccount', name='login_with_jaccount'),
     url(r'^getaccesstoken/$', 'lost.app.user.get_access_token', name='get_access_token'),

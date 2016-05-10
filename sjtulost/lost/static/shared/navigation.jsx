@@ -14,6 +14,7 @@ var Found = require('../found/found');
 var Rank = require('../rank/rank');
 var FindingView = require('../finding/findingview');
 var FoundView = require('../found/foundview');
+var Me = require('../me/me');
 
 var Navigation = React.createClass({
     getInitialState: function() {
@@ -39,7 +40,7 @@ var Navigation = React.createClass({
 
     getUrl: function() {
         if (this.state.userInfo['student_number'] == '') return '/loginwithjaccount/';
-        else return '#'
+        else return '/me/';
     },
 
     render: function() {
@@ -52,13 +53,13 @@ var Navigation = React.createClass({
                     <div className="navbar-collapse collapse" id="navbar-main">
                         <ul className="nav navbar-nav">
                             <li>
-                                <a href = "/finding/" target = "_blank">丢失</a>
+                                <a href = "/finding/">丢失</a>
                             </li>
                             <li>
-                                <a href = "/found/" target = "_blank">拾物</a>
+                                <a href = "/found/">拾物</a>
                             </li>
                             <li>
-                                <a href = "/rank/" target = "_blank">排行</a>
+                                <a href = "/rank/">排行</a>
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
@@ -121,6 +122,13 @@ var App = React.createClass({
                     <FoundView
                         id = {this.id}
                     />
+                </div>
+            )
+        } else if (this.url == 'me') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <Me />
                 </div>
             )
         }

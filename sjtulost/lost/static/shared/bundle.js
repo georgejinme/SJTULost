@@ -51,7 +51,7 @@
 	    'dev-prefix': 'http://127.0.0.1:8888'
 	};
 
-	var UserActions = __webpack_require__(22);
+	var UserActions = __webpack_require__(1);
 	var UserInfoStore = __webpack_require__(6);
 
 	var Homepage = __webpack_require__(14);
@@ -60,6 +60,7 @@
 	var Rank = __webpack_require__(19);
 	var FindingView = __webpack_require__(20);
 	var FoundView = __webpack_require__(21);
+	var Me = __webpack_require__(22);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -85,7 +86,7 @@
 
 	    getUrl: function() {
 	        if (this.state.userInfo['student_number'] == '') return '/loginwithjaccount/';
-	        else return '#'
+	        else return '/me/';
 	    },
 
 	    render: function() {
@@ -98,13 +99,13 @@
 	                    React.createElement("div", {className: "navbar-collapse collapse", id: "navbar-main"}, 
 	                        React.createElement("ul", {className: "nav navbar-nav"}, 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "/finding/", target: "_blank"}, "丢失")
+	                                React.createElement("a", {href: "/finding/"}, "丢失")
 	                            ), 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "/found/", target: "_blank"}, "拾物")
+	                                React.createElement("a", {href: "/found/"}, "拾物")
 	                            ), 
 	                            React.createElement("li", null, 
-	                                React.createElement("a", {href: "/rank/", target: "_blank"}, "排行")
+	                                React.createElement("a", {href: "/rank/"}, "排行")
 	                            )
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
@@ -169,6 +170,13 @@
 	                    )
 	                )
 	            )
+	        } else if (this.url == 'me') {
+	            return (
+	                React.createElement("div", {className: "container"}, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(Me, null)
+	                )
+	            )
 	        }
 	    }
 	});
@@ -180,7 +188,30 @@
 
 
 /***/ },
-/* 1 */,
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Created by gougoumemeda on 16/4/22.
+	 */
+	'use strict';
+
+	var AppDispatcher = __webpack_require__(2);
+
+	var UserActions = {
+	    fetchData: function fetchData() {
+	        $.get('/getuserinfo/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'USER_INFO_INITIALIZATION',
+	                userInfo: data
+	            });
+	        });
+	    }
+	};
+
+	module.exports = UserActions;
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2435,27 +2466,18 @@
 
 /***/ },
 /* 22 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	/**
-	 * Created by gougoumemeda on 16/4/22.
-	 */
-	'use strict';
-
-	var AppDispatcher = __webpack_require__(2);
-
-	var UserActions = {
-	    fetchData: function fetchData() {
-	        $.get('/getuserinfo/', function (data) {
-	            AppDispatcher.dispatch({
-	                actionType: 'USER_INFO_INITIALIZATION',
-	                userInfo: data
-	            });
-	        });
+	
+	var Me = React.createClass({displayName: "Me",
+	    render: function() {
+	        return (
+	            React.createElement("div", null)
+	        )
 	    }
-	};
+	});
 
-	module.exports = UserActions;
+	module.exports = Me;
 
 /***/ }
 /******/ ]);
