@@ -97,21 +97,38 @@ var MeInformation = React.createClass({
 });
 
 var MeFindingItem = React.createClass({
+    badgeColor: function() {
+        if (this.props.json['state'] == 0) return 'label-danger label';
+        else return 'label-success label';
+    },
+
+    badgeText: function() {
+        if (this.props.json['state'] == 0) return 'Uncompleted';
+        else return 'Completed'
+    },
+
+    getButtonActive:function() {
+        if (this.props.json['state'] == 0) return 'btn btn-success meFindingBtn';
+        else return 'btn btn-success meFindingBtn disable'
+    },
+
     render: function() {
         return (
             <div className="row meFindingItem">
                 <div className="col-lg-6 col-md-6 col-sm-6 meFindingItemImage">
-                    <span className='label-danger label'>Uncomplete</span>
-                    <img src="/static/image/qwt.jpg" />
+                    <span className={this.badgeColor()}>{this.badgeText()}</span>
+                    <img src={this.props.json['img']} />
                 </div>
                 <div className="col-lg-6 col-md-6 col-sm-6 meFindingItemDetail">
-                    <p className="meFindingItemDetailTitle">{this.props.json['description']}</p>
+                    <a href = {'/findingview/' + this.props.json['id']} target = '_blank'>
+                        <p className="meFindingItemDetailTitle">{this.props.json['description']}</p>
+                    </a>
                     <p className="meFindingItemDetailInfo">物品类别: {this.props.json['item_type']}</p>
                     <p className="meFindingItemDetailInfo">遗失时间: {this.props.json['time']}</p>
                     <p className="meFindingItemDetailInfo">遗失地点: {this.props.json['place']}</p>
                     <p className="meFindingItemDetailInfo">详细位置: {this.props.json['place_detail']}</p>
                     <p className="meFindingItemDetailInfo">酬金: {this.props.json['pay']} 元</p>
-                    <a href="#" className='btn btn-success meFindingBtn'>已经找到</a>
+                    <a href="#" className={this.getButtonActive()}>已经找到</a>
                 </div>
             </div>
         )
@@ -160,11 +177,81 @@ var MeFinding = React.createClass({
     }
 });
 
-var MeFound = React.createClass({
+var MeFoundItem = React.createClass({
+    badgeColor: function() {
+        if (this.props.json['state'] == 0) return 'label-danger label';
+        else return 'label-success label';
+    },
+
+    badgeText: function() {
+        if (this.props.json['state'] == 0) return 'Uncompleted';
+        else return 'Completed'
+    },
+
+    getButtonActive:function() {
+        if (this.props.json['state'] == 0) return 'btn btn-success meFoundBtn';
+        else return 'btn btn-success meFoundBtn disable'
+    },
+
     render: function() {
         return (
-            <div>
-                333
+            <div className="row meFoundItem">
+                <div className="col-lg-6 col-md-6 col-sm-6 meFoundItemImage">
+                    <span className={this.badgeColor()}>{this.badgeText()}</span>
+                    <img src={this.props.json['img']} />
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-6 meFoundItemDetail">
+                    <a href = {'/foundview/' + this.props.json['id']} target = '_blank'>
+                        <p className="meFoundItemDetailTitle">{this.props.json['description']}</p>
+                    </a>
+                    <p className="meFoundItemDetailInfo">物品类别: {this.props.json['item_type']}</p>
+                    <p className="meFoundItemDetailInfo">遗失时间: {this.props.json['time']}</p>
+                    <p className="meFoundItemDetailInfo">遗失地点: {this.props.json['place']}</p>
+                    <p className="meFoundItemDetailInfo">详细位置: {this.props.json['place_detail']}</p>
+                    <a href="#" className={this.getButtonActive()}>已经归还</a>
+                </div>
+            </div>
+        )
+    }
+});
+
+var MeFound = React.createClass({
+    getInitialState: function() {
+        return {
+            founds: FoundStore.getFoundsWithAmount()
+        }
+    },
+
+
+    componentDidMount: function() {
+        FoundStore.addChangeListener(this._onFoundChange);
+        UserActions.fetchUserFounds();
+    },
+
+    componentWillUnmount: function() {
+        FoundStore.removeChangeListener(this._onFoundChange);
+    },
+
+    _onFoundChange: function () {
+        this.setState({
+            founds: FoundStore.getFoundsWithAmount()
+        });
+    },
+
+    render: function() {
+        return (
+            <div className="row meFound">
+                {
+                    this.state.founds.map(function(val, index){
+                        return (
+                            <div className="col-lg-6 col-md-6 col-sm-6">
+                                <MeFoundItem
+                                    json = {val}
+                                />
+                            </div>
+                        )
+                    })
+                }
             </div>
         )
     }

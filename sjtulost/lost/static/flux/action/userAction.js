@@ -31,6 +31,15 @@ var UserActions = {
                 findingArray: data
             })
         })
+    },
+
+    fetchUserFounds: function () {
+        $.get('/getuserfounds/', function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'USER_FOUND_INITIALIZATION',
+                foundArray: data
+            })
+        })
     }
 };
 

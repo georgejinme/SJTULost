@@ -3,6 +3,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonRes
 import json
 from lost.models import User
 import lost.app.finding as FindingFunctions
+import lost.app.found as FoundFunctions
 from rauth import OAuth2Service
 
 CLIENT_ID = 'jaseieelost20160504'
@@ -106,4 +107,14 @@ def get_user_findings(request):
     if check_user_logined(request):
         user = User.objects.get(id = request.session['user_id'])
         return JsonResponse(FindingFunctions.finding_format(user.finding_set.all()), safe=False)
+    else:
+        return JsonResponse([], safe=False)
+
+
+def get_user_founds(request):
+    if check_user_logined(request):
+        user = User.objects.get(id = request.session['user_id'])
+        return JsonResponse(FoundFunctions.found_format(user.found_set.all()), safe=False)
+    else:
+        return JsonResponse([], safe=False)
 

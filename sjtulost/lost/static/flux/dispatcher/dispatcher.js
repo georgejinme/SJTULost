@@ -28,6 +28,7 @@ AppDispatcher.register(function (action) {
             FindingStore.emitChange();
             break;
 
+        case 'USER_FOUND_INITIALIZATION':
         case 'FOUND_INITIALIZATION':
         case 'FOUND_UPDATE':
         case 'FOUND_VIEWING':

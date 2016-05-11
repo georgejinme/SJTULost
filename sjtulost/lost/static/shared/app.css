@@ -470,7 +470,7 @@
 
 .meFinding .meFindingItem .meFindingItemImage img {
     width: 100%;
-    height: 260px;
+    height: 265px;
 }
 
 .meFinding .meFindingItem .meFindingItemImage span {
@@ -511,6 +511,72 @@
     margin-top: 5px;
     width: 100%;
 }
+
+.meFinding .meFindingItem a:hover{
+    text-decoration: none;
+}
+
+.meFound .meFoundItem {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    width: 100%;
+    overflow: hidden;
+}
+
+.meFound .meFoundItem .meFoundItemImage {
+    padding-left: 0;
+}
+
+.meFound .meFoundItem .meFoundItemImage img {
+    width: 100%;
+    height: 235px;
+}
+
+.meFound .meFoundItem .meFoundItemImage span {
+    position: absolute;
+}
+
+.meFound .meFoundItem .meFoundItemDetail{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.meFound .meFoundItem .meFoundItemDetail p{
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    width: 100%;
+    margin-bottom: 0px;
+    color: #666666;
+}
+
+.meFound .meFoundItem .meFoundItemDetailTitle{
+    color: brown !important;
+    font-size: 15px;
+    height: 50px;
+    line-height: 25px;
+    overflow: hidden;
+}
+
+.meFound .meFoundItem .meFoundItemDetailInfo {
+    margin-top: 5px;
+    line-height: 25px;
+    height:25px;
+    overflow: hidden;
+    font-size: 13px;
+}
+
+.meFound .meFoundItem .meFoundBtn {
+    margin-top: 5px;
+    width: 100%;
+}
+
+.meFound .meFoundItem a:hover{
+    text-decoration: none;
+}
+
 
 
 

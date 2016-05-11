@@ -226,6 +226,15 @@
 	                findingArray: data
 	            });
 	        });
+	    },
+
+	    fetchUserFounds: function fetchUserFounds() {
+	        $.get('/getuserfounds/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'USER_FOUND_INITIALIZATION',
+	                foundArray: data
+	            });
+	        });
 	    }
 	};
 
@@ -267,6 +276,7 @@
 	            FindingStore.emitChange();
 	            break;
 
+	        case 'USER_FOUND_INITIALIZATION':
 	        case 'FOUND_INITIALIZATION':
 	        case 'FOUND_UPDATE':
 	        case 'FOUND_VIEWING':
@@ -2611,21 +2621,38 @@
 	});
 
 	var MeFindingItem = React.createClass({displayName: "MeFindingItem",
+	    badgeColor: function() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';
+	        else return 'label-success label';
+	    },
+
+	    badgeText: function() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';
+	        else return 'Completed'
+	    },
+
+	    getButtonActive:function() {
+	        if (this.props.json['state'] == 0) return 'btn btn-success meFindingBtn';
+	        else return 'btn btn-success meFindingBtn disable'
+	    },
+
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "row meFindingItem"}, 
 	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6 meFindingItemImage"}, 
-	                    React.createElement("span", {className: "label-danger label"}, "Uncomplete"), 
-	                    React.createElement("img", {src: "/static/image/qwt.jpg"})
+	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                    React.createElement("img", {src: this.props.json['img']})
 	                ), 
 	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6 meFindingItemDetail"}, 
-	                    React.createElement("p", {className: "meFindingItemDetailTitle"}, this.props.json['description']), 
+	                    React.createElement("a", {href: '/findingview/' + this.props.json['id'], target: "_blank"}, 
+	                        React.createElement("p", {className: "meFindingItemDetailTitle"}, this.props.json['description'])
+	                    ), 
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "物品类别: ", this.props.json['item_type']), 
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失地点: ", this.props.json['place']), 
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "详细位置: ", this.props.json['place_detail']), 
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "酬金: ", this.props.json['pay'], " 元"), 
-	                    React.createElement("a", {href: "#", className: "btn btn-success meFindingBtn"}, "已经找到")
+	                    React.createElement("a", {href: "#", className: this.getButtonActive()}, "已经找到")
 	                )
 	            )
 	        )
@@ -2674,11 +2701,81 @@
 	    }
 	});
 
-	var MeFound = React.createClass({displayName: "MeFound",
+	var MeFoundItem = React.createClass({displayName: "MeFoundItem",
+	    badgeColor: function() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';
+	        else return 'label-success label';
+	    },
+
+	    badgeText: function() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';
+	        else return 'Completed'
+	    },
+
+	    getButtonActive:function() {
+	        if (this.props.json['state'] == 0) return 'btn btn-success meFoundBtn';
+	        else return 'btn btn-success meFoundBtn disable'
+	    },
+
 	    render: function() {
 	        return (
-	            React.createElement("div", null, 
-	                "333"
+	            React.createElement("div", {className: "row meFoundItem"}, 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6 meFoundItemImage"}, 
+	                    React.createElement("span", {className: this.badgeColor()}, this.badgeText()), 
+	                    React.createElement("img", {src: this.props.json['img']})
+	                ), 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6 meFoundItemDetail"}, 
+	                    React.createElement("a", {href: '/foundview/' + this.props.json['id'], target: "_blank"}, 
+	                        React.createElement("p", {className: "meFoundItemDetailTitle"}, this.props.json['description'])
+	                    ), 
+	                    React.createElement("p", {className: "meFoundItemDetailInfo"}, "物品类别: ", this.props.json['item_type']), 
+	                    React.createElement("p", {className: "meFoundItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
+	                    React.createElement("p", {className: "meFoundItemDetailInfo"}, "遗失地点: ", this.props.json['place']), 
+	                    React.createElement("p", {className: "meFoundItemDetailInfo"}, "详细位置: ", this.props.json['place_detail']), 
+	                    React.createElement("a", {href: "#", className: this.getButtonActive()}, "已经归还")
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var MeFound = React.createClass({displayName: "MeFound",
+	    getInitialState: function() {
+	        return {
+	            founds: FoundStore.getFoundsWithAmount()
+	        }
+	    },
+
+
+	    componentDidMount: function() {
+	        FoundStore.addChangeListener(this._onFoundChange);
+	        UserActions.fetchUserFounds();
+	    },
+
+	    componentWillUnmount: function() {
+	        FoundStore.removeChangeListener(this._onFoundChange);
+	    },
+
+	    _onFoundChange: function () {
+	        this.setState({
+	            founds: FoundStore.getFoundsWithAmount()
+	        });
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "row meFound"}, 
+	                
+	                    this.state.founds.map(function(val, index){
+	                        return (
+	                            React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
+	                                React.createElement(MeFoundItem, {
+	                                    json: val}
+	                                )
+	                            )
+	                        )
+	                    })
+	                
 	            )
 	        )
 	    }
