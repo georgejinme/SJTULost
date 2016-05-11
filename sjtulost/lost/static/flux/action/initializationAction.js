@@ -35,6 +35,10 @@ var FindingAction = {
                 findingArray: data
             })
         })
+    },
+
+    fetchDataWithUserId: function() {
+
     }
 };
 

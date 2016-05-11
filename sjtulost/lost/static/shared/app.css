@@ -455,6 +455,58 @@
     100% {top: -38px;}
 }
 
+.meFinding .meFindingItem {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    background-color: #eeeeee;
+    width: 100%;
+    overflow: hidden;
+}
+
+.meFinding .meFindingItem .meFindingItemImage {
+    padding-left: 0;
+}
+
+.meFinding .meFindingItem .meFindingItemImage img {
+    width: 100%;
+    height: 250px;
+}
+
+.meFinding .meFindingItem .meFindingItemImage span {
+    position: absolute;
+}
+
+.meFinding .meFindingItem .meFindingItemDetail p{
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    width: 100%;
+    margin-bottom: 0px;
+    color: #666666;
+}
+
+.meFinding .meFindingItem .meFindingItemDetailTitle{
+    color: brown !important;
+    font-size: 15px;
+    height: 60px;
+    line-height: 30px;
+    overflow: hidden;
+}
+
+.meFinding .meFindingItem .meFindingItemDetailInfo {
+    margin-top: 5px;
+    line-height: 30px;
+    height:30px;
+    overflow: hidden;
+    font-size: 13px;
+}
+
+.meFinding .meFindingItem .meFindingBtn {
+    margin-top: 5px;
+    width: 100%;
+}
+
 
 
 

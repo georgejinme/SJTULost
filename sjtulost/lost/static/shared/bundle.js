@@ -1670,7 +1670,9 @@
 	                findingArray: data
 	            });
 	        });
-	    }
+	    },
+
+	    fetchDataWithUserId: function fetchDataWithUserId() {}
 	};
 
 	var FoundAction = {
@@ -2346,11 +2348,6 @@
 	        else return 'Completed'
 	    },
 
-	    buttonActive: function() {
-	        if (this.props.json['state'] == 0) return 'btn btn-success findingViewHeaderButton';
-	        else return 'btn btn-success disabled findingViewHeaderButton'
-	    },
-
 	    render: function() {
 	        return(
 	            React.createElement("div", {className: "findingViewHeader"}, 
@@ -2360,8 +2357,7 @@
 	                React.createElement("p", null, "遗失地点: ", this.props.json['place']), 
 	                React.createElement("p", null, "详细位置: ", this.props.json['place_detail']), 
 	                React.createElement("p", null, "联系电话: ", this.props.json['user_phone']), 
-	                React.createElement("p", null, "酬金: ", this.props.json['pay'], " 元"), 
-	                React.createElement("a", {href: "#", className: this.buttonActive()}, "我捡到了!")
+	                React.createElement("p", null, "酬金: ", this.props.json['pay'], " 元")
 	            )
 
 	        )
@@ -2445,11 +2441,6 @@
 	        else return 'Completed'
 	    },
 
-	    buttonActive: function() {
-	        if (this.props.json['state'] == 0) return 'btn btn-success foundViewHeaderButton';
-	        else return 'btn btn-success disabled foundViewHeaderButton'
-	    },
-
 	    render: function() {
 	        return(
 	            React.createElement("div", {className: "foundViewHeader"}, 
@@ -2458,8 +2449,7 @@
 	                React.createElement("p", null, "拾物时间: ", this.props.json['time']), 
 	                React.createElement("p", null, "拾物地点: ", this.props.json['place']), 
 	                React.createElement("p", null, "详细位置: ", this.props.json['place_detail']), 
-	                React.createElement("p", null, "联系电话: ", this.props.json['user_phone']), 
-	                React.createElement("a", {href: "#", className: this.buttonActive()}, "这是我丢的东西!")
+	                React.createElement("p", null, "联系电话: ", this.props.json['user_phone'])
 	            )
 
 	        )
@@ -2518,6 +2508,11 @@
 
 	var UserActions = __webpack_require__(1);
 	var UserInfoStore = __webpack_require__(6);
+
+	var FindingAction = __webpack_require__(15).FindingAction;
+	var FoundAction = __webpack_require__(15).FoundAction;
+	var FindingStore = __webpack_require__(9);
+	var FoundStore = __webpack_require__(10);
 
 
 	var MeInformation = React.createClass({displayName: "MeInformation",
@@ -2609,11 +2604,65 @@
 	    }
 	});
 
-	var MeFinding = React.createClass({displayName: "MeFinding",
+	var MeFindingItem = React.createClass({displayName: "MeFindingItem",
 	    render: function() {
 	        return (
-	            React.createElement("div", null, 
-	                "222"
+	            React.createElement("div", {className: "row meFindingItem"}, 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6 meFindingItemImage"}, 
+	                    React.createElement("span", {className: "label-danger label"}, "Uncomplete"), 
+	                    React.createElement("img", {src: "/static/image/qwt.jpg"})
+	                ), 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6 meFindingItemDetail"}, 
+	                    React.createElement("p", {className: "meFindingItemDetailTitle"}, "Titldddddddddddddsfsjldkfjslkdjflskejlfwkeflkwnvkwenwfnlwkejflwkje"), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失时间: 2016/01/01"), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失地点: 二餐"), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "详细位置: 二餐二楼新疆餐厅"), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "酬金: 50 元"), 
+	                    React.createElement("a", {href: "#", className: "btn btn-success meFindingBtn"}, "已经找到")
+	                )
+	            )
+	        )
+	    }
+	});
+
+	var MeFinding = React.createClass({displayName: "MeFinding",
+	    getInitialState: function() {
+	        return {
+	            findings: FindingStore.getFindingsWithAmount()
+	        }
+	    },
+
+
+	    componentDidMount: function() {
+	        FindingStore.addChangeListener(this._onFindingChange);
+	        FindingAction.fetchDataWithUserId();
+	    },
+
+	    componentWillUnmount: function() {
+	        FindingStore.removeChangeListener(this._onFindingChange);
+	    },
+
+	    _onFindingChange: function () {
+	        this.setState({
+	            findings: FindingStore.getFindingsWithAmount()
+	        });
+	    },
+
+	    render: function() {
+	        return (
+	            React.createElement("div", {className: "row meFinding"}, 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
+	                    React.createElement(MeFindingItem, null)
+	                ), 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
+	                    React.createElement(MeFindingItem, null)
+	                ), 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
+	                    React.createElement(MeFindingItem, null)
+	                ), 
+	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
+	                    React.createElement(MeFindingItem, null)
+	                )
 	            )
 	        )
 	    }

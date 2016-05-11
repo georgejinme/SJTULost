@@ -3,6 +3,11 @@ var idOperation = require('../shared/util');
 var UserActions = require('../flux/action/userAction');
 var UserInfoStore = require('../flux/store/userInfoStore');
 
+var FindingAction = require('../flux/action/initializationAction').FindingAction;
+var FoundAction = require('../flux/action/initializationAction').FoundAction;
+var FindingStore = require('../flux/store/findingStore');
+var FoundStore = require('../flux/store/foundStore');
+
 
 var MeInformation = React.createClass({
 
@@ -93,11 +98,65 @@ var MeInformation = React.createClass({
     }
 });
 
-var MeFinding = React.createClass({
+var MeFindingItem = React.createClass({
     render: function() {
         return (
-            <div>
-                222
+            <div className="row meFindingItem">
+                <div className="col-lg-6 col-md-6 col-sm-6 meFindingItemImage">
+                    <span className='label-danger label'>Uncomplete</span>
+                    <img src="/static/image/qwt.jpg" />
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-6 meFindingItemDetail">
+                    <p className="meFindingItemDetailTitle">Titldddddddddddddsfsjldkfjslkdjflskejlfwkeflkwnvkwenwfnlwkejflwkje</p>
+                    <p className="meFindingItemDetailInfo">遗失时间: 2016/01/01</p>
+                    <p className="meFindingItemDetailInfo">遗失地点: 二餐</p>
+                    <p className="meFindingItemDetailInfo">详细位置: 二餐二楼新疆餐厅</p>
+                    <p className="meFindingItemDetailInfo">酬金: 50 元</p>
+                    <a href="#" className='btn btn-success meFindingBtn'>已经找到</a>
+                </div>
+            </div>
+        )
+    }
+});
+
+var MeFinding = React.createClass({
+    getInitialState: function() {
+        return {
+            findings: FindingStore.getFindingsWithAmount()
+        }
+    },
+
+
+    componentDidMount: function() {
+        FindingStore.addChangeListener(this._onFindingChange);
+        FindingAction.fetchDataWithUserId();
+    },
+
+    componentWillUnmount: function() {
+        FindingStore.removeChangeListener(this._onFindingChange);
+    },
+
+    _onFindingChange: function () {
+        this.setState({
+            findings: FindingStore.getFindingsWithAmount()
+        });
+    },
+
+    render: function() {
+        return (
+            <div className="row meFinding">
+                <div className="col-lg-6 col-md-6 col-sm-6">
+                    <MeFindingItem />
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-6">
+                    <MeFindingItem />
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-6">
+                    <MeFindingItem />
+                </div>
+                <div className="col-lg-6 col-md-6 col-sm-6">
+                    <MeFindingItem />
+                </div>
             </div>
         )
     }

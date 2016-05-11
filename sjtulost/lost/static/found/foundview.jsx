@@ -27,11 +27,6 @@ var FoundViewHeader = React.createClass({
         else return 'Completed'
     },
 
-    buttonActive: function() {
-        if (this.props.json['state'] == 0) return 'btn btn-success foundViewHeaderButton';
-        else return 'btn btn-success disabled foundViewHeaderButton'
-    },
-
     render: function() {
         return(
             <div className="foundViewHeader">
@@ -41,7 +36,6 @@ var FoundViewHeader = React.createClass({
                 <p>拾物地点: {this.props.json['place']}</p>
                 <p>详细位置: {this.props.json['place_detail']}</p>
                 <p>联系电话: {this.props.json['user_phone']}</p>
-                <a href="#" className={this.buttonActive()}>这是我丢的东西!</a>
             </div>
 
         )
