@@ -15,7 +15,7 @@ AUTHORIZATION_URL = 'https://jaccount.sjtu.edu.cn/oauth2/authorize'
 TOKEN_URL = 'https://jaccount.sjtu.edu.cn/oauth2/token'
 
 GET_ACCESS_TOKEN_URI = 'http://127.0.0.1:8888/getaccesstoken/'
-REDIRECT_URI = 'http://127.0.0.1:8888/'
+HOMEPAGE_URL = 'http://127.0.0.1:8888/'
 
 jaccount = OAuth2Service(
     client_id=CLIENT_ID,
@@ -52,7 +52,7 @@ def get_access_token(request):
     id = check_user_exists_in_databases(user_info)
     request.session['user_id'] = id
 
-    return HttpResponseRedirect(REDIRECT_URI)
+    return HttpResponseRedirect(HOMEPAGE_URL)
 
 def check_user_exists_in_databases(user_info):
     stu_id = user_info['entities'][0]['code']
@@ -62,7 +62,7 @@ def check_user_exists_in_databases(user_info):
         new_user = User(phone = 0, name = user_name, student_number = stu_id)
         new_user.save()
         return new_user.id
-    return user.id
+    return user[0].id
 
 def check_user_logined(request):
     if request.session.get('user_id', '') != '':
@@ -117,4 +117,9 @@ def get_user_founds(request):
         return JsonResponse(FoundFunctions.found_format(user.found_set.all()), safe=False)
     else:
         return JsonResponse([], safe=False)
+
+def logout(request):
+    if check_user_logined(request):
+        del request.session['user_id']
+    return HttpResponseRedirect(HOMEPAGE_URL)
 

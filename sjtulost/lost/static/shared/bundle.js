@@ -2802,7 +2802,7 @@
 	                    React.createElement("a", {href: "#", id: idOperation.encodeId('meNav', 2), onClick: this.props.navClick}, "我拾到过")
 	                ), 
 	                React.createElement("li", {className: this.getNavClass(3)}, 
-	                    React.createElement("a", {href: "#", id: idOperation.encodeId('meNav', 3), onClick: this.props.navClick}, "退出登录")
+	                    React.createElement("a", {href: "/logout/", id: idOperation.encodeId('meNav', 3), onClick: this.props.navClick}, "退出登录")
 	                )
 	            )
 	        )
@@ -2850,9 +2850,11 @@
 
 	    meNavClick: function(ev){
 	        var id = idOperation.decodeId(ev.target.id);
-	        this.setState({
-	            selectedNavItem: id
-	        })
+	        if (id != 3) {
+	            this.setState({
+	                selectedNavItem: id
+	            })
+	        }
 	    },
 
 	    render: function() {

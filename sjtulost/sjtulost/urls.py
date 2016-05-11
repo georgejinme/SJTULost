@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^updateuserinfo/$', 'lost.app.user.update_user_info', name='update_user_info'),
     url(r'^getuserfindings/$', 'lost.app.user.get_user_findings', name='get_user_findings'),
     url(r'^getuserfounds/$', 'lost.app.user.get_user_founds', name='get_user_founds'),
+    url(r'^logout/$', 'lost.app.user.logout', name='logout'),
 
     url(r'^findingview/(\d+)/$', 'lost.app.views.findingview', name='findingview'),
     url(r'^foundview/(\d+)/$', 'lost.app.views.foundview', name='foundview'),
