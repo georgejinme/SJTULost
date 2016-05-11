@@ -217,6 +217,15 @@
 	                result: rdata['success']
 	            });
 	        });
+	    },
+
+	    fetchUserFindings: function fetchUserFindings() {
+	        $.get('/getuserfindings/', function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'USER_FINDING_INITIALIZATION',
+	                findingArray: data
+	            });
+	        });
 	    }
 	};
 
@@ -250,6 +259,7 @@
 	            UserInfoStore.emitChange();
 	            break;
 
+	        case 'USER_FINDING_INITIALIZATION':
 	        case 'FINDING_INITIALIZATION':
 	        case 'FINDING_UPDATE':
 	        case 'FINDING_VIEWING':
@@ -1670,9 +1680,7 @@
 	                findingArray: data
 	            });
 	        });
-	    },
-
-	    fetchDataWithUserId: function fetchDataWithUserId() {}
+	    }
 	};
 
 	var FoundAction = {
@@ -2509,8 +2517,6 @@
 	var UserActions = __webpack_require__(1);
 	var UserInfoStore = __webpack_require__(6);
 
-	var FindingAction = __webpack_require__(15).FindingAction;
-	var FoundAction = __webpack_require__(15).FoundAction;
 	var FindingStore = __webpack_require__(9);
 	var FoundStore = __webpack_require__(10);
 
@@ -2613,11 +2619,12 @@
 	                    React.createElement("img", {src: "/static/image/qwt.jpg"})
 	                ), 
 	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6 meFindingItemDetail"}, 
-	                    React.createElement("p", {className: "meFindingItemDetailTitle"}, "Titldddddddddddddsfsjldkfjslkdjflskejlfwkeflkwnvkwenwfnlwkejflwkje"), 
-	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失时间: 2016/01/01"), 
-	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失地点: 二餐"), 
-	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "详细位置: 二餐二楼新疆餐厅"), 
-	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "酬金: 50 元"), 
+	                    React.createElement("p", {className: "meFindingItemDetailTitle"}, this.props.json['description']), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "物品类别: ", this.props.json['item_type']), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失地点: ", this.props.json['place']), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "详细位置: ", this.props.json['place_detail']), 
+	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "酬金: ", this.props.json['pay'], " 元"), 
 	                    React.createElement("a", {href: "#", className: "btn btn-success meFindingBtn"}, "已经找到")
 	                )
 	            )
@@ -2635,7 +2642,7 @@
 
 	    componentDidMount: function() {
 	        FindingStore.addChangeListener(this._onFindingChange);
-	        FindingAction.fetchDataWithUserId();
+	        UserActions.fetchUserFindings();
 	    },
 
 	    componentWillUnmount: function() {
@@ -2651,18 +2658,17 @@
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "row meFinding"}, 
-	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
-	                    React.createElement(MeFindingItem, null)
-	                ), 
-	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
-	                    React.createElement(MeFindingItem, null)
-	                ), 
-	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
-	                    React.createElement(MeFindingItem, null)
-	                ), 
-	                React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
-	                    React.createElement(MeFindingItem, null)
-	                )
+	                
+	                    this.state.findings.map(function(val, index){
+	                        return (
+	                            React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
+	                                React.createElement(MeFindingItem, {
+	                                    json: val}
+	                                )
+	                            )
+	                        )
+	                    })
+	                
 	            )
 	        )
 	    }

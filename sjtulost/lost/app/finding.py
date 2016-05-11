@@ -61,7 +61,6 @@ def findings_with_item_and_place(item, place):
 def findings_with_id(finding_id):
     return finding_format([Finding.objects.get(id = finding_id)])
 
-
 # external function
 
 def get_all_findings(request):
@@ -76,6 +75,8 @@ def get_findings_with_filter(request):
 def get_findings_with_id(request):
     finding_id = request.POST['id']
     return JsonResponse(findings_with_id(finding_id), safe=False)
+
+
 
 
 

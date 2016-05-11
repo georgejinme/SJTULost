@@ -20,6 +20,7 @@ AppDispatcher.register(function (action) {
             UserInfoStore.emitChange();
             break;
 
+        case 'USER_FINDING_INITIALIZATION':
         case 'FINDING_INITIALIZATION':
         case 'FINDING_UPDATE':
         case 'FINDING_VIEWING':

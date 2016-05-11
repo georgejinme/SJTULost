@@ -2,6 +2,7 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 import json
 from lost.models import User
+import lost.app.finding as FindingFunctions
 from rauth import OAuth2Service
 
 CLIENT_ID = 'jaseieelost20160504'
@@ -62,8 +63,11 @@ def check_user_exists_in_databases(user_info):
         return new_user.id
     return user.id
 
-
-# get user information
+def check_user_logined(request):
+    if request.session.get('user_id', '') != '':
+        return True
+    else:
+        return False
 
 
 def user_info(sid):
@@ -76,8 +80,11 @@ def user_info(sid):
     return user_dict
 
 
+# external functions
+
+
 def get_user_info(request):
-    if request.session.get('user_id', '') != '':
+    if check_user_logined(request):
         return JsonResponse(user_info(request.session['user_id']), safe=False)
     else:
         return JsonResponse({
@@ -88,9 +95,15 @@ def get_user_info(request):
 
 
 def update_user_info(request):
-    if request.session.get('user_id', '') != '':
+    if check_user_logined(request):
         User.objects.filter(id = request.session['user_id']).update(phone = request.POST['phone'], student_number=request.POST['student_number'])
         return JsonResponse({'success': 1}, safe=False)
     else:
         return JsonResponse({'success': 0}, safe=False)
+
+
+def get_user_findings(request):
+    if check_user_logined(request):
+        user = User.objects.get(id = request.session['user_id'])
+        return JsonResponse(FindingFunctions.finding_format(user.finding_set.all()), safe=False)
 

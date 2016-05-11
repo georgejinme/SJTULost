@@ -470,11 +470,16 @@
 
 .meFinding .meFindingItem .meFindingItemImage img {
     width: 100%;
-    height: 250px;
+    height: 260px;
 }
 
 .meFinding .meFindingItem .meFindingItemImage span {
     position: absolute;
+}
+
+.meFinding .meFindingItem .meFindingItemDetail{
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .meFinding .meFindingItem .meFindingItemDetail p{
@@ -489,15 +494,15 @@
 .meFinding .meFindingItem .meFindingItemDetailTitle{
     color: brown !important;
     font-size: 15px;
-    height: 60px;
-    line-height: 30px;
+    height: 50px;
+    line-height: 25px;
     overflow: hidden;
 }
 
 .meFinding .meFindingItem .meFindingItemDetailInfo {
     margin-top: 5px;
-    line-height: 30px;
-    height:30px;
+    line-height: 25px;
+    height:25px;
     overflow: hidden;
     font-size: 13px;
 }

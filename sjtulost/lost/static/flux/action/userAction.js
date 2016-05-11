@@ -22,6 +22,15 @@ var UserActions = {
                 result: rdata['success']
             })
         })
+    },
+
+    fetchUserFindings: function() {
+        $.get('/getuserfindings/', function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'USER_FINDING_INITIALIZATION',
+                findingArray: data
+            })
+        })
     }
 };
 
