@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^loginwithjaccount/$', 'lost.app.user.login_with_jaccount', name='login_with_jaccount'),
     url(r'^getaccesstoken/$', 'lost.app.user.get_access_token', name='get_access_token'),
     url(r'^getuserinfo/$', 'lost.app.user.get_user_info', name='get_access_token'),
+    url(r'^updateuserinfo/$', 'lost.app.user.update_user_info', name='update_user_info'),
 
     url(r'^findingview/(\d+)/$', 'lost.app.views.findingview', name='findingview'),
     url(r'^foundview/(\d+)/$', 'lost.app.views.foundview', name='foundview'),

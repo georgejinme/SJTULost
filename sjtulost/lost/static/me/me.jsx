@@ -5,20 +5,89 @@ var UserInfoStore = require('../flux/store/userInfoStore');
 
 
 var MeInformation = React.createClass({
+
+    getInitialState: function() {
+        return {
+            userInfo: UserInfoStore.getUserInfo(),
+            updateResult: UserInfoStore.getUpdateResult(),
+            updating: false
+        }
+    },
+
+    componentDidMount: function() {
+        UserInfoStore.addChangeListener(this._onChange);
+        UserInfoStore.addUpdateListener(this._onUpdate);
+        UserActions.fetchData();
+    },
+
+    componentWillUnmount: function() {
+        UserInfoStore.removeChangeListener(this._onChange);
+        UserInfoStore.removeUpdateListener(this._onUpdate);
+    },
+
+    _onChange: function () {
+        this.setState({
+            userInfo: UserInfoStore.getUserInfo()
+        });
+    },
+
+    _onUpdate: function() {
+        this.setState({
+            updateResult: UserInfoStore.getUpdateResult(),
+            updating: true
+        });
+        var that = this;
+        setTimeout(function(){
+            that.setState({
+                updating: false
+            })}, 2100
+        )
+    },
+
+    phoneChange: function(ev) {
+        UserInfoStore.setUserPhone(ev.target.value);
+        UserInfoStore.emitChange()
+    },
+
+    studentNumberChange: function(ev) {
+        UserInfoStore.setUserStudentNumber(ev.target.value);
+        UserInfoStore.emitChange()
+    },
+
+    updateUserInfo: function() {
+        UserActions.updateData(this.state.userInfo)
+    },
+
+    getAlertText: function() {
+        if (this.state.updateResult == 1) return '更新成功';
+        else return '更新失败, 请重新登录'
+    },
+
+    getAlertClass: function() {
+        var c = 'alert alert-dismissible meInfoAlert';
+        if (this.state.updating) c += ' updating';
+        if (this.state.updateResult == 1) c += ' alert-success';
+        else c += ' alert-danger';
+        return c
+    },
+
     render: function() {
         return (
             <div className="meInfo">
-                <h1>{this.props.json['name']}</h1>
+                <div className={this.getAlertClass()}>
+                    <p>{this.getAlertText()}</p>
+                </div>
+                <h1>{this.state.userInfo['name']}</h1>
                 <hr/>
                 <div className="form-group">
                     <label className="control-label" htmlFor="focusedInput">联系方式</label>
-                    <input className="form-control" id="focusedInput1" type="text" value={this.props.json['phone']}/>
+                    <input className="form-control" id="focusedInput1" type="text" onChange={this.phoneChange} value={this.state.userInfo['phone']}/>
                 </div>
                 <div className="form-group">
                     <label className="control-label" htmlFor="focusedInput">学号</label>
-                    <input className="form-control" id="focusedInput2" type="text" value={this.props.json['student_number']}/>
+                    <input className="form-control" id="focusedInput2" type="text" onChange={this.studentNumberChange} value={this.state.userInfo['student_number']}/>
                 </div>
-                <a href="#" className="btn btn-success">修改完成</a>
+                <a href="#" className="btn btn-success" onClick = {this.updateUserInfo}>修改完成</a>
             </div>
         )
     }
@@ -80,7 +149,6 @@ var MeDisplay = React.createClass({
             return (
                 <div>
                     <MeInformation
-                        json = {this.props.userInfo}
                     />
                 </div>
             )
@@ -112,21 +180,6 @@ var Me = React.createClass({
         }
     },
 
-    componentDidMount: function() {
-        UserInfoStore.addChangeListener(this._onChange);
-        UserActions.fetchData();
-    },
-
-    componentWillUnmount: function() {
-        UserInfoStore.removeChangeListener(this._onChange);
-    },
-
-    _onChange: function () {
-        this.setState({
-            userInfo: UserInfoStore.getUserInfo()
-        });
-    },
-
     meNavClick: function(ev){
         var id = idOperation.decodeId(ev.target.id);
         this.setState({
@@ -146,7 +199,6 @@ var Me = React.createClass({
                 <div className="col-lg-9 col-md-9 col-sm-9">
                     <MeDisplay
                         selected = {this.state.selectedNavItem}
-                        userInfo = {this.state.userInfo}
                     />
                 </div>
             </div>

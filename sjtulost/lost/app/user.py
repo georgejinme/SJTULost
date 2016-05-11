@@ -86,3 +86,11 @@ def get_user_info(request):
             'student_number': ''
         }, safe=False)
 
+
+def update_user_info(request):
+    if request.session.get('user_id', '') != '':
+        User.objects.filter(id = request.session['user_id']).update(phone = request.POST['phone'], student_number=request.POST['student_number'])
+        return JsonResponse({'success': 1}, safe=False)
+    else:
+        return JsonResponse({'success': 0}, safe=False)
+

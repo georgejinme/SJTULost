@@ -11,6 +11,17 @@ var UserActions = {
                 userInfo: data
             })
         })
+    },
+    updateData: function(data) {
+        $.post('/updateuserinfo/', {
+            phone: data['phone'],
+            student_number: data['student_number']
+        }, function(rdata){
+            AppDispatcher.dispatch({
+                actionType: 'USER_INFO_UPDATE',
+                result: rdata['success']
+            })
+        })
     }
 };
 

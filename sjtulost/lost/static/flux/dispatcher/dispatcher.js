@@ -10,6 +10,11 @@ var RankStore = require('../store/rankStore');
 
 AppDispatcher.register(function (action) {
     switch(action.actionType) {
+        case 'USER_INFO_UPDATE':
+            UserInfoStore.setUpdateResult(action.result);
+            UserInfoStore.emitUpdateResult();
+            break;
+
         case 'USER_INFO_INITIALIZATION':
             UserInfoStore.setUserInfo(action.userInfo);
             UserInfoStore.emitChange();

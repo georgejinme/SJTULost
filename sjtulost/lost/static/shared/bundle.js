@@ -206,6 +206,17 @@
 	                userInfo: data
 	            });
 	        });
+	    },
+	    updateData: function updateData(data) {
+	        $.post('/updateuserinfo/', {
+	            phone: data['phone'],
+	            student_number: data['student_number']
+	        }, function (rdata) {
+	            AppDispatcher.dispatch({
+	                actionType: 'USER_INFO_UPDATE',
+	                result: rdata['success']
+	            });
+	        });
 	    }
 	};
 
@@ -229,6 +240,11 @@
 
 	AppDispatcher.register(function (action) {
 	    switch (action.actionType) {
+	        case 'USER_INFO_UPDATE':
+	            UserInfoStore.setUpdateResult(action.result);
+	            UserInfoStore.emitUpdateResult();
+	            break;
+
 	        case 'USER_INFO_INITIALIZATION':
 	            UserInfoStore.setUserInfo(action.userInfo);
 	            UserInfoStore.emitChange();
@@ -634,17 +650,47 @@
 	     */
 
 	    userInfo: {},
+	    // this property indicated the result of updating of user information
+	    updateResult: 0,
 
 	    getUserInfo: function getUserInfo() {
 	        return this.userInfo;
+	    },
+
+	    getUpdateResult: function getUpdateResult() {
+	        return this.updateResult;
+	    },
+
+	    setUserPhone: function setUserPhone(phone) {
+	        this.userInfo['phone'] = phone;
+	    },
+
+	    setUserStudentNumber: function setUserStudentNumber(sn) {
+	        this.userInfo['student_number'] = sn;
 	    },
 
 	    setUserInfo: function setUserInfo(json) {
 	        this.userInfo = json;
 	    },
 
+	    setUpdateResult: function setUpdateResult(re) {
+	        this.updateResult = re;
+	    },
+
 	    emitChange: function emitChange() {
 	        this.emit('change');
+	    },
+
+	    emitUpdateResult: function emitUpdateResult() {
+	        this.emit('update');
+	    },
+
+	    addUpdateListener: function addUpdateListener(callback) {
+	        this.on('update', callback);
+	    },
+
+	    removeUpdateListener: function removeUpdateListener(callback) {
+	        this.removeListener('update', callback);
 	    },
 
 	    addChangeListener: function addChangeListener(callback) {
@@ -2475,20 +2521,89 @@
 
 
 	var MeInformation = React.createClass({displayName: "MeInformation",
+
+	    getInitialState: function() {
+	        return {
+	            userInfo: UserInfoStore.getUserInfo(),
+	            updateResult: UserInfoStore.getUpdateResult(),
+	            updating: false
+	        }
+	    },
+
+	    componentDidMount: function() {
+	        UserInfoStore.addChangeListener(this._onChange);
+	        UserInfoStore.addUpdateListener(this._onUpdate);
+	        UserActions.fetchData();
+	    },
+
+	    componentWillUnmount: function() {
+	        UserInfoStore.removeChangeListener(this._onChange);
+	        UserInfoStore.removeUpdateListener(this._onUpdate);
+	    },
+
+	    _onChange: function () {
+	        this.setState({
+	            userInfo: UserInfoStore.getUserInfo()
+	        });
+	    },
+
+	    _onUpdate: function() {
+	        this.setState({
+	            updateResult: UserInfoStore.getUpdateResult(),
+	            updating: true
+	        });
+	        var that = this;
+	        setTimeout(function(){
+	            that.setState({
+	                updating: false
+	            })}, 2100
+	        )
+	    },
+
+	    phoneChange: function(ev) {
+	        UserInfoStore.setUserPhone(ev.target.value);
+	        UserInfoStore.emitChange()
+	    },
+
+	    studentNumberChange: function(ev) {
+	        UserInfoStore.setUserStudentNumber(ev.target.value);
+	        UserInfoStore.emitChange()
+	    },
+
+	    updateUserInfo: function() {
+	        UserActions.updateData(this.state.userInfo)
+	    },
+
+	    getAlertText: function() {
+	        if (this.state.updateResult == 1) return '更新成功';
+	        else return '更新失败, 请重新登录'
+	    },
+
+	    getAlertClass: function() {
+	        var c = 'alert alert-dismissible meInfoAlert';
+	        if (this.state.updating) c += ' updating';
+	        if (this.state.updateResult == 1) c += ' alert-success';
+	        else c += ' alert-danger';
+	        return c
+	    },
+
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "meInfo"}, 
-	                React.createElement("h1", null, this.props.json['name']), 
+	                React.createElement("div", {className: this.getAlertClass()}, 
+	                    React.createElement("p", null, this.getAlertText())
+	                ), 
+	                React.createElement("h1", null, this.state.userInfo['name']), 
 	                React.createElement("hr", null), 
 	                React.createElement("div", {className: "form-group"}, 
 	                    React.createElement("label", {className: "control-label", htmlFor: "focusedInput"}, "联系方式"), 
-	                    React.createElement("input", {className: "form-control", id: "focusedInput1", type: "text", value: this.props.json['phone']})
+	                    React.createElement("input", {className: "form-control", id: "focusedInput1", type: "text", onChange: this.phoneChange, value: this.state.userInfo['phone']})
 	                ), 
 	                React.createElement("div", {className: "form-group"}, 
 	                    React.createElement("label", {className: "control-label", htmlFor: "focusedInput"}, "学号"), 
-	                    React.createElement("input", {className: "form-control", id: "focusedInput2", type: "text", value: this.props.json['student_number']})
+	                    React.createElement("input", {className: "form-control", id: "focusedInput2", type: "text", onChange: this.studentNumberChange, value: this.state.userInfo['student_number']})
 	                ), 
-	                React.createElement("a", {href: "#", className: "btn btn-success"}, "修改完成")
+	                React.createElement("a", {href: "#", className: "btn btn-success", onClick: this.updateUserInfo}, "修改完成")
 	            )
 	        )
 	    }
@@ -2549,8 +2664,7 @@
 	        if (this.props.selected == 0) {
 	            return (
 	                React.createElement("div", null, 
-	                    React.createElement(MeInformation, {
-	                        json: this.props.userInfo}
+	                    React.createElement(MeInformation, null
 	                    )
 	                )
 	            )
@@ -2582,21 +2696,6 @@
 	        }
 	    },
 
-	    componentDidMount: function() {
-	        UserInfoStore.addChangeListener(this._onChange);
-	        UserActions.fetchData();
-	    },
-
-	    componentWillUnmount: function() {
-	        UserInfoStore.removeChangeListener(this._onChange);
-	    },
-
-	    _onChange: function () {
-	        this.setState({
-	            userInfo: UserInfoStore.getUserInfo()
-	        });
-	    },
-
 	    meNavClick: function(ev){
 	        var id = idOperation.decodeId(ev.target.id);
 	        this.setState({
@@ -2615,8 +2714,7 @@
 	                ), 
 	                React.createElement("div", {className: "col-lg-9 col-md-9 col-sm-9"}, 
 	                    React.createElement(MeDisplay, {
-	                        selected: this.state.selectedNavItem, 
-	                        userInfo: this.state.userInfo}
+	                        selected: this.state.selectedNavItem}
 	                    )
 	                )
 	            )
