@@ -109,7 +109,7 @@ var MeFindingItem = React.createClass({
 
     getButtonActive:function() {
         if (this.props.json['state'] == 0) return 'btn btn-success meFindingBtn';
-        else return 'btn btn-success meFindingBtn disable'
+        else return 'btn btn-success meFindingBtn disabled'
     },
 
     render: function() {
@@ -128,7 +128,11 @@ var MeFindingItem = React.createClass({
                     <p className="meFindingItemDetailInfo">遗失地点: {this.props.json['place']}</p>
                     <p className="meFindingItemDetailInfo">详细位置: {this.props.json['place_detail']}</p>
                     <p className="meFindingItemDetailInfo">酬金: {this.props.json['pay']} 元</p>
-                    <a href="#" className={this.getButtonActive()}>已经找到</a>
+                    <a href="#"
+                       id = {idOperation.encodeId('meFinding', this.props.json['id'])}
+                       className={this.getButtonActive()}
+                       onClick = {this.props.findingHandler}>已经找到
+                    </a>
                 </div>
             </div>
         )
@@ -138,18 +142,22 @@ var MeFindingItem = React.createClass({
 var MeFinding = React.createClass({
     getInitialState: function() {
         return {
-            findings: FindingStore.getFindingsWithAmount()
+            findings: FindingStore.getFindingsWithAmount(),
+            updateResult: FindingStore.getUpdateResult(),
+            updating: false
         }
     },
 
 
     componentDidMount: function() {
         FindingStore.addChangeListener(this._onFindingChange);
+        FindingStore.addUpdateListener(this._onFindingUpdate);
         UserActions.fetchUserFindings();
     },
 
     componentWillUnmount: function() {
         FindingStore.removeChangeListener(this._onFindingChange);
+        FindingStore.removeUpdateListener(this._onFindingUpdate);
     },
 
     _onFindingChange: function () {
@@ -158,15 +166,52 @@ var MeFinding = React.createClass({
         });
     },
 
+    _onFindingUpdate: function() {
+        this.setState({
+            updateResult: FindingStore.getUpdateResult(),
+            updating: true
+        });
+        var that = this;
+        setTimeout(function(){
+            that.setState({
+                updating: false
+            })}, 2100
+        );
+        UserActions.fetchUserFindings()
+    },
+
+    getAlertText: function() {
+        if (this.state.updateResult == 1) return '更新成功';
+        else return '更新失败, 请重新登录'
+    },
+
+    getAlertClass: function() {
+        var c = 'alert alert-dismissible meFindingAlert';
+        if (this.state.updating) c += ' updating';
+        if (this.state.updateResult == 1) c += ' alert-success';
+        else c += ' alert-danger';
+        return c
+    },
+
+    findingClick: function(ev) {
+        var id = idOperation.decodeId(ev.target.id);
+        UserActions.userFindingsDone(id)
+    },
+
     render: function() {
+        var handler = this.findingClick;
         return (
             <div className="row meFinding">
+                <div className={this.getAlertClass()}>
+                    <p>{this.getAlertText()}</p>
+                </div>
                 {
                     this.state.findings.map(function(val, index){
                         return (
                             <div className="col-lg-6 col-md-6 col-sm-6">
                                 <MeFindingItem
                                     json = {val}
+                                    findingHandler = {handler}
                                 />
                             </div>
                         )
@@ -190,7 +235,7 @@ var MeFoundItem = React.createClass({
 
     getButtonActive:function() {
         if (this.props.json['state'] == 0) return 'btn btn-success meFoundBtn';
-        else return 'btn btn-success meFoundBtn disable'
+        else return 'btn btn-success meFoundBtn disabled'
     },
 
     render: function() {

@@ -2,8 +2,10 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 import json
 from lost.models import User
+from lost.models import Finding
 import lost.app.finding as FindingFunctions
 import lost.app.found as FoundFunctions
+import django.utils.timezone as timezone
 from rauth import OAuth2Service
 
 CLIENT_ID = 'jaseieelost20160504'
@@ -94,13 +96,16 @@ def get_user_info(request):
             'student_number': ''
         }, safe=False)
 
+# code:
+# 0: success
+# 1: fail
 
 def update_user_info(request):
     if check_user_logined(request):
         User.objects.filter(id = request.session['user_id']).update(phone = request.POST['phone'], student_number=request.POST['student_number'])
-        return JsonResponse({'success': 1}, safe=False)
+        return JsonResponse({'code': 0}, safe=False)
     else:
-        return JsonResponse({'success': 0}, safe=False)
+        return JsonResponse({'code': 1}, safe=False)
 
 
 def get_user_findings(request):
@@ -109,6 +114,19 @@ def get_user_findings(request):
         return JsonResponse(FindingFunctions.finding_format(user.finding_set.all()), safe=False)
     else:
         return JsonResponse([], safe=False)
+
+# code:
+# 0: success
+# 1: fail
+
+def user_findings_done(request):
+    if check_user_logined(request):
+        id = request.POST['id']
+        Finding.objects.filter(id = id).update(state=1, complete_time=timezone.now())
+        return JsonResponse({'code': 0}, safe=False)
+    else:
+        return JsonResponse({'code': 1}, safe=False)
+
 
 
 def get_user_founds(request):

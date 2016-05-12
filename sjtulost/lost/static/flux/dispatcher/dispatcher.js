@@ -20,6 +20,11 @@ AppDispatcher.register(function (action) {
             UserInfoStore.emitChange();
             break;
 
+        case 'USER_FINDING_DONE':
+            FindingStore.setUpdateResult(action.result);
+            FindingStore.emitUpdateResult();
+            break;
+
         case 'USER_FINDING_INITIALIZATION':
         case 'FINDING_INITIALIZATION':
         case 'FINDING_UPDATE':

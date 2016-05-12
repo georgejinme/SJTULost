@@ -431,7 +431,7 @@
     100% {top: -38px;}
 }
 
-@-moz-keyframes myfirst /* Firefox */
+@-moz-keyframes meInfoUpdateAnimation /* Firefox */
 {
     0% {top: -38px;}
     35% {top: -8px;}
@@ -439,7 +439,7 @@
     100% {top: -38px;}
 }
 
-@-webkit-keyframes myfirst /* Safari 和 Chrome */
+@-webkit-keyframes meInfoUpdateAnimation /* Safari 和 Chrome */
 {
     0% {top: -38px;}
     35% {top: -8px;}
@@ -447,7 +447,7 @@
     100% {top: -38px;}
 }
 
-@-o-keyframes myfirst /* Opera */
+@-o-keyframes meInfoUpdateAnimation /* Opera */
 {
     0% {top: -38px;}
     35% {top: -8px;}
@@ -514,6 +514,63 @@
 
 .meFinding .meFindingItem a:hover{
     text-decoration: none;
+}
+
+.meFinding .meFindingAlert{
+    width: 95%;
+    height: 30px;
+    padding-top: 0px;
+    position: absolute;
+    top: -38px;
+    text-align: center;
+    display: none;
+}
+
+.meFinding .updating {
+    display: block;
+    animation: meFindingUpdateAnimation 2s;
+    -moz-animation: meFindingUpdateAnimation 2s;	/* Firefox */
+    -webkit-animation: meFindingUpdateAnimation 2s;	/* Safari 和 Chrome */
+    -o-animation: meFindingUpdateAnimation 2s;	/* Opera */
+}
+
+.meFinding .meFindingAlert p{
+    height: 30px;
+    line-height: 30px;
+    margin: 0px;
+    text-align: center;
+}
+
+@keyframes meFindingUpdateAnimation
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
+}
+
+@-moz-keyframes meFindingUpdateAnimation /* Firefox */
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
+}
+
+@-webkit-keyframes meFindingUpdateAnimation /* Safari 和 Chrome */
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
+}
+
+@-o-keyframes meFindingUpdateAnimation /* Opera */
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
 }
 
 .meFound .meFoundItem {

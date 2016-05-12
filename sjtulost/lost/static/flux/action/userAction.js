@@ -19,7 +19,7 @@ var UserActions = {
         }, function(rdata){
             AppDispatcher.dispatch({
                 actionType: 'USER_INFO_UPDATE',
-                result: rdata['success']
+                result: rdata['code']
             })
         })
     },
@@ -38,6 +38,17 @@ var UserActions = {
             AppDispatcher.dispatch({
                 actionType: 'USER_FOUND_INITIALIZATION',
                 foundArray: data
+            })
+        })
+    },
+
+    userFindingsDone: function(id) {
+        $.post('/userfindingsdone/', {
+            id: id
+        }, function(data){
+            AppDispatcher.dispatch({
+                actionType: 'USER_FINDING_DONE',
+                result: data['code']
             })
         })
     }

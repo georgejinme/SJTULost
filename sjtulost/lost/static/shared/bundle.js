@@ -214,7 +214,7 @@
 	        }, function (rdata) {
 	            AppDispatcher.dispatch({
 	                actionType: 'USER_INFO_UPDATE',
-	                result: rdata['success']
+	                result: rdata['code']
 	            });
 	        });
 	    },
@@ -233,6 +233,17 @@
 	            AppDispatcher.dispatch({
 	                actionType: 'USER_FOUND_INITIALIZATION',
 	                foundArray: data
+	            });
+	        });
+	    },
+
+	    userFindingsDone: function userFindingsDone(id) {
+	        $.post('/userfindingsdone/', {
+	            id: id
+	        }, function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'USER_FINDING_DONE',
+	                result: data['code']
 	            });
 	        });
 	    }
@@ -266,6 +277,11 @@
 	        case 'USER_INFO_INITIALIZATION':
 	            UserInfoStore.setUserInfo(action.userInfo);
 	            UserInfoStore.emitChange();
+	            break;
+
+	        case 'USER_FINDING_DONE':
+	            FindingStore.setUpdateResult(action.result);
+	            FindingStore.emitUpdateResult();
 	            break;
 
 	        case 'USER_FINDING_INITIALIZATION':
@@ -1106,6 +1122,7 @@
 	     */
 
 	    findings: [],
+	    updateResult: 0,
 
 	    getDefaultFinding: function getDefaultFinding() {
 	        return {
@@ -1137,8 +1154,28 @@
 	        if (this.findings.length == 0) return this.getDefaultFinding();else return this.findings[0];
 	    },
 
+	    getUpdateResult: function getUpdateResult() {
+	        return this.updateResult;
+	    },
+
+	    setUpdateResult: function setUpdateResult(re) {
+	        this.updateResult = re;
+	    },
+
 	    emitChange: function emitChange() {
 	        this.emit('change');
+	    },
+
+	    emitUpdateResult: function emitUpdateResult() {
+	        this.emit('update');
+	    },
+
+	    addUpdateListener: function addUpdateListener(callback) {
+	        this.on('update', callback);
+	    },
+
+	    removeUpdateListener: function removeUpdateListener(callback) {
+	        this.removeListener('update', callback);
 	    },
 
 	    addChangeListener: function addChangeListener(callback) {
@@ -2633,7 +2670,7 @@
 
 	    getButtonActive:function() {
 	        if (this.props.json['state'] == 0) return 'btn btn-success meFindingBtn';
-	        else return 'btn btn-success meFindingBtn disable'
+	        else return 'btn btn-success meFindingBtn disabled'
 	    },
 
 	    render: function() {
@@ -2652,7 +2689,11 @@
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "遗失地点: ", this.props.json['place']), 
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "详细位置: ", this.props.json['place_detail']), 
 	                    React.createElement("p", {className: "meFindingItemDetailInfo"}, "酬金: ", this.props.json['pay'], " 元"), 
-	                    React.createElement("a", {href: "#", className: this.getButtonActive()}, "已经找到")
+	                    React.createElement("a", {href: "#", 
+	                       id: idOperation.encodeId('meFinding', this.props.json['id']), 
+	                       className: this.getButtonActive(), 
+	                       onClick: this.props.findingHandler}, "已经找到"
+	                    )
 	                )
 	            )
 	        )
@@ -2662,18 +2703,22 @@
 	var MeFinding = React.createClass({displayName: "MeFinding",
 	    getInitialState: function() {
 	        return {
-	            findings: FindingStore.getFindingsWithAmount()
+	            findings: FindingStore.getFindingsWithAmount(),
+	            updateResult: FindingStore.getUpdateResult(),
+	            updating: false
 	        }
 	    },
 
 
 	    componentDidMount: function() {
 	        FindingStore.addChangeListener(this._onFindingChange);
+	        FindingStore.addUpdateListener(this._onFindingUpdate);
 	        UserActions.fetchUserFindings();
 	    },
 
 	    componentWillUnmount: function() {
 	        FindingStore.removeChangeListener(this._onFindingChange);
+	        FindingStore.removeUpdateListener(this._onFindingUpdate);
 	    },
 
 	    _onFindingChange: function () {
@@ -2682,15 +2727,52 @@
 	        });
 	    },
 
+	    _onFindingUpdate: function() {
+	        this.setState({
+	            updateResult: FindingStore.getUpdateResult(),
+	            updating: true
+	        });
+	        var that = this;
+	        setTimeout(function(){
+	            that.setState({
+	                updating: false
+	            })}, 2100
+	        );
+	        UserActions.fetchUserFindings()
+	    },
+
+	    getAlertText: function() {
+	        if (this.state.updateResult == 1) return '更新成功';
+	        else return '更新失败, 请重新登录'
+	    },
+
+	    getAlertClass: function() {
+	        var c = 'alert alert-dismissible meFindingAlert';
+	        if (this.state.updating) c += ' updating';
+	        if (this.state.updateResult == 1) c += ' alert-success';
+	        else c += ' alert-danger';
+	        return c
+	    },
+
+	    findingClick: function(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        UserActions.userFindingsDone(id)
+	    },
+
 	    render: function() {
+	        var handler = this.findingClick;
 	        return (
 	            React.createElement("div", {className: "row meFinding"}, 
+	                React.createElement("div", {className: this.getAlertClass()}, 
+	                    React.createElement("p", null, this.getAlertText())
+	                ), 
 	                
 	                    this.state.findings.map(function(val, index){
 	                        return (
 	                            React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
 	                                React.createElement(MeFindingItem, {
-	                                    json: val}
+	                                    json: val, 
+	                                    findingHandler: handler}
 	                                )
 	                            )
 	                        )
@@ -2714,7 +2796,7 @@
 
 	    getButtonActive:function() {
 	        if (this.props.json['state'] == 0) return 'btn btn-success meFoundBtn';
-	        else return 'btn btn-success meFoundBtn disable'
+	        else return 'btn btn-success meFoundBtn disabled'
 	    },
 
 	    render: function() {
