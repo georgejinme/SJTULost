@@ -246,6 +246,17 @@
 	                result: data['code']
 	            });
 	        });
+	    },
+
+	    userFoundsDone: function userFoundsDone(id) {
+	        $.post('/userfoundsdone/', {
+	            id: id
+	        }, function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'USER_FOUND_DONE',
+	                result: data['code']
+	            });
+	        });
 	    }
 	};
 
@@ -282,6 +293,11 @@
 	        case 'USER_FINDING_DONE':
 	            FindingStore.setUpdateResult(action.result);
 	            FindingStore.emitUpdateResult();
+	            break;
+
+	        case 'USER_FOUND_DONE':
+	            FoundStore.setUpdateResult(action.result);
+	            FoundStore.emitUpdateResult();
 	            break;
 
 	        case 'USER_FINDING_INITIALIZATION':
@@ -1221,6 +1237,7 @@
 	     */
 
 	    founds: [],
+	    updateResult: 0,
 
 	    getDefaultFound: function getDefaultFound() {
 	        return {
@@ -1251,8 +1268,28 @@
 	        if (this.founds.length == 0) return this.getDefaultFound();else return this.founds[0];
 	    },
 
+	    getUpdateResult: function getUpdateResult() {
+	        return this.updateResult;
+	    },
+
+	    setUpdateResult: function setUpdateResult(re) {
+	        this.updateResult = re;
+	    },
+
 	    emitChange: function emitChange() {
 	        this.emit('change');
+	    },
+
+	    emitUpdateResult: function emitUpdateResult() {
+	        this.emit('update');
+	    },
+
+	    addUpdateListener: function addUpdateListener(callback) {
+	        this.on('update', callback);
+	    },
+
+	    removeUpdateListener: function removeUpdateListener(callback) {
+	        this.removeListener('update', callback);
 	    },
 
 	    addChangeListener: function addChangeListener(callback) {
@@ -2815,7 +2852,10 @@
 	                    React.createElement("p", {className: "meFoundItemDetailInfo"}, "遗失时间: ", this.props.json['time']), 
 	                    React.createElement("p", {className: "meFoundItemDetailInfo"}, "遗失地点: ", this.props.json['place']), 
 	                    React.createElement("p", {className: "meFoundItemDetailInfo"}, "详细位置: ", this.props.json['place_detail']), 
-	                    React.createElement("a", {href: "#", className: this.getButtonActive()}, "已经归还")
+	                    React.createElement("a", {href: "#", 
+	                       id: idOperation.encodeId('meFound', this.props.json['id']), 
+	                       className: this.getButtonActive(), 
+	                       onClick: this.props.foundHandler}, "已经归还")
 	                )
 	            )
 	        )
@@ -2825,18 +2865,22 @@
 	var MeFound = React.createClass({displayName: "MeFound",
 	    getInitialState: function() {
 	        return {
-	            founds: FoundStore.getFoundsWithAmount()
+	            founds: FoundStore.getFoundsWithAmount(),
+	            updateResult: FoundStore.getUpdateResult(),
+	            updating: false
 	        }
 	    },
 
 
 	    componentDidMount: function() {
 	        FoundStore.addChangeListener(this._onFoundChange);
+	        FoundStore.addUpdateListener(this._onFoundUpdate);
 	        UserActions.fetchUserFounds();
 	    },
 
 	    componentWillUnmount: function() {
 	        FoundStore.removeChangeListener(this._onFoundChange);
+	        FoundStore.removeUpdateListener(this._onFoundUpdate);
 	    },
 
 	    _onFoundChange: function () {
@@ -2845,15 +2889,52 @@
 	        });
 	    },
 
+	    _onFoundUpdate: function() {
+	        this.setState({
+	            updateResult: FoundStore.getUpdateResult(),
+	            updating: true
+	        });
+	        var that = this;
+	        setTimeout(function(){
+	            that.setState({
+	                updating: false
+	            })}, 2100
+	        );
+	        UserActions.fetchUserFounds()
+	    },
+
+	    getAlertText: function() {
+	        if (this.state.updateResult == 0) return '更新成功';
+	        else return '更新失败, 请重新登录'
+	    },
+
+	    getAlertClass: function() {
+	        var c = 'alert alert-dismissible meFoundAlert';
+	        if (this.state.updating) c += ' updating';
+	        if (this.state.updateResult == 0) c += ' alert-success';
+	        else c += ' alert-warning';
+	        return c
+	    },
+
+	    foundClick: function(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        UserActions.userFoundsDone(id)
+	    },
+
 	    render: function() {
+	        var handler = this.foundClick;
 	        return (
 	            React.createElement("div", {className: "row meFound"}, 
+	                React.createElement("div", {className: this.getAlertClass()}, 
+	                    React.createElement("p", null, this.getAlertText())
+	                ), 
 	                
 	                    this.state.founds.map(function(val, index){
 	                        return (
 	                            React.createElement("div", {className: "col-lg-6 col-md-6 col-sm-6"}, 
 	                                React.createElement(MeFoundItem, {
-	                                    json: val}
+	                                    json: val, 
+	                                    foundHandler: handler}
 	                                )
 	                            )
 	                        )

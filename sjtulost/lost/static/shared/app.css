@@ -456,8 +456,7 @@
 }
 
 .meFinding .meFindingItem {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 30px;
     border-radius: 5px;
     background-color: #eeeeee;
     width: 100%;
@@ -574,8 +573,7 @@
 }
 
 .meFound .meFoundItem {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 30px;
     border-radius: 5px;
     background-color: #eeeeee;
     width: 100%;
@@ -632,6 +630,63 @@
 
 .meFound .meFoundItem a:hover{
     text-decoration: none;
+}
+
+.meFound .meFoundAlert{
+    width: 95%;
+    height: 30px;
+    padding-top: 0px;
+    position: absolute;
+    top: -38px;
+    text-align: center;
+    display: none;
+}
+
+.meFound .updating {
+    display: block;
+    animation: meFoundUpdateAnimation 2s;
+    -moz-animation: meFoundUpdateAnimation 2s;	/* Firefox */
+    -webkit-animation: meFoundUpdateAnimation 2s;	/* Safari 和 Chrome */
+    -o-animation: meFoundUpdateAnimation 2s;	/* Opera */
+}
+
+.meFound .meFoundAlert p{
+    height: 30px;
+    line-height: 30px;
+    margin: 0px;
+    text-align: center;
+}
+
+@keyframes meFoundUpdateAnimation
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
+}
+
+@-moz-keyframes meFoundUpdateAnimation /* Firefox */
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
+}
+
+@-webkit-keyframes meFoundUpdateAnimation /* Safari 和 Chrome */
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
+}
+
+@-o-keyframes meFoundUpdateAnimation /* Opera */
+{
+    0% {top: -38px;}
+    35% {top: -8px;}
+    65% {top: -8px;}
+    100% {top: -38px;}
 }
 
 

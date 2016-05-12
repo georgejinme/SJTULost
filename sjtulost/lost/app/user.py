@@ -4,6 +4,7 @@ import json
 from lost.models import User
 from lost.models import Finding
 import lost.app.finding as FindingFunctions
+from lost.models import Found
 import lost.app.found as FoundFunctions
 import django.utils.timezone as timezone
 from rauth import OAuth2Service
@@ -141,6 +142,20 @@ def get_user_founds(request):
         return JsonResponse(FoundFunctions.found_format(user.found_set.all()), safe=False)
     else:
         return JsonResponse([], safe=False)
+
+# code:
+# 0: success
+# 1: fail
+
+def user_founds_done(request):
+    if check_user_logined(request):
+        id = request.POST['id']
+        Found.objects.filter(id = id).update(state=1, complete_time=timezone.now())
+        return JsonResponse({'code': 0}, safe=False)
+    else:
+        return JsonResponse({'code': 1}, safe=False)
+
+
 
 def logout(request):
     if check_user_logined(request):

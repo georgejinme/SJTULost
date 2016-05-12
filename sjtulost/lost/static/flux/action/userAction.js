@@ -51,6 +51,17 @@ var UserActions = {
                 result: data['code']
             })
         })
+    },
+
+    userFoundsDone: function(id) {
+        $.post('/userfoundsdone/', {
+            id: id
+        }, function(data) {
+            AppDispatcher.dispatch({
+                actionType: 'USER_FOUND_DONE',
+                result: data['code']
+            })
+        })
     }
 };
 

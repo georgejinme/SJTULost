@@ -254,7 +254,10 @@ var MeFoundItem = React.createClass({
                     <p className="meFoundItemDetailInfo">遗失时间: {this.props.json['time']}</p>
                     <p className="meFoundItemDetailInfo">遗失地点: {this.props.json['place']}</p>
                     <p className="meFoundItemDetailInfo">详细位置: {this.props.json['place_detail']}</p>
-                    <a href="#" className={this.getButtonActive()}>已经归还</a>
+                    <a href="#"
+                       id = {idOperation.encodeId('meFound', this.props.json['id'])}
+                       className={this.getButtonActive()}
+                       onClick={this.props.foundHandler}>已经归还</a>
                 </div>
             </div>
         )
@@ -264,18 +267,22 @@ var MeFoundItem = React.createClass({
 var MeFound = React.createClass({
     getInitialState: function() {
         return {
-            founds: FoundStore.getFoundsWithAmount()
+            founds: FoundStore.getFoundsWithAmount(),
+            updateResult: FoundStore.getUpdateResult(),
+            updating: false
         }
     },
 
 
     componentDidMount: function() {
         FoundStore.addChangeListener(this._onFoundChange);
+        FoundStore.addUpdateListener(this._onFoundUpdate);
         UserActions.fetchUserFounds();
     },
 
     componentWillUnmount: function() {
         FoundStore.removeChangeListener(this._onFoundChange);
+        FoundStore.removeUpdateListener(this._onFoundUpdate);
     },
 
     _onFoundChange: function () {
@@ -284,15 +291,52 @@ var MeFound = React.createClass({
         });
     },
 
+    _onFoundUpdate: function() {
+        this.setState({
+            updateResult: FoundStore.getUpdateResult(),
+            updating: true
+        });
+        var that = this;
+        setTimeout(function(){
+            that.setState({
+                updating: false
+            })}, 2100
+        );
+        UserActions.fetchUserFounds()
+    },
+
+    getAlertText: function() {
+        if (this.state.updateResult == 0) return '更新成功';
+        else return '更新失败, 请重新登录'
+    },
+
+    getAlertClass: function() {
+        var c = 'alert alert-dismissible meFoundAlert';
+        if (this.state.updating) c += ' updating';
+        if (this.state.updateResult == 0) c += ' alert-success';
+        else c += ' alert-warning';
+        return c
+    },
+
+    foundClick: function(ev) {
+        var id = idOperation.decodeId(ev.target.id);
+        UserActions.userFoundsDone(id)
+    },
+
     render: function() {
+        var handler = this.foundClick;
         return (
             <div className="row meFound">
+                <div className={this.getAlertClass()}>
+                    <p>{this.getAlertText()}</p>
+                </div>
                 {
                     this.state.founds.map(function(val, index){
                         return (
                             <div className="col-lg-6 col-md-6 col-sm-6">
                                 <MeFoundItem
                                     json = {val}
+                                    foundHandler = {handler}
                                 />
                             </div>
                         )

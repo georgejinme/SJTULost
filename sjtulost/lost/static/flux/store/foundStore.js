@@ -24,6 +24,7 @@ var FoundStore = assign({}, EventEmitter.prototype, {
      */
 
     founds: [],
+    updateResult: 0,
 
     getDefaultFound: function() {
         return {
@@ -53,8 +54,28 @@ var FoundStore = assign({}, EventEmitter.prototype, {
         else return this.founds[0]
     },
 
+    getUpdateResult: function() {
+        return this.updateResult
+    },
+
+    setUpdateResult: function(re) {
+        this.updateResult = re
+    },
+
     emitChange: function () {
         this.emit('change');
+    },
+
+    emitUpdateResult: function() {
+        this.emit('update')
+    },
+
+    addUpdateListener: function(callback) {
+        this.on('update', callback);
+    },
+
+    removeUpdateListener: function(callback) {
+        this.removeListener('update', callback);
     },
 
     addChangeListener: function(callback) {
