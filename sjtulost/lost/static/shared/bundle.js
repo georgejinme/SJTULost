@@ -2623,15 +2623,16 @@
 	    },
 
 	    getAlertText: function() {
-	        if (this.state.updateResult == 1) return '更新成功';
+	        if (this.state.updateResult == 0) return '更新成功';
+	        else if (this.state.updateResult == 1) return '无效联系方式';
 	        else return '更新失败, 请重新登录'
 	    },
 
 	    getAlertClass: function() {
 	        var c = 'alert alert-dismissible meInfoAlert';
 	        if (this.state.updating) c += ' updating';
-	        if (this.state.updateResult == 1) c += ' alert-success';
-	        else c += ' alert-danger';
+	        if (this.state.updateResult == 0) c += ' alert-success';
+	        else c += ' alert-warning';
 	        return c
 	    },
 
@@ -2742,15 +2743,15 @@
 	    },
 
 	    getAlertText: function() {
-	        if (this.state.updateResult == 1) return '更新成功';
+	        if (this.state.updateResult == 0) return '更新成功';
 	        else return '更新失败, 请重新登录'
 	    },
 
 	    getAlertClass: function() {
 	        var c = 'alert alert-dismissible meFindingAlert';
 	        if (this.state.updating) c += ' updating';
-	        if (this.state.updateResult == 1) c += ' alert-success';
-	        else c += ' alert-danger';
+	        if (this.state.updateResult == 0) c += ' alert-success';
+	        else c += ' alert-warning';
 	        return c
 	    },
 

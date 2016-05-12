@@ -98,14 +98,20 @@ def get_user_info(request):
 
 # code:
 # 0: success
-# 1: fail
+# 1: invalid format
+# 2: fail
 
 def update_user_info(request):
     if check_user_logined(request):
-        User.objects.filter(id = request.session['user_id']).update(phone = request.POST['phone'], student_number=request.POST['student_number'])
-        return JsonResponse({'code': 0}, safe=False)
+        user_phone = request.POST['phone']
+        user_student_number = request.POST['student_number']
+        if len(user_phone) == 11:
+            User.objects.filter(id=request.session['user_id']).update(phone=user_phone, student_number=user_student_number)
+            return JsonResponse({'code': 0}, safe=False)
+        else:
+            return JsonResponse({'code': 1}, safe=False)
     else:
-        return JsonResponse({'code': 1}, safe=False)
+        return JsonResponse({'code': 2}, safe=False)
 
 
 def get_user_findings(request):
