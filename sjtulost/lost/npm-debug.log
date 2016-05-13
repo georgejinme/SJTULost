@@ -1,18 +1,136 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node', '/usr/local/bin/npm', 'start' ]
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.40
-4 verbose config Skipping project config: /Users/gougoumemeda/.npmrc. (matches userconfig)
-5 error Error: ENOENT, open '/Users/gougoumemeda/SJTULost/sjtulost/lost/package.json'
-6 error If you need help, you may report this *entire* log,
-6 error including the npm and node versions, at:
-6 error     <http://github.com/npm/npm/issues>
-7 error System Darwin 15.0.0
-8 error command "node" "/usr/local/bin/npm" "start"
-9 error cwd /Users/gougoumemeda/SJTULost/sjtulost/lost
-10 error node -v v0.10.40
-11 error npm -v 1.4.28
-12 error path /Users/gougoumemeda/SJTULost/sjtulost/lost/package.json
-13 error code ENOENT
-14 error errno 34
-15 verbose exit [ 34, true ]
+4 warn package.json SJTULost@1.0.0 No repository field.
+5 warn package.json SJTULost@1.0.0 No README data
+6 verbose readDependencies using package.json deps
+7 verbose install where, deps [ '/Users/gougoumemeda/SJTULost/sjtulost/lost',
+7 verbose install   [ 'flux',
+7 verbose install     'object-assign',
+7 verbose install     'webpack',
+7 verbose install     'babel-loader',
+7 verbose install     'jsx-loader',
+7 verbose install     'react',
+7 verbose install     'react-dom',
+7 verbose install     'react-datetime' ] ]
+8 info preinstall SJTULost@1.0.0
+9 verbose readDependencies using package.json deps
+10 verbose already installed skipping flux@~2.0.3 /Users/gougoumemeda/SJTULost/sjtulost/lost
+11 verbose already installed skipping object-assign@^4.0.1 /Users/gougoumemeda/SJTULost/sjtulost/lost
+12 verbose already installed skipping webpack@^1.11.0 /Users/gougoumemeda/SJTULost/sjtulost/lost
+13 verbose already installed skipping babel-loader@~5.3.2 /Users/gougoumemeda/SJTULost/sjtulost/lost
+14 verbose already installed skipping jsx-loader@^0.13.2 /Users/gougoumemeda/SJTULost/sjtulost/lost
+15 verbose already installed skipping react@0.13.3 /Users/gougoumemeda/SJTULost/sjtulost/lost
+16 verbose cache add [ 'react-dom@0.13.2', null ]
+17 verbose cache add name=undefined spec="react-dom@0.13.2" args=["react-dom@0.13.2",null]
+18 verbose parsed url { protocol: null,
+18 verbose parsed url   slashes: null,
+18 verbose parsed url   auth: null,
+18 verbose parsed url   host: null,
+18 verbose parsed url   port: null,
+18 verbose parsed url   hostname: null,
+18 verbose parsed url   hash: null,
+18 verbose parsed url   search: null,
+18 verbose parsed url   query: null,
+18 verbose parsed url   pathname: 'react-dom@0.13.2',
+18 verbose parsed url   path: 'react-dom@0.13.2',
+18 verbose parsed url   href: 'react-dom@0.13.2' }
+19 verbose cache add [ 'react-datetime@2.1.0', null ]
+20 verbose cache add name=undefined spec="react-datetime@2.1.0" args=["react-datetime@2.1.0",null]
+21 verbose parsed url { protocol: null,
+21 verbose parsed url   slashes: null,
+21 verbose parsed url   auth: null,
+21 verbose parsed url   host: null,
+21 verbose parsed url   port: null,
+21 verbose parsed url   hostname: null,
+21 verbose parsed url   hash: null,
+21 verbose parsed url   search: null,
+21 verbose parsed url   query: null,
+21 verbose parsed url   pathname: 'react-datetime@2.1.0',
+21 verbose parsed url   path: 'react-datetime@2.1.0',
+21 verbose parsed url   href: 'react-datetime@2.1.0' }
+22 verbose cache add name="react-dom" spec="0.13.2" args=["react-dom","0.13.2"]
+23 verbose parsed url { protocol: null,
+23 verbose parsed url   slashes: null,
+23 verbose parsed url   auth: null,
+23 verbose parsed url   host: null,
+23 verbose parsed url   port: null,
+23 verbose parsed url   hostname: null,
+23 verbose parsed url   hash: null,
+23 verbose parsed url   search: null,
+23 verbose parsed url   query: null,
+23 verbose parsed url   pathname: '0.13.2',
+23 verbose parsed url   path: '0.13.2',
+23 verbose parsed url   href: '0.13.2' }
+24 verbose addNamed [ 'react-dom', '0.13.2' ]
+25 verbose addNamed [ '0.13.2', '0.13.2' ]
+26 verbose cache add name="react-datetime" spec="2.1.0" args=["react-datetime","2.1.0"]
+27 verbose parsed url { protocol: null,
+27 verbose parsed url   slashes: null,
+27 verbose parsed url   auth: null,
+27 verbose parsed url   host: null,
+27 verbose parsed url   port: null,
+27 verbose parsed url   hostname: null,
+27 verbose parsed url   hash: null,
+27 verbose parsed url   search: null,
+27 verbose parsed url   query: null,
+27 verbose parsed url   pathname: '2.1.0',
+27 verbose parsed url   path: '2.1.0',
+27 verbose parsed url   href: '2.1.0' }
+28 verbose addNamed [ 'react-datetime', '2.1.0' ]
+29 verbose addNamed [ '2.1.0', '2.1.0' ]
+30 silly lockFile dc4db180-react-dom-0-13-2 react-dom@0.13.2
+31 verbose lock react-dom@0.13.2 /Users/gougoumemeda/.npm/dc4db180-react-dom-0-13-2.lock
+32 silly lockFile 78cc7a3a-react-datetime-2-1-0 react-datetime@2.1.0
+33 verbose lock react-datetime@2.1.0 /Users/gougoumemeda/.npm/78cc7a3a-react-datetime-2-1-0.lock
+34 verbose request where is /react-dom
+35 verbose request registry https://registry.npm.taobao.org/
+36 verbose request id 30a41a15cef27e04
+37 verbose url raw /react-dom
+38 verbose url resolving [ 'https://registry.npm.taobao.org/', './react-dom' ]
+39 verbose url resolved https://registry.npm.taobao.org/react-dom
+40 verbose request where is https://registry.npm.taobao.org/react-dom
+41 info trying registry request attempt 1 at 00:25:33
+42 verbose etag "9a88-nd8tFfcea+B/mED8k7WBlw"
+43 http GET https://registry.npm.taobao.org/react-dom
+44 verbose request where is /react-datetime
+45 verbose request registry https://registry.npm.taobao.org/
+46 verbose url raw /react-datetime
+47 verbose url resolving [ 'https://registry.npm.taobao.org/', './react-datetime' ]
+48 verbose url resolved https://registry.npm.taobao.org/react-datetime
+49 verbose request where is https://registry.npm.taobao.org/react-datetime
+50 info trying registry request attempt 1 at 00:25:33
+51 verbose etag "a1a9-MeH0WYWUbW2FFnGQbJHkMA"
+52 http GET https://registry.npm.taobao.org/react-datetime
+53 http 304 https://registry.npm.taobao.org/react-datetime
+54 silly registry.get cb [ 304,
+54 silly registry.get   { date: 'Fri, 13 May 2016 16:25:30 GMT',
+54 silly registry.get     connection: 'keep-alive',
+54 silly registry.get     etag: '"a1a9-MeH0WYWUbW2FFnGQbJHkMA"',
+54 silly registry.get     'x-readtime': '42' } ]
+55 verbose etag https://registry.npm.taobao.org/react-datetime from cache
+56 http 304 https://registry.npm.taobao.org/react-dom
+57 silly registry.get cb [ 304,
+57 silly registry.get   { date: 'Fri, 13 May 2016 16:25:30 GMT',
+57 silly registry.get     connection: 'keep-alive',
+57 silly registry.get     etag: '"9a88-nd8tFfcea+B/mED8k7WBlw"',
+57 silly registry.get     'x-readtime': '48' } ]
+58 verbose etag https://registry.npm.taobao.org/react-dom from cache
+59 silly lockFile dc4db180-react-dom-0-13-2 react-dom@0.13.2
+60 silly lockFile dc4db180-react-dom-0-13-2 react-dom@0.13.2
+61 silly lockFile 78cc7a3a-react-datetime-2-1-0 react-datetime@2.1.0
+62 silly lockFile 78cc7a3a-react-datetime-2-1-0 react-datetime@2.1.0
+63 error Error: version not found: react-dom@0.13.2
+63 error     at /usr/local/lib/node_modules/npm/lib/cache/add-named.js:125:12
+63 error     at saved (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/get.js:167:7)
+63 error     at Object.oncomplete (fs.js:108:15)
+64 error If you need help, you may report this *entire* log,
+64 error including the npm and node versions, at:
+64 error     <http://github.com/npm/npm/issues>
+65 error System Darwin 15.0.0
+66 error command "node" "/usr/local/bin/npm" "install"
+67 error cwd /Users/gougoumemeda/SJTULost/sjtulost/lost
+68 error node -v v0.10.40
+69 error npm -v 1.4.28
+70 verbose exit [ 1, true ]

@@ -5,6 +5,8 @@ var constant = {
     'dev-prefix': 'http://127.0.0.1:8888'
 };
 
+var React = require('react');
+
 var UserActions = require('../flux/action/userAction');
 var UserInfoStore = require('../flux/store/userInfoStore');
 

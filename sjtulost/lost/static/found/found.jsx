@@ -1,3 +1,5 @@
+var React = require('react');
+
 var ItemTypeAction = require('../flux/action/initializationAction').ItemTypeAction;
 var PlaceAction = require('../flux/action/initializationAction').PlaceAction;
 var FoundAction = require('../flux/action/initializationAction').FoundAction;

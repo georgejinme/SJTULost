@@ -1,3 +1,5 @@
+var React = require('react');
+
 var FoundAction = require('../flux/action/initializationAction').FoundAction;
 var FoundStore = require('../flux/store/foundStore');
 

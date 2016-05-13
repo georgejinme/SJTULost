@@ -1,4 +1,4 @@
-
+var React = require('react');
 
 var PublishFound = React.createClass({
     render: function() {

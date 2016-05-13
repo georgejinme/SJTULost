@@ -1,3 +1,4 @@
+var React = require('react');
 
 var RankAction = require('../flux/action/initializationAction').RankAction;
 var RankStore = require('../flux/store/rankStore');

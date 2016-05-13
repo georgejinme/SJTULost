@@ -1,3 +1,5 @@
+var React = require('react');
+
 var idOperation = require('../shared/util');
 
 var UserActions = require('../flux/action/userAction');
