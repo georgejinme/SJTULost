@@ -15,6 +15,8 @@ var Rank = require('../rank/rank');
 var FindingView = require('../finding/findingview');
 var FoundView = require('../found/foundview');
 var Me = require('../me/me');
+var PublishFinding = require('../publish/publishfinding');
+var PublishFound = require('../publish/publishfound');
 
 var Navigation = React.createClass({
     getInitialState: function() {
@@ -44,8 +46,8 @@ var Navigation = React.createClass({
     },
 
     getPublishUrl: function() {
-        if (this.state.userInfo['student_number'] == '') return 'navPublishHidden';
-        else return '';
+        if (this.state.userInfo['student_number'] == '') return 'navPublishHidden dropdown';
+        else return 'dropdown';
     },
 
     render: function() {
@@ -68,7 +70,13 @@ var Navigation = React.createClass({
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
-                            <li><a href="#" className={this.getPublishUrl()}>发布</a></li>
+                            <li className={this.getPublishUrl()}>
+                                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">发布<span className="caret" /></a>
+                                <ul className="dropdown-menu" role="menu">
+                                    <li><a href="/publishfinding/">我丢失了</a></li>
+                                    <li><a href="/publishfound/">我拾到了</a></li>
+                                </ul>
+                            </li>
                             <li><a href={this.getUrl()}>{ this.state.userInfo['name'] }</a></li>
                         </ul>
                     </div>
@@ -134,6 +142,24 @@ var App = React.createClass({
                 <div className="meContainer">
                     <Navigation />
                     <Me />
+                </div>
+            )
+        } else if (this.url == 'publishfinding') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <PublishFinding
+                        id = {this.id}
+                    />
+                </div>
+            )
+        } else if (this.url == 'publishfound') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <PublishFound
+                        id = {this.id}
+                    />
                 </div>
             )
         }

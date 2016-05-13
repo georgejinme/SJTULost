@@ -28,3 +28,9 @@ def foundview(request, id):
 
 def me(request):
     return render(request, 'main.html')
+
+def publish_finding(request):
+    return render(request, 'main.html')
+
+def publish_found(request):
+    return render(request, 'main.html')

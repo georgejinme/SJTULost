@@ -61,6 +61,8 @@
 	var FindingView = __webpack_require__(20);
 	var FoundView = __webpack_require__(21);
 	var Me = __webpack_require__(22);
+	var PublishFinding = __webpack_require__(24);
+	var PublishFound = __webpack_require__(25);
 
 	var Navigation = React.createClass({displayName: "Navigation",
 	    getInitialState: function() {
@@ -90,8 +92,8 @@
 	    },
 
 	    getPublishUrl: function() {
-	        if (this.state.userInfo['student_number'] == '') return 'navPublishHidden';
-	        else return '';
+	        if (this.state.userInfo['student_number'] == '') return 'navPublishHidden dropdown';
+	        else return 'dropdown';
 	    },
 
 	    render: function() {
@@ -114,7 +116,13 @@
 	                            )
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	                            React.createElement("li", null, React.createElement("a", {href: "#", className: this.getPublishUrl()}, "发布")), 
+	                            React.createElement("li", {className: this.getPublishUrl()}, 
+	                                React.createElement("a", {href: "#", className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-expanded": "false"}, "发布", React.createElement("span", {className: "caret"})), 
+	                                React.createElement("ul", {className: "dropdown-menu", role: "menu"}, 
+	                                    React.createElement("li", null, React.createElement("a", {href: "/publishfinding/"}, "我丢失了")), 
+	                                    React.createElement("li", null, React.createElement("a", {href: "/publishfound/"}, "我拾到了"))
+	                                )
+	                            ), 
 	                            React.createElement("li", null, React.createElement("a", {href: this.getUrl()},  this.state.userInfo['name'] ))
 	                        )
 	                    )
@@ -180,6 +188,24 @@
 	                React.createElement("div", {className: "meContainer"}, 
 	                    React.createElement(Navigation, null), 
 	                    React.createElement(Me, null)
+	                )
+	            )
+	        } else if (this.url == 'publishfinding') {
+	            return (
+	                React.createElement("div", {className: "container"}, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(PublishFinding, {
+	                        id: this.id}
+	                    )
+	                )
+	            )
+	        } else if (this.url == 'publishfound') {
+	            return (
+	                React.createElement("div", {className: "container"}, 
+	                    React.createElement(Navigation, null), 
+	                    React.createElement(PublishFound, {
+	                        id: this.id}
+	                    )
 	                )
 	            )
 	        }
@@ -3046,6 +3072,47 @@
 	});
 
 	module.exports = Me;
+
+/***/ },
+/* 23 */,
+/* 24 */
+/***/ function(module, exports) {
+
+	
+
+
+
+
+	var PublishFinding = React.createClass({displayName: "PublishFinding",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                "fuck"
+	            )
+	        )
+	    }
+	});
+
+
+	module.exports = PublishFinding;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	
+
+	var PublishFound = React.createClass({displayName: "PublishFound",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                "sdfsdf"
+	            )
+	        )
+	    }
+	});
+
+	module.exports = PublishFound;
 
 /***/ }
 /******/ ]);
