@@ -43,6 +43,11 @@ var Navigation = React.createClass({
         else return '/me/';
     },
 
+    getPublishUrl: function() {
+        if (this.state.userInfo['student_number'] == '') return 'navPublishHidden';
+        else return '';
+    },
+
     render: function() {
         return (
             <div className="navbar navbar-default navbar-fixed-top">
@@ -63,7 +68,7 @@ var Navigation = React.createClass({
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
-                            <li><a href="#">发布</a></li>
+                            <li><a href="#" className={this.getPublishUrl()}>发布</a></li>
                             <li><a href={this.getUrl()}>{ this.state.userInfo['name'] }</a></li>
                         </ul>
                     </div>

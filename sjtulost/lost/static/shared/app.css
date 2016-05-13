@@ -1,5 +1,5 @@
 /*
-    For Homepage
+    For Navigation
 */
 
 .container{
@@ -7,6 +7,15 @@
     width: 80%;
     margin: auto;
 }
+
+.navPublishHidden {
+    display: none !important;
+}
+
+/*
+    For Homepage
+*/
+
 
 .homepageContent {
     margin-top: 90px;

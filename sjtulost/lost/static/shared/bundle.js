@@ -89,6 +89,11 @@
 	        else return '/me/';
 	    },
 
+	    getPublishUrl: function() {
+	        if (this.state.userInfo['student_number'] == '') return 'navPublishHidden';
+	        else return '';
+	    },
+
 	    render: function() {
 	        return (
 	            React.createElement("div", {className: "navbar navbar-default navbar-fixed-top"}, 
@@ -109,7 +114,7 @@
 	                            )
 	                        ), 
 	                        React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	                            React.createElement("li", null, React.createElement("a", {href: "#"}, "发布")), 
+	                            React.createElement("li", null, React.createElement("a", {href: "#", className: this.getPublishUrl()}, "发布")), 
 	                            React.createElement("li", null, React.createElement("a", {href: this.getUrl()},  this.state.userInfo['name'] ))
 	                        )
 	                    )
