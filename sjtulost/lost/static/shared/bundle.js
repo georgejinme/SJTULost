@@ -3080,14 +3080,95 @@
 
 	
 
+	var PublishFindingBasicInfo = React.createClass({displayName: "PublishFindingBasicInfo",
+	    render: function() {
+	        return (
+	            React.createElement("div", null, 
+	                React.createElement("form", {className: "form-horizontal"}, 
+	                    React.createElement("fieldset", null, 
+	                        React.createElement("legend", null, "基本信息"), 
+	                        React.createElement("div", {className: "form-group"}, 
+	                            React.createElement("label", {htmlFor: "inputEmail", className: "col-lg-2 control-label"}, "Email"), 
+	                            React.createElement("div", {className: "col-lg-10"}, 
+	                                React.createElement("input", {type: "text", className: "form-control", id: "inputEmail", placeholder: "Email"})
+	                            )
+	                        ), 
+	                        React.createElement("div", {className: "form-group"}, 
+	                            React.createElement("label", {htmlFor: "inputPassword", className: "col-lg-2 control-label"}, "Password"), 
+	                            React.createElement("div", {className: "col-lg-10"}, 
+	                                React.createElement("input", {type: "password", className: "form-control", id: "inputPassword", placeholder: "Password"}), 
+	                                    React.createElement("div", {className: "checkbox"}, 
+	                                        React.createElement("label", null, 
+	                                            React.createElement("input", {type: "checkbox"}), " Checkbox"
+	                                        )
+	                                    )
+	                            )
+	                        ), 
+	                        React.createElement("div", {className: "form-group"}, 
+	                            React.createElement("label", {htmlFor: "textArea", className: "col-lg-2 control-label"}, "Textarea"), 
+	                            React.createElement("div", {className: "col-lg-10"}, 
+	                                React.createElement("textarea", {className: "form-control", rows: "3", id: "textArea"}), 
+	                                React.createElement("span", {className: "help-block"}, "A longer block of help text that breaks onto a new line and may extend beyond one line.")
+	                            )
+	                        ), 
+	                        React.createElement("div", {className: "form-group"}, 
+	                            React.createElement("label", {className: "col-lg-2 control-label"}, "Radios"), 
+	                            React.createElement("div", {className: "col-lg-10"}, 
+	                                React.createElement("div", {className: "radio"}, 
+	                                    React.createElement("label", null, 
+	                                        React.createElement("input", {type: "radio", name: "optionsRadios", id: "optionsRadios1", value: "option1", checked: ""}), 
+	                                            "Option one is this"
+	                                    )
+	                                ), 
+	                                React.createElement("div", {className: "radio"}, 
+	                                    React.createElement("label", null, 
+	                                        React.createElement("input", {type: "radio", name: "optionsRadios", id: "optionsRadios2", value: "option2"}), 
+	                                            "Option two can be something else"
+	                                    )
+	                                )
+	                            )
+	                        ), 
+	                        React.createElement("div", {className: "form-group"}, 
+	                            React.createElement("label", {htmlFor: "select", className: "col-lg-2 control-label"}, "Selects"), 
+	                            React.createElement("div", {className: "col-lg-10"}, 
+	                                React.createElement("select", {className: "form-control", id: "select"}, 
+	                                    React.createElement("option", null, "1"), 
+	                                    React.createElement("option", null, "2"), 
+	                                    React.createElement("option", null, "3"), 
+	                                    React.createElement("option", null, "4"), 
+	                                    React.createElement("option", null, "5")
+	                                ), 
+	                                React.createElement("br", null), 
+	                                    React.createElement("select", {multiple: "", className: "form-control"}, 
+	                                        React.createElement("option", null, "1"), 
+	                                        React.createElement("option", null, "2"), 
+	                                        React.createElement("option", null, "3"), 
+	                                        React.createElement("option", null, "4"), 
+	                                        React.createElement("option", null, "5")
+	                                    )
+	                            )
+	                        ), 
+	                        React.createElement("div", {className: "form-group"}, 
+	                            React.createElement("div", {className: "col-lg-10 col-lg-offset-2"}, 
+	                                React.createElement("button", {type: "reset", className: "btn btn-default"}, "Cancel"), 
+	                                React.createElement("button", {type: "submit", className: "btn btn-primary"}, "Submit")
+	                            )
+	                        )
+	                    )
+	                )
+	            )
+	        )
+	    }
+	});
+
 
 
 
 	var PublishFinding = React.createClass({displayName: "PublishFinding",
 	    render: function() {
 	        return (
-	            React.createElement("div", null, 
-	                "fuck"
+	            React.createElement("div", {className: "publishFinding"}, 
+	                React.createElement(PublishFindingBasicInfo, null)
 	            )
 	        )
 	    }
