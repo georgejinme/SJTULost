@@ -4,7 +4,7 @@ var Datetime = require('react-datetime');
 var PublishFindingBasicInfo = React.createClass({
     render: function() {
         return (
-            <div>
+            <div className="publishFindingBasicInfo">
                 <form className="form-horizontal">
                     <fieldset>
                         <legend>基本信息</legend>
@@ -66,7 +66,7 @@ var PublishFindingBasicInfo = React.createClass({
 
                         <div className="form-group">
                             <div className="col-lg-10 col-lg-offset-2">
-                                <button type="submit" className="btn btn-primary">Submit</button>
+                                <button type="submit" className="btn btn-success">发布</button>
                             </div>
                         </div>
                     </fieldset>
