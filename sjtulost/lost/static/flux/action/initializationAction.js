@@ -42,7 +42,18 @@ var FindingAction = {
             url: '/publishfindinguploadimage/',
             dataType: 'json',
             done: function (e, data) {
-                console.log(data['result'])
+                AppDispatcher.dispatch({
+                    actionType: 'PUBLISH_FINDING_UPLOAD_IMAGE',
+                    img: data['result']['url'],
+                    status: data['result']['code']
+                });
+            },
+            send: function(e, data) {
+                AppDispatcher.dispatch({
+                    actionType: 'PUBLISH_FINDING_UPLOAD_IMAGE',
+                    img: '',
+                    status: 2
+                });
             }
         });
     }

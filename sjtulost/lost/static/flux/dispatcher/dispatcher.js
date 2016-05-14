@@ -71,6 +71,13 @@ AppDispatcher.register(function (action) {
             RankStore.emitChange();
             break;
 
+        case 'PUBLISH_FINDING_UPLOAD_IMAGE':
+            FindingStore.setImage(action.img);
+            FindingStore.setUploadImageStatus(action.status);
+            FindingStore.emitChange();
+            FindingStore.emitUploadImage();
+            break;
+
         default:
         // no op
     }

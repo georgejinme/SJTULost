@@ -30,6 +30,8 @@ var ItemStore = assign({}, EventEmitter.prototype, {
             if (index != 0) {
                 if (this.countSelectedItems() > 1 || this.selectedItems[index] == false){
                     this.selectedItems[index] = !this.selectedItems[index];
+                } else {
+                    this.clearSelectedItems();
                 }
             } else {
                 this.clearSelectedItems();
@@ -78,6 +80,14 @@ var ItemStore = assign({}, EventEmitter.prototype, {
         }
         for (var i = 1; i < this.items.length; ++i) {
             if (all || this.selectedItems[i]) ids.push(this.items[i]['id'])
+        }
+        return ids;
+    },
+
+    getSelectedItemsIdWithoutAll: function() {
+        var ids = [];
+        for (var i = 1; i < this.items.length; ++i) {
+            if (this.selectedItems[i]) ids.push(this.items[i]['id'])
         }
         return ids;
     },

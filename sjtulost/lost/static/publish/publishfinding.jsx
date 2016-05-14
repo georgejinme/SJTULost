@@ -1,6 +1,8 @@
 var React = require('react');
 var Datetime = require('react-datetime');
 
+var idOperation = require('../shared/util');
+
 var FindingStore = require('../flux/store/findingStore');
 var FindingAction = require('../flux/action/initializationAction').FindingAction;
 
@@ -11,18 +13,20 @@ var PlaceStore = require('../flux/store/placeStore');
 
 var PublishFindingBasicInfo = React.createClass({
     getItemChecked: function(val) {
-        if (this.props.json['item_type'].indexOf(val) == -1) return '';
+        if (this.props.json['item_type_ids'].indexOf(val['id']) == -1) return '';
         else return 'checked'
     },
 
     getPlaceChecked: function(val) {
-        if (this.props.json['place'].indexOf(val) == -1) return '';
+        if (this.props.json['place_ids'].indexOf(val['id']) == -1) return '';
         else return 'checked'
     },
 
     render: function() {
         var itemChecked = this.getItemChecked;
         var placeChecked = this.getPlaceChecked;
+        var itemTypeHandler = this.props.itemTypeHandler;
+        var placeHandler = this.props.placeHandler;
         return (
             <div className="publishFindingBasicInfo">
                 <form className="form-horizontal">
@@ -35,7 +39,8 @@ var PublishFindingBasicInfo = React.createClass({
                                        className="form-control"
                                        id="publishFindingTitle"
                                        placeholder="Title"
-                                       value={this.props.json['description']}/>
+                                       value={this.props.json['description']}
+                                       onChange = {this.props.descriptionHandler}/>
                             </div>
                         </div>
 
@@ -49,7 +54,10 @@ var PublishFindingBasicInfo = React.createClass({
                                             return (
                                                 <div className="checkbox col-lg-2 col-md-2 col-sm-2">
                                                     <label>
-                                                        <input type="checkbox" checked={itemChecked(val)}/> {val['description']}
+                                                        <input type="checkbox"
+                                                               checked={itemChecked(val)}
+                                                               id = {idOperation.encodeId('publishItem', index)}
+                                                               onChange = {itemTypeHandler}/> {val['description']}
                                                     </label>
                                                 </div>
                                             )
@@ -68,7 +76,10 @@ var PublishFindingBasicInfo = React.createClass({
                                             return (
                                                 <div className="checkbox col-lg-2 col-md-2 col-sm-2">
                                                     <label>
-                                                        <input type="checkbox" checked={placeChecked(val)}/> {val['description']}
+                                                        <input type="checkbox"
+                                                               checked={placeChecked(val)}
+                                                               id = {idOperation.encodeId('publishPlace', index)}
+                                                               onChange={placeHandler}/> {val['description']}
                                                     </label>
                                                 </div>
                                             )
@@ -85,7 +96,8 @@ var PublishFindingBasicInfo = React.createClass({
                                        className="form-control"
                                        id="publishFindingPlaceDetail"
                                        placeholder="Place detail"
-                                       value={this.props.json['place_detail']}/>
+                                       value={this.props.json['place_detail']}
+                                       onChange = {this.props.placeDetailHandler}/>
                             </div>
                         </div>
 
@@ -95,7 +107,8 @@ var PublishFindingBasicInfo = React.createClass({
                                 <Datetime
                                     dateFormat = "YYYY/MM/DD"
                                     timeFormat = "hh:mm:ss"
-                                    defaultValue = {this.props.json['time']}
+                                    value = {this.props.json['time']}
+                                    onChange = {this.props.timeHandler}
                                 />
                             </div>
                         </div>
@@ -106,7 +119,8 @@ var PublishFindingBasicInfo = React.createClass({
                                 <textarea className="form-control"
                                           rows="3"
                                           id="publishFindingDetail"
-                                          value={this.props.json['detail']}/>
+                                          value={this.props.json['detail']}
+                                          onChange={this.props.detailHandler}/>
                                 <span className="help-block">请尽量提供详细信息</span>
                             </div>
                         </div>
@@ -118,7 +132,8 @@ var PublishFindingBasicInfo = React.createClass({
                                        className="form-control"
                                        id="publishFindingPay"
                                        placeholder="Pay"
-                                       value={this.props.json['pay']}/>
+                                       value={this.props.json['pay']}
+                                       onChange={this.props.payHandler}/>
                             </div>
                         </div>
                     </fieldset>
@@ -129,6 +144,13 @@ var PublishFindingBasicInfo = React.createClass({
 });
 
 var PublishFindingImage = React.createClass({
+    getButtonText: function() {
+        if (this.props.status == -1) return '选择文件';
+        else if (this.props.status == 0) return '上传成功';
+        else if (this.props.status == 1) return '上传失败';
+        else if (this.props.status == 2) return '正在上传...';
+        else return ''
+    },
     render: function() {
         return (
             <div className="PublishFindingImage">
@@ -137,9 +159,11 @@ var PublishFindingImage = React.createClass({
                         <legend>图片信息</legend>
                         <div className="form-group">
                             <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
-                                <img src="" />
+                                <img src={this.props.json['img']} />
+                                <br/>
+                                <br/>
                                 <a href = "javascript:void(0);" className="btn btn-success publishFindingImageBtn">
-                                    <input id="fileupload" type="file" name="files[]" ref="fileupload" multiple />选择文件
+                                    <input id="fileupload" type="file" name="files[]" multiple />{this.getButtonText()}
                                 </a>
                             </div>
                         </div>
@@ -158,14 +182,18 @@ var PublishFinding = React.createClass({
         return {
             finding: FindingStore.getFirstFinding(),
             itemTypes: ItemStore.getItems(),
-            places: PlaceStore.getPlaces()
+            places: PlaceStore.getPlaces(),
+            uploadImageStatus: FindingStore.getUploadImageStatus()
         }
     },
 
     componentDidMount: function() {
         FindingStore.addChangeListener(this._onFindingChange);
+        FindingStore.addUploadImageListener(this._onUploadImageChange);
         ItemStore.addChangeListener(this._onItemChange);
+        ItemStore.addSelectListener(this._onItemSelectChange);
         PlaceStore.addChangeListener(this._onPlaceChange);
+        PlaceStore.addSelectListener(this._onPlaceSelectChange);
         if (this.props.id != '') FindingAction.fetchDataWithId(this.props.id);
         FindingAction.uploadImageInit();
         ItemTypeAction.fetchData();
@@ -174,8 +202,11 @@ var PublishFinding = React.createClass({
 
     componentWillUnmount: function() {
         FindingStore.removeChangeListener(this._onFindingChange);
+        FindingStore.removeUploadImageListener(this._onUploadImageChange);
         ItemStore.removeChangeListener(this._onItemChange);
+        ItemStore.removeSelectListener(this._onItemSelectChange);
         PlaceStore.removeChangeListener(this._onPlaceChange);
+        PlaceStore.removeSelectListener(this._onPlaceSelectChange);
     },
 
     _onFindingChange: function() {
@@ -196,6 +227,60 @@ var PublishFinding = React.createClass({
         })
     },
 
+    _onItemSelectChange: function(){
+        FindingStore.setItemTypeWithId(ItemStore.getSelectedItemsIdWithoutAll());
+        FindingStore.emitChange()
+    },
+
+    _onPlaceSelectChange: function() {
+        FindingStore.setPlacesWithId(PlaceStore.getSelectedPlacesIdWithoutAll());
+        FindingStore.emitChange()
+    },
+
+    _onUploadImageChange: function() {
+        this.setState({
+            uploadImageStatus: FindingStore.getUploadImageStatus()
+        })
+    },
+
+    descriptionChange: function(ev) {
+        FindingStore.setDescription(ev.target.value);
+        FindingStore.emitChange();
+    },
+
+    itemTypeChange: function(ev) {
+        ItemTypeAction.select(idOperation.decodeId(ev.target.id));
+    },
+
+    placeChange: function(ev) {
+        PlaceAction.select(idOperation.decodeId(ev.target.id));
+    },
+
+    timeChange: function(ev) {
+        FindingStore.setTime(ev.format('YYYY/MM/DD hh:mm:ss'));
+        FindingStore.emitChange();
+    },
+
+    placeDetailChange: function(ev) {
+        FindingStore.setPlaceDetail(ev.target.value);
+        FindingStore.emitChange();
+    },
+
+    detailChange: function(ev) {
+        FindingStore.setDetail(ev.target.value);
+        FindingStore.emitChange();
+    },
+
+    payChange: function(ev) {
+        FindingStore.setPay(ev.target.value);
+        FindingStore.emitChange();
+    },
+
+    publish: function() {
+        console.log(this.state.finding)
+    },
+
+
     render: function() {
         return (
             <div className="publishFinding">
@@ -203,12 +288,22 @@ var PublishFinding = React.createClass({
                     json = {this.state.finding}
                     items = {this.state.itemTypes}
                     places = {this.state.places}
+                    descriptionHandler = {this.descriptionChange}
+                    itemTypeHandler = {this.itemTypeChange}
+                    placeHandler = {this.placeChange}
+                    timeHandler = {this.timeChange}
+                    placeDetailHandler = {this.placeDetailChange}
+                    detailHandler = {this.detailChange}
+                    payHandler = {this.payChange}
                 />
-                <PublishFindingImage />
+                <PublishFindingImage
+                    json = {this.state.finding}
+                    status = {this.state.uploadImageStatus}
+                />
                 <form className="form-horizontal">
                     <div className="form-group">
                         <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
-                            <button type="submit" className="btn btn-success">发布</button>
+                            <a href="#" className="btn btn-success" onClick = {this.publish}>发布</a>
                         </div>
                     </div>
                 </form>

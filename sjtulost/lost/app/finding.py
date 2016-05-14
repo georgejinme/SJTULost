@@ -24,7 +24,7 @@ def upload_image(id, file):
     if ret is None:
         return ''
     else:
-        return "7xtbqj.com1.z0.glb.clouddn.com/" + file_name
+        return "http://7xtbqj.com1.z0.glb.clouddn.com/" + file_name
 
 
 # internal function
@@ -33,9 +33,15 @@ def finding_places(finding):
     finding_places_array = [p.description for p in finding.place_ids.all()]
     return ",".join(finding_places_array)
 
+def finding_places_ids(finding):
+    return [p.id for p in finding.place_ids.all()]
+
 def finding_item_types(finding):
     finding_item_types_array = [i.description for i in finding.type_id.all()]
     return ",".join(finding_item_types_array)
+
+def finding_item_types_ids(finding):
+    return [i.id for i in finding.type_id.all()]
 
 
 def finding_format(findings_array):
@@ -43,9 +49,11 @@ def finding_format(findings_array):
                            'description': f.description,
                            'img': f.image,
                            'item_type': finding_item_types(f),
+                           'item_type_ids': finding_item_types_ids(f),
                            'user_phone': f.user_id.phone,
                            'time': time.timeString(f.lost_time),
                            'place': finding_places(f),
+                           'place_ids': finding_places_ids(f),
                            'place_detail': f.place_detail,
                            'detail': f.detail,
                            'pay': f.pay,
@@ -108,7 +116,9 @@ def publish_finding_upload_image(request):
     url = upload_image(request.session['user_id'], request.FILES[u'files[]'])
     print url
     if url == '':
-        return JsonResponse({'code': 1}, safe=False)
+        return JsonResponse({'code': 1,
+                             'url': url
+                             }, safe=False)
     else:
         return JsonResponse({'code': 0,
                              'url': url

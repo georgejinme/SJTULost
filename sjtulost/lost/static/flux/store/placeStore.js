@@ -30,6 +30,8 @@ var PlaceStore = assign({}, EventEmitter.prototype, {
             if (index != 0) {
                 if (this.countSelectedPlaces() > 1 || this.selectedPlaces[index] == false){
                     this.selectedPlaces[index] = !this.selectedPlaces[index];
+                } else {
+                    this.clearSelectedPlaces();
                 }
             } else {
                 this.clearSelectedPlaces();
@@ -78,6 +80,14 @@ var PlaceStore = assign({}, EventEmitter.prototype, {
         }
         for (var i = 1; i < this.places.length; ++i) {
             if (all || this.selectedPlaces[i]) ids.push(this.places[i]['id'])
+        }
+        return ids;
+    },
+
+    getSelectedPlacesIdWithoutAll: function() {
+        var ids = [];
+        for (var i = 1; i < this.places.length; ++i) {
+            if (this.selectedPlaces[i]) ids.push(this.places[i]['id'])
         }
         return ids;
     },
