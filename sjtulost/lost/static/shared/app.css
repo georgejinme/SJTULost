@@ -919,6 +919,11 @@ td.rdtYear:hover {
     width: 300px;
 }
 
+.PublishFindingImage img{
+    max-width: 100%;
+    max-height: 500px;
+}
+
 
 
 

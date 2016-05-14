@@ -3,6 +3,29 @@ from lost.models import Finding
 import lost.app.item as Item
 import lost.app.place as Place
 import lost.util.time as time
+import django.utils.timezone as timezone
+import qiniu
+import qiniu.config
+
+ACCESS_KEY = '8cWwOsrZzbf55SkNtySdbHoQ4ctqFCLWQtGpz2HO'
+SECRET_KEY = 'ARUvI86Xvip6JoEE1wE6-uAaoHE1EuHORaZSO-m3'
+
+
+def upload_image(id, file):
+    current_time = timezone.now()
+    current_time_str = str(current_time)
+    current_time_str = current_time_str.replace(' ', '').replace('.', '').replace('-', '').replace(':', '')
+    file_name = str(id) + current_time_str + '.jpg'
+
+    bucket_src = 'sjtulost'
+    q = qiniu.Auth(ACCESS_KEY, SECRET_KEY)
+    token = q.upload_token(bucket_src)
+    ret, info = qiniu.put_data(token, file_name, file)
+    if ret is None:
+        return ''
+    else:
+        return "7xtbqj.com1.z0.glb.clouddn.com/" + file_name
+
 
 # internal function
 
@@ -77,10 +100,19 @@ def get_findings_with_id(request):
     finding_id = request.POST['id']
     return JsonResponse(findings_with_id(finding_id), safe=False)
 
+# code:
+# 0: success
+# 1: fail
 
 def publish_finding_upload_image(request):
-    print 123
-    return JsonResponse({'avc': 1}, safe=False)
+    url = upload_image(request.session['user_id'], request.FILES[u'files[]'])
+    print url
+    if url == '':
+        return JsonResponse({'code': 1}, safe=False)
+    else:
+        return JsonResponse({'code': 0,
+                             'url': url
+                             }, safe=False)
 
 
 
