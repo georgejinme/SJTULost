@@ -22978,13 +22978,34 @@
 	var FindingStore = __webpack_require__(165);
 	var FindingAction = __webpack_require__(171).FindingAction;
 
+	var ItemTypeAction = __webpack_require__(171).ItemTypeAction;
+	var ItemStore = __webpack_require__(167);
+	var PlaceAction = __webpack_require__(171).PlaceAction;
+	var PlaceStore = __webpack_require__(168);
+
 	var PublishFindingBasicInfo = React.createClass({ displayName: "PublishFindingBasicInfo",
+	    getItemChecked: function getItemChecked(val) {
+	        if (this.props.json['item_type'].indexOf(val) == -1) return '';else return 'checked';
+	    },
+
+	    getPlaceChecked: function getPlaceChecked(val) {
+	        if (this.props.json['place'].indexOf(val) == -1) return '';else return 'checked';
+	    },
+
 	    render: function render() {
+	        var itemChecked = this.getItemChecked;
+	        var placeChecked = this.getPlaceChecked;
 	        return React.createElement("div", { className: "publishFindingBasicInfo" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "基本信息"), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingTitle", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "标题"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
 	            className: "form-control",
 	            id: "publishFindingTitle",
 	            placeholder: "Title",
-	            value: this.props.json['description'] }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingItem", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "物品类别"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox" }), " 手表")), React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox" }), " 手机")), React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox" }), " 耳机")), React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox" }), " 钱包")), React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox" }), " 钥匙"))))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingPlace", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失地点"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("select", { className: "form-control", id: "publishFindingPlace" }, React.createElement("option", null, "二餐"), React.createElement("option", null, "一餐"), React.createElement("option", null, "D16"), React.createElement("option", null, "男体"), React.createElement("option", null, "东转")))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingPlaceDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细位置"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
+	            value: this.props.json['description'] }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingItem", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "物品类别"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.items.map(function (val, index) {
+	            if (index == 0) return;
+	            return React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox", checked: itemChecked(val) }), " ", val['description']));
+	        })))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingPlace", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失地点"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.places.map(function (val, index) {
+	            if (index == 0) return;
+	            return React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox", checked: placeChecked(val) }), " ", val['description']));
+	        })))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingPlaceDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细位置"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
 	            className: "form-control",
 	            id: "publishFindingPlaceDetail",
 	            placeholder: "Place detail",
@@ -23005,28 +23026,50 @@
 	var PublishFinding = React.createClass({ displayName: "PublishFinding",
 	    getInitialState: function getInitialState() {
 	        return {
-	            finding: FindingStore.getFirstFinding()
+	            finding: FindingStore.getFirstFinding(),
+	            itemTypes: ItemStore.getItems(),
+	            places: PlaceStore.getPlaces()
 	        };
 	    },
 
 	    componentDidMount: function componentDidMount() {
-	        FindingStore.addChangeListener(this._onChange);
+	        FindingStore.addChangeListener(this._onFindingChange);
+	        ItemStore.addChangeListener(this._onItemChange);
+	        PlaceStore.addChangeListener(this._onPlaceChange);
 	        if (this.props.id != '') FindingAction.fetchDataWithId(this.props.id);
+	        ItemTypeAction.fetchData();
+	        PlaceAction.fetchData();
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
-	        FindingStore.removeChangeListener(this._onChange);
+	        FindingStore.removeChangeListener(this._onFindingChange);
+	        ItemStore.removeChangeListener(this._onItemChange);
+	        PlaceStore.removeChangeListener(this._onPlaceChange);
 	    },
 
-	    _onChange: function _onChange() {
+	    _onFindingChange: function _onFindingChange() {
 	        this.setState({
 	            finding: FindingStore.getFirstFinding()
 	        });
 	    },
 
+	    _onItemChange: function _onItemChange() {
+	        this.setState({
+	            itemTypes: ItemStore.getItems()
+	        });
+	    },
+
+	    _onPlaceChange: function _onPlaceChange() {
+	        this.setState({
+	            places: PlaceStore.getPlaces()
+	        });
+	    },
+
 	    render: function render() {
 	        return React.createElement("div", { className: "publishFinding" }, React.createElement(PublishFindingBasicInfo, {
-	            json: this.state.finding }));
+	            json: this.state.finding,
+	            items: this.state.itemTypes,
+	            places: this.state.places }));
 	    }
 	});
 
