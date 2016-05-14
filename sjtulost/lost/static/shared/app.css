@@ -899,8 +899,12 @@ td.rdtYear:hover {
     margin-top: 90px;
 }
 
-.publishFindingBasicInfo input:focus, textarea:focus{
+.publishFindingBasicInfo input:focus, textarea:focus, select:focus{
     box-shadow: inset 0 -2px 0 brown !important;
+}
+
+.publishFindingBasicInfo .publishFindingTime input {
+    ime-mode: disabled;
 }
 
 

@@ -36,7 +36,7 @@ var FindingStore = assign({}, EventEmitter.prototype, {
             img: '',
             item_type: '',
             user_phone: '',
-            time: '0000/00/00 00:00:00',
+            time: '',
             place: '',
             place_detail: '',
             detail: '',
