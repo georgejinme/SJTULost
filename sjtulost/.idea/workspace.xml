@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sjtulost/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="23" column="59" selection-start-line="23" selection-start-column="59" selection-end-line="23" selection-end-column="59" />
+            <state relative-caret-position="350">
+              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
               <folding>
                 <element signature="e#617#658#0" expanded="true" />
               </folding>
@@ -36,7 +36,7 @@
       <file leaf-file-name="user.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lost/app/user.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2115">
+            <state relative-caret-position="410">
               <caret line="149" column="30" selection-start-line="149" selection-start-column="30" selection-end-line="149" selection-end-column="30" />
               <folding>
                 <element signature="e#14#99#0" expanded="true" />
@@ -67,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="finding.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="finding.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lost/app/finding.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+            <state relative-caret-position="560">
+              <caret line="80" column="32" selection-start-line="80" selection-start-column="4" selection-end-line="80" selection-end-column="32" />
               <folding>
                 <element signature="e#0#72#0" expanded="true" />
               </folding>
@@ -162,10 +162,10 @@
         <option value="$PROJECT_DIR$/lost/models.py" />
         <option value="$PROJECT_DIR$/lost/app/found.py" />
         <option value="$PROJECT_DIR$/lost/app/login.py" />
-        <option value="$PROJECT_DIR$/lost/app/finding.py" />
         <option value="$PROJECT_DIR$/sjtulost/settings.py" />
         <option value="$PROJECT_DIR$/lost/app/user.py" />
         <option value="$PROJECT_DIR$/lost/app/views.py" />
+        <option value="$PROJECT_DIR$/lost/app/finding.py" />
         <option value="$PROJECT_DIR$/sjtulost/urls.py" />
       </list>
     </option>
@@ -790,31 +790,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lost/app/user.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2115">
-          <caret line="149" column="30" selection-start-line="149" selection-start-column="30" selection-end-line="149" selection-end-column="30" />
-          <folding>
-            <element signature="e#14#99#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lost/app/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sjtulost/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="23" column="59" selection-start-line="23" selection-start-column="59" selection-end-line="23" selection-end-column="59" />
-          <folding>
-            <element signature="e#617#658#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -836,12 +816,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lost/app/user.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="410">
+          <caret line="149" column="30" selection-start-line="149" selection-start-column="30" selection-end-line="149" selection-end-column="30" />
+          <folding>
+            <element signature="e#14#99#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lost/app/finding.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        <state relative-caret-position="560">
+          <caret line="80" column="32" selection-start-line="80" selection-start-column="4" selection-end-line="80" selection-end-column="32" />
           <folding>
             <element signature="e#0#72#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sjtulost/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+          <folding>
+            <element signature="e#617#658#0" expanded="true" />
           </folding>
         </state>
       </provider>

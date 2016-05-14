@@ -21492,7 +21492,10 @@
 	    },
 
 	    getFirstFinding: function getFirstFinding() {
-	        if (this.findings.length == 0) return this.getDefaultFinding();else return this.findings[0];
+	        if (this.findings.length == 0) {
+	            this.findings.push(this.getDefaultFinding());
+	        }
+	        return this.findings[0];
 	    },
 
 	    getUpdateResult: function getUpdateResult() {
@@ -21590,7 +21593,10 @@
 	    },
 
 	    getFirstFound: function getFirstFound() {
-	        if (this.founds.length == 0) return this.getDefaultFound();else return this.founds[0];
+	        if (this.founds.length == 0) {
+	            this.founds.push(this.getDefaultFound());
+	        }
+	        return this.founds[0];
 	    },
 
 	    getUpdateResult: function getUpdateResult() {
@@ -22040,6 +22046,16 @@
 	                actionType: 'FINDING_VIEWING',
 	                findingArray: data
 	            });
+	        });
+	    },
+
+	    uploadImageInit: function uploadImageInit() {
+	        $('#fileupload').fileupload({
+	            url: '/publishfindinguploadimage/',
+	            dataType: 'json',
+	            done: function done(e, data) {
+	                console.log(data['result']);
+	            }
 	        });
 	    }
 	};
@@ -23019,7 +23035,13 @@
 	            className: "form-control",
 	            id: "publishFindingPay",
 	            placeholder: "Pay",
-	            value: this.props.json['pay'] }))), React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("button", { type: "submit", className: "btn btn-success" }, "发布"))))));
+	            value: this.props.json['pay'] }))))));
+	    }
+	});
+
+	var PublishFindingImage = React.createClass({ displayName: "PublishFindingImage",
+	    render: function render() {
+	        return React.createElement("div", { className: "PublishFindingImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息"), React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("img", { src: "" }), React.createElement("a", { href: "javascript:void(0);", className: "btn btn-success publishFindingImageBtn" }, React.createElement("input", { id: "fileupload", type: "file", name: "files[]", ref: "fileupload", multiple: true }), "选择文件"))))));
 	    }
 	});
 
@@ -23037,6 +23059,7 @@
 	        ItemStore.addChangeListener(this._onItemChange);
 	        PlaceStore.addChangeListener(this._onPlaceChange);
 	        if (this.props.id != '') FindingAction.fetchDataWithId(this.props.id);
+	        FindingAction.uploadImageInit();
 	        ItemTypeAction.fetchData();
 	        PlaceAction.fetchData();
 	    },
@@ -23069,7 +23092,7 @@
 	        return React.createElement("div", { className: "publishFinding" }, React.createElement(PublishFindingBasicInfo, {
 	            json: this.state.finding,
 	            items: this.state.itemTypes,
-	            places: this.state.places }));
+	            places: this.state.places }), React.createElement(PublishFindingImage, null), React.createElement("form", { className: "form-horizontal" }, React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("button", { type: "submit", className: "btn btn-success" }, "发布")))));
 	    }
 	});
 

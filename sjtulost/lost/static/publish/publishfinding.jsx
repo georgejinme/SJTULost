@@ -121,10 +121,26 @@ var PublishFindingBasicInfo = React.createClass({
                                        value={this.props.json['pay']}/>
                             </div>
                         </div>
+                    </fieldset>
+                </form>
+            </div>
+        )
+    }
+});
 
+var PublishFindingImage = React.createClass({
+    render: function() {
+        return (
+            <div className="PublishFindingImage">
+                <form className="form-horizontal">
+                    <fieldset>
+                        <legend>图片信息</legend>
                         <div className="form-group">
                             <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
-                                <button type="submit" className="btn btn-success">发布</button>
+                                <img src="" />
+                                <a href = "javascript:void(0);" className="btn btn-success publishFindingImageBtn">
+                                    <input id="fileupload" type="file" name="files[]" ref="fileupload" multiple />选择文件
+                                </a>
                             </div>
                         </div>
                     </fieldset>
@@ -151,6 +167,7 @@ var PublishFinding = React.createClass({
         ItemStore.addChangeListener(this._onItemChange);
         PlaceStore.addChangeListener(this._onPlaceChange);
         if (this.props.id != '') FindingAction.fetchDataWithId(this.props.id);
+        FindingAction.uploadImageInit();
         ItemTypeAction.fetchData();
         PlaceAction.fetchData();
     },
@@ -187,6 +204,14 @@ var PublishFinding = React.createClass({
                     items = {this.state.itemTypes}
                     places = {this.state.places}
                 />
+                <PublishFindingImage />
+                <form className="form-horizontal">
+                    <div className="form-group">
+                        <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
+                            <button type="submit" className="btn btn-success">发布</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         )
     }

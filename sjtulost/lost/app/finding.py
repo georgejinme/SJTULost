@@ -72,9 +72,15 @@ def get_findings_with_filter(request):
     place = request.POST.getlist('place[]')
     return JsonResponse(findings_with_item_and_place(item, place), safe=False)
 
+
 def get_findings_with_id(request):
     finding_id = request.POST['id']
     return JsonResponse(findings_with_id(finding_id), safe=False)
+
+
+def publish_finding_upload_image(request):
+    print 123
+    return JsonResponse({'avc': 1}, safe=False)
 
 
 

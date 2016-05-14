@@ -50,8 +50,10 @@ var FoundStore = assign({}, EventEmitter.prototype, {
     },
 
     getFirstFound: function() {
-        if (this.founds.length == 0) return this.getDefaultFound();
-        else return this.founds[0]
+        if (this.founds.length == 0) {
+            this.founds.push(this.getDefaultFound());
+        }
+        return this.founds[0]
     },
 
     getUpdateResult: function() {

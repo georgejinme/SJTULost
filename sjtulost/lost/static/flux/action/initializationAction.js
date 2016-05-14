@@ -35,6 +35,16 @@ var FindingAction = {
                 findingArray: data
             })
         })
+    },
+
+    uploadImageInit: function() {
+        $('#fileupload').fileupload({
+            url: '/publishfindinguploadimage/',
+            dataType: 'json',
+            done: function (e, data) {
+                console.log(data['result'])
+            }
+        });
     }
 };
 

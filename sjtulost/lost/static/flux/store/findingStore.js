@@ -54,8 +54,10 @@ var FindingStore = assign({}, EventEmitter.prototype, {
     },
 
     getFirstFinding: function() {
-        if (this.findings.length == 0) return this.getDefaultFinding();
-        else return this.findings[0]
+        if (this.findings.length == 0) {
+            this.findings.push(this.getDefaultFinding());
+        }
+        return this.findings[0]
     },
 
     getUpdateResult: function() {
