@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^me/$', 'lost.app.views.me', name='me'),
     url(r'^publishfinding/$', 'lost.app.views.publish_finding', name='publish_finding'),
     url(r'^publishfound/$', 'lost.app.views.publish_found', name='publish_found'),
+    url(r'^publishfinding/(\d+)/$', 'lost.app.views.publish_finding_with_id', name='publish_finding_with_id'),
+    url(r'^publishfound/(\d+)/$', 'lost.app.views.publish_found_with_id', name='publish_found_with_id'),
 
     url(r'^loginwithjaccount/$', 'lost.app.user.login_with_jaccount', name='login_with_jaccount'),
     url(r'^getaccesstoken/$', 'lost.app.user.get_access_token', name='get_access_token'),

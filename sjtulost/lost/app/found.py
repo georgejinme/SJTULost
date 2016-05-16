@@ -164,6 +164,7 @@ def publish_found_upload_image(request):
 
 
 def create_found(request):
+    code = 0
     found_dict = {
         'description': request.POST['description'],
         'img': request.POST['img'],
@@ -174,9 +175,7 @@ def create_found(request):
         'detail': request.POST['detail'],
     }
     if not check_found(found_dict):
-        return JsonResponse({
-            'code': 1
-        }, safe=False)
+        code = 1
     else:
         if request.session.get('user_id', '') != '':
             user = User.objects.get(id=request.session['user_id'])
@@ -193,16 +192,16 @@ def create_found(request):
             for i in found_dict['item_type_ids']:
                 item = Item.get_item_type_by_id(int(i))
                 new_found.type_id.add(item)
-            return JsonResponse({
-                'code': 0
-            }, safe=False)
+            code = 0
         else:
-            return JsonResponse({
-                'code': 2
-            }, safe=False)
+            code = 2
+    return JsonResponse({
+        'code': code
+    }, safe=False)
 
 
 def update_found(request):
+    code = 0
     found_dict = {
         'id': request.POST['id'],
         'description': request.POST['description'],
@@ -214,34 +213,30 @@ def update_found(request):
         'detail': request.POST['detail'],
     }
     if not check_found(found_dict):
-        return JsonResponse({
-            'code': 1
-        }, safe=False)
+        code = 1
     else:
         if request.session.get('user_id', '') != '':
-            user = User.objects.get(id=request.session['user_id'])
             place = Place.get_place_by_id(int(found_dict['place_id']))
             found = Found.objects.filter(id=found_dict['id'])
-            found.update(user_id=user,
-                         description=found_dict['description'],
-                         state=0,
+            found.update(description=found_dict['description'],
                          image=found_dict['img'],
                          place_detail=found_dict['place_detail'],
                          detail=found_dict['detail'],
                          place_id=place,
-                         lost_time=found_dict['time'])
-
-            found.type_id.clear()
-            for i in found_dict['item_type_ids']:
-                item = Item.get_item_type_by_id(int(i))
-                found.type_id.add(item)
-            return JsonResponse({
-                'code': 0
-            }, safe=False)
+                         found_time=found_dict['time'])
+            if len(found) > 0:
+                found[0].type_id.clear()
+                for i in found_dict['item_type_ids']:
+                    item = Item.get_item_type_by_id(int(i))
+                    found[0].type_id.add(item)
+                code = 0
+            else:
+                code = 2
         else:
-            return JsonResponse({
-                'code': 2
-            }, safe=False)
+            code = 2
+    return JsonResponse({
+        'code': code
+    }, safe=False)
 
 
 

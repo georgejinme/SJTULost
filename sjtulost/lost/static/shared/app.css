@@ -1041,7 +1041,7 @@ td.rdtYear:hover {
     padding-right:0;
 }
 
-.publishFoundImage .publishFoundImageBtn {
+.publishFoundImage .publishFoundImageBtn:active {
     background-image: radial-gradient(circle, #880000 10%, brown 11%);
 }
 

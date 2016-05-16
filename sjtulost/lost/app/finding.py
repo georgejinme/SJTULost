@@ -179,6 +179,7 @@ def publish_finding_upload_image(request):
 
 
 def create_finding(request):
+    code = 0
     finding_dict = {
         'description': request.POST['description'],
         'img': request.POST['img'],
@@ -190,9 +191,7 @@ def create_finding(request):
         'pay': request.POST['pay']
     }
     if not check_finding(finding_dict):
-        return JsonResponse({
-            'code': 1
-        }, safe=False)
+        code = 1
     else:
         if request.session.get('user_id', '') != '':
             user = User.objects.get(id=request.session['user_id'])
@@ -211,16 +210,16 @@ def create_finding(request):
             for p in finding_dict['place_ids']:
                 place = Place.get_place_by_id(int(p))
                 new_finding.place_ids.add(place)
-            return JsonResponse({
-                'code': 0
-            }, safe=False)
+            code = 0
         else:
-            return JsonResponse({
-                'code': 2
-            }, safe=False)
+            code = 2
+    return JsonResponse({
+        'code': code
+    }, safe=False)
 
 
 def update_finding(request):
+    code = 0
     finding_dict = {
         'id': request.POST['id'],
         'description': request.POST['description'],
@@ -233,37 +232,33 @@ def update_finding(request):
         'pay': request.POST['pay']
     }
     if not check_finding(finding_dict):
-        return JsonResponse({
-            'code': 1
-        }, safe=False)
+        code = 1
     else:
         if request.session.get('user_id', '') != '':
-            user = User.objects.get(id=request.session['user_id'])
             finding = Finding.objects.filter(id=finding_dict['id'])
-            finding.update(user_id=user,
-                           description=finding_dict['description'],
+            finding.update(description=finding_dict['description'],
                            pay=finding_dict['pay'],
-                           state=0,
                            image=finding_dict['img'],
                            place_detail=finding_dict['place_detail'],
                            detail=finding_dict['detail'],
                            lost_time=finding_dict['time'])
-
-            finding.place_ids.clear()
-            finding.type_id.clear()
-            for i in finding_dict['item_type_ids']:
-                item = Item.get_item_type_by_id(int(i))
-                finding.type_id.add(item)
-            for p in finding_dict['place_ids']:
-                place = Place.get_place_by_id(int(p))
-                finding.place_ids.add(place)
-            return JsonResponse({
-                'code': 0
-            }, safe=False)
+            if len(finding) > 0:
+                finding[0].place_ids.clear()
+                finding[0].type_id.clear()
+                for i in finding_dict['item_type_ids']:
+                    item = Item.get_item_type_by_id(int(i))
+                    finding[0].type_id.add(item)
+                for p in finding_dict['place_ids']:
+                    place = Place.get_place_by_id(int(p))
+                    finding[0].place_ids.add(place)
+                code = 0
+            else:
+                code = 2
         else:
-            return JsonResponse({
-                'code': 2
-            }, safe=False)
+            code = 2
+    return JsonResponse({
+        'code': code
+    }, safe=False)
 
 
 
