@@ -242,6 +242,51 @@ def create_finding(request):
             }, safe=False)
 
 
+def update_finding(request):
+    finding_dict = {
+        'id': request.POST['id'],
+        'description': request.POST['description'],
+        'img': request.POST['img'],
+        'item_type_ids': request.POST.getlist('item_type_ids[]'),
+        'time': request.POST['time'],
+        'place_ids': request.POST.getlist('place_ids[]'),
+        'place_detail': request.POST['place_detail'],
+        'detail': request.POST['detail'],
+        'pay': request.POST['pay']
+    }
+    if not check_finding(finding_dict):
+        return JsonResponse({
+            'code': 1
+        }, safe=False)
+    else:
+        if request.session.get('user_id', '') != '':
+            user = User.objects.get(id=request.session['user_id'])
+            finding = Finding.objects.filter(id=finding_dict['id'])
+            finding.update(user_id=user,
+                           description=finding_dict['description'],
+                           pay=finding_dict['pay'],
+                           state=0,
+                           image=finding_dict['img'],
+                           place_detail=finding_dict['place_detail'],
+                           detail=finding_dict['detail'],
+                           lost_time=finding_dict['time'])
+
+            finding.place_ids.clear()
+            for i in finding_dict['item_type_ids']:
+                item = Item.get_item_type_by_id(int(i))
+                finding.type_id.add(item)
+            for p in finding_dict['place_ids']:
+                place = Place.get_place_by_id(int(p))
+                finding.place_ids.add(place)
+            return JsonResponse({
+                'code': 0
+            }, safe=False)
+        else:
+            return JsonResponse({
+                'code': 2
+            }, safe=False)
+
+
 
 
 

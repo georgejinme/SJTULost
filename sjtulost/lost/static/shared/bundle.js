@@ -20678,6 +20678,11 @@
 	            FindingStore.emitUpdateResult();
 	            break;
 
+	        case 'PUBLISH_FINDING_UPDATE':
+	            FindingStore.setUpdateResult(action.result);
+	            FindingStore.emitUpdateResult();
+	            break;
+
 	        default:
 	        // no op
 	    }
