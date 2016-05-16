@@ -158,13 +158,12 @@ var PublishFindingImage = React.createClass({
                     <fieldset>
                         <legend>图片信息 (必填)</legend>
                         <div className="form-group">
-                            <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
+                            <a href = "javascript:void(0);" className="col-lg-2 col-md-2 col-sm-2 btn btn-success publishFindingImageBtn">
+                                <input id="fileupload" type="file" name="files[]" multiple />{this.getButtonText()}
+                            </a>
+                            <div className="col-lg-10 col-md-10 col-sm-10">
                                 <img src={this.props.json['img']} />
-                                <br/>
-                                <br/>
-                                <a href = "javascript:void(0);" className="btn btn-success publishFindingImageBtn">
-                                    <input id="fileupload" type="file" name="files[]" multiple />{this.getButtonText()}
-                                </a>
+
                             </div>
                         </div>
                     </fieldset>
@@ -341,13 +340,7 @@ var PublishFinding = React.createClass({
                     status = {this.state.uploadImageStatus}
                 />
                 <hr/>
-                <form className="form-horizontal">
-                    <div className="form-group">
-                        <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
-                            <a href="#" className="btn btn-success publishBtn" onClick = {this.publish}>发布</a>
-                        </div>
-                    </div>
-                </form>
+                <a href="#" className="btn btn-success publishBtn" onClick = {this.publish}>发布</a>
                 <br/>
                 <br/>
             </div>

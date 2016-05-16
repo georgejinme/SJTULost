@@ -899,6 +899,11 @@ td.rdtYear:hover {
     margin-top: 90px;
 }
 
+.publishFinding .form-group{
+    margin-left: 0;
+    margin-right:0;
+}
+
 .publishFindingBasicInfo input:focus, textarea:focus, select:focus{
     box-shadow: inset 0 -2px 0 brown !important;
 }
@@ -908,7 +913,7 @@ td.rdtYear:hover {
 }
 
 .publishFindingImage .publishFindingImageBtn {
-    width: 300px;
+
     padding-left: 0;
     padding-right:0;
 }

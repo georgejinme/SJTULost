@@ -23211,7 +23211,7 @@
 	        if (this.props.status == -1) return '选择文件';else if (this.props.status == 0) return '上传成功';else if (this.props.status == 1) return '上传失败';else if (this.props.status == 2) return '正在上传...';else return '';
 	    },
 	    render: function render() {
-	        return React.createElement("div", { className: "publishFindingImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息 (必填)"), React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("img", { src: this.props.json['img'] }), React.createElement("br", null), React.createElement("br", null), React.createElement("a", { href: "javascript:void(0);", className: "btn btn-success publishFindingImageBtn" }, React.createElement("input", { id: "fileupload", type: "file", name: "files[]", multiple: true }), this.getButtonText()))))));
+	        return React.createElement("div", { className: "publishFindingImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息 (必填)"), React.createElement("div", { className: "form-group" }, React.createElement("a", { href: "javascript:void(0);", className: "col-lg-2 col-md-2 col-sm-2 btn btn-success publishFindingImageBtn" }, React.createElement("input", { id: "fileupload", type: "file", name: "files[]", multiple: true }), this.getButtonText()), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("img", { src: this.props.json['img'] }))))));
 	    }
 	});
 
@@ -23365,7 +23365,7 @@
 	            detailHandler: this.detailChange,
 	            payHandler: this.payChange }), React.createElement(PublishFindingImage, {
 	            json: this.state.finding,
-	            status: this.state.uploadImageStatus }), React.createElement("hr", null), React.createElement("form", { className: "form-horizontal" }, React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("a", { href: "#", className: "btn btn-success publishBtn", onClick: this.publish }, "发布")))), React.createElement("br", null), React.createElement("br", null));
+	            status: this.state.uploadImageStatus }), React.createElement("hr", null), React.createElement("a", { href: "#", className: "btn btn-success publishBtn", onClick: this.publish }, "发布"), React.createElement("br", null), React.createElement("br", null));
 	    }
 	});
 
