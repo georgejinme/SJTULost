@@ -56,6 +56,43 @@ var FindingAction = {
                 });
             }
         });
+    },
+
+    createFinding: function(finding) {
+        $.post('/createfinding/', {
+            'description': finding['description'],
+            'img': finding['img'],
+            'item_type_ids': finding['item_type_ids'],
+            'time': finding['time'],
+            'place_ids': finding['place_ids'],
+            'place_detail': finding['place_detail'],
+            'detail': finding['detail'],
+            'pay': finding['pay']
+        }, function(res) {
+            AppDispatcher.dispatch({
+                actionType: 'PUBLISH_FINDING_CREATE',
+                result: res['code']
+            })
+        })
+    },
+
+    updateFinding: function(finding) {
+        $.post('/updatefinding/', {
+            'id': finding['id'],
+            'description': finding['description'],
+            'img': finding['img'],
+            'item_type_ids': finding['item_type_ids'],
+            'time': finding['time'],
+            'place_ids': finding['place_ids'],
+            'place_detail': finding['place_detail'],
+            'detail': finding['detail'],
+            'pay': finding['pay']
+        }, function(res) {
+            AppDispatcher.dispatch({
+                actionType: 'PUBLISH_FINDING_UPDATE',
+                result: res['code']
+            })
+        })
     }
 };
 

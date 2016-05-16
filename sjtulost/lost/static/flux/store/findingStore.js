@@ -55,7 +55,7 @@ var FindingStore = assign({}, EventEmitter.prototype, {
             place_ids: [],
             place_detail: '',
             detail: '',
-            pay: 0,
+            pay: '0',
             state: 0
         }
     },

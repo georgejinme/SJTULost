@@ -907,21 +907,82 @@ td.rdtYear:hover {
     ime-mode: disabled;
 }
 
-.PublishFindingImage .publishFindingImageBtn {
+.publishFindingImage .publishFindingImageBtn {
     width: 300px;
     padding-left: 0;
     padding-right:0;
 }
 
-.PublishFindingImage input{
+.publishFindingImage input{
     opacity: 0;
     position: absolute;
     width: 300px;
 }
 
-.PublishFindingImage img{
+.publishFindingImage img{
     max-width: 100%;
     max-height: 500px;
+}
+
+.publishFinding .publishFindingAlert{
+    width: 100%;
+    height: 30px;
+    padding-top: 0px;
+    position: absolute;
+    top: 33px;
+    text-align: center;
+    display: none;
+}
+
+.publishFinding .updating {
+    display: block;
+    animation: publishFindingUpdateAnimation 2s;
+    -moz-animation: publishFindingUpdateAnimation 2s;	/* Firefox */
+    -webkit-animation: publishFindingUpdateAnimation 2s;	/* Safari 和 Chrome */
+    -o-animation: publishFindingUpdateAnimation 2s;	/* Opera */
+}
+
+.publishFinding .publishFindingAlert p{
+    height: 30px;
+    line-height: 30px;
+    margin: 0px;
+    text-align: center;
+}
+
+@keyframes publishFindingUpdateAnimation
+{
+    0% {top: 33px;}
+    35% {top: 63px;}
+    65% {top: 63px;}
+    100% {top: 33px;}
+}
+
+@-moz-keyframes publishFindingUpdateAnimation /* Firefox */
+{
+    0% {top: 33px;}
+    35% {top: 63px;}
+    65% {top: 63px;}
+    100% {top: 33px;}
+}
+
+@-webkit-keyframes publishFindingUpdateAnimation /* Safari 和 Chrome */
+{
+    0% {top: 33px;}
+    35% {top: 63px;}
+    65% {top: 63px;}
+    100% {top: 33px;}
+}
+
+@-o-keyframes publishFindingUpdateAnimation /* Opera */
+{
+    0% {top: 33px;}
+    35% {top: 63px;}
+    65% {top: 63px;}
+    100% {top: 33px;}
+}
+
+.publishFinding .publishBtn {
+    width: 100%;
 }
 
 

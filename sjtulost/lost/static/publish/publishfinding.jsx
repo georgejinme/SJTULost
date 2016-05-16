@@ -31,7 +31,7 @@ var PublishFindingBasicInfo = React.createClass({
             <div className="publishFindingBasicInfo">
                 <form className="form-horizontal">
                     <fieldset>
-                        <legend>基本信息</legend>
+                        <legend>基本信息 (所有信息必填)</legend>
                         <div className="form-group">
                             <label htmlFor="publishFindingTitle" className="col-lg-2 col-md-2 col-sm-2 control-label">标题</label>
                             <div className="col-lg-10 col-md-10 col-sm-10">
@@ -102,10 +102,10 @@ var PublishFindingBasicInfo = React.createClass({
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="publishFindingTime" className="col-lg-2 col-md-2 col-sm-2 control-label">丢失时间</label>
+                            <label htmlFor="publishFindingTime" className="col-lg-2 col-md-2 col-sm-2 control-label">丢失时间 <br/>(年-月-日 时:分:秒)</label>
                             <div className="col-lg-10 col-md-10 col-sm-10">
                                 <Datetime
-                                    dateFormat = "YYYY/MM/DD"
+                                    dateFormat = "YYYY-MM-DD"
                                     timeFormat = "hh:mm:ss"
                                     value = {this.props.json['time']}
                                     onChange = {this.props.timeHandler}
@@ -153,10 +153,10 @@ var PublishFindingImage = React.createClass({
     },
     render: function() {
         return (
-            <div className="PublishFindingImage">
+            <div className="publishFindingImage">
                 <form className="form-horizontal">
                     <fieldset>
-                        <legend>图片信息</legend>
+                        <legend>图片信息 (必填)</legend>
                         <div className="form-group">
                             <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
                                 <img src={this.props.json['img']} />
@@ -183,13 +183,16 @@ var PublishFinding = React.createClass({
             finding: FindingStore.getFirstFinding(),
             itemTypes: ItemStore.getItems(),
             places: PlaceStore.getPlaces(),
-            uploadImageStatus: FindingStore.getUploadImageStatus()
+            uploadImageStatus: FindingStore.getUploadImageStatus(),
+            updateResult: FindingStore.getUpdateResult(),
+            updating: false
         }
     },
 
     componentDidMount: function() {
         FindingStore.addChangeListener(this._onFindingChange);
         FindingStore.addUploadImageListener(this._onUploadImageChange);
+        FindingStore.addUpdateListener(this._onUpdate);
         ItemStore.addChangeListener(this._onItemChange);
         ItemStore.addSelectListener(this._onItemSelectChange);
         PlaceStore.addChangeListener(this._onPlaceChange);
@@ -203,6 +206,7 @@ var PublishFinding = React.createClass({
     componentWillUnmount: function() {
         FindingStore.removeChangeListener(this._onFindingChange);
         FindingStore.removeUploadImageListener(this._onUploadImageChange);
+        FindingStore.removeUpdateListener(this._onUpdate);
         ItemStore.removeChangeListener(this._onItemChange);
         ItemStore.removeSelectListener(this._onItemSelectChange);
         PlaceStore.removeChangeListener(this._onPlaceChange);
@@ -243,6 +247,20 @@ var PublishFinding = React.createClass({
         })
     },
 
+    _onUpdate: function() {
+        this.setState({
+            updateResult: FindingStore.getUpdateResult(),
+            updating: true
+        });
+        if (this.state.updateResult == 0) window.location.href = '/';
+        var that = this;
+        setTimeout(function(){
+            that.setState({
+                updating: false
+            })}, 2100
+        )
+    },
+
     descriptionChange: function(ev) {
         FindingStore.setDescription(ev.target.value);
         FindingStore.emitChange();
@@ -257,7 +275,7 @@ var PublishFinding = React.createClass({
     },
 
     timeChange: function(ev) {
-        FindingStore.setTime(ev.format('YYYY/MM/DD hh:mm:ss'));
+        FindingStore.setTime(ev.format('YYYY-MM-DD hh:mm:ss'));
         FindingStore.emitChange();
     },
 
@@ -277,13 +295,35 @@ var PublishFinding = React.createClass({
     },
 
     publish: function() {
+        if (this.props.id == '') {
+            FindingAction.createFinding(this.state.finding)
+        } else {
+            FindingAction.updateFinding(this.state.finding)
+        }
         console.log(this.state.finding)
+    },
+
+    getAlertText: function() {
+        if (this.state.updateResult == 0) return '更新成功';
+        else if (this.state.updateResult == 1) return '您有无效输入, 请检查';
+        else return '更新失败, 请重新登录'
+    },
+
+    getAlertClass: function() {
+        var c = 'alert alert-dismissible publishFindingAlert';
+        if (this.state.updating) c += ' updating';
+        if (this.state.updateResult == 0) c += ' alert-success';
+        else c += ' alert-warning';
+        return c
     },
 
 
     render: function() {
         return (
             <div className="publishFinding">
+                <div className={this.getAlertClass()}>
+                    <p>{this.getAlertText()}</p>
+                </div>
                 <PublishFindingBasicInfo
                     json = {this.state.finding}
                     items = {this.state.itemTypes}
@@ -300,13 +340,16 @@ var PublishFinding = React.createClass({
                     json = {this.state.finding}
                     status = {this.state.uploadImageStatus}
                 />
+                <hr/>
                 <form className="form-horizontal">
                     <div className="form-group">
                         <div className="col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2">
-                            <a href="#" className="btn btn-success" onClick = {this.publish}>发布</a>
+                            <a href="#" className="btn btn-success publishBtn" onClick = {this.publish}>发布</a>
                         </div>
                     </div>
                 </form>
+                <br/>
+                <br/>
             </div>
         )
     }

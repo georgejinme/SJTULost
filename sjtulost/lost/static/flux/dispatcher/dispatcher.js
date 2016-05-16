@@ -78,6 +78,11 @@ AppDispatcher.register(function (action) {
             FindingStore.emitUploadImage();
             break;
 
+        case 'PUBLISH_FINDING_CREATE':
+            FindingStore.setUpdateResult(action.result);
+            FindingStore.emitUpdateResult();
+            break;
+
         default:
         // no op
     }

@@ -20673,6 +20673,11 @@
 	            FindingStore.emitUploadImage();
 	            break;
 
+	        case 'PUBLISH_FINDING_CREATE':
+	            FindingStore.setUpdateResult(action.result);
+	            FindingStore.emitUpdateResult();
+	            break;
+
 	        default:
 	        // no op
 	    }
@@ -21498,7 +21503,7 @@
 	            place_ids: [],
 	            place_detail: '',
 	            detail: '',
-	            pay: 0,
+	            pay: '0',
 	            state: 0
 	        };
 	    },
@@ -22161,6 +22166,43 @@
 	                    status: 2
 	                });
 	            }
+	        });
+	    },
+
+	    createFinding: function createFinding(finding) {
+	        $.post('/createfinding/', {
+	            'description': finding['description'],
+	            'img': finding['img'],
+	            'item_type_ids': finding['item_type_ids'],
+	            'time': finding['time'],
+	            'place_ids': finding['place_ids'],
+	            'place_detail': finding['place_detail'],
+	            'detail': finding['detail'],
+	            'pay': finding['pay']
+	        }, function (res) {
+	            AppDispatcher.dispatch({
+	                actionType: 'PUBLISH_FINDING_CREATE',
+	                result: res['code']
+	            });
+	        });
+	    },
+
+	    updateFinding: function updateFinding(finding) {
+	        $.post('/updatefinding/', {
+	            'id': finding['id'],
+	            'description': finding['description'],
+	            'img': finding['img'],
+	            'item_type_ids': finding['item_type_ids'],
+	            'time': finding['time'],
+	            'place_ids': finding['place_ids'],
+	            'place_detail': finding['place_detail'],
+	            'detail': finding['detail'],
+	            'pay': finding['pay']
+	        }, function (res) {
+	            AppDispatcher.dispatch({
+	                actionType: 'PUBLISH_FINDING_UPDATE',
+	                result: res['code']
+	            });
 	        });
 	    }
 	};
@@ -23120,7 +23162,7 @@
 	        var placeChecked = this.getPlaceChecked;
 	        var itemTypeHandler = this.props.itemTypeHandler;
 	        var placeHandler = this.props.placeHandler;
-	        return React.createElement("div", { className: "publishFindingBasicInfo" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "基本信息"), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingTitle", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "标题"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
+	        return React.createElement("div", { className: "publishFindingBasicInfo" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "基本信息 (所有信息必填)"), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingTitle", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "标题"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
 	            className: "form-control",
 	            id: "publishFindingTitle",
 	            placeholder: "Title",
@@ -23142,8 +23184,8 @@
 	            id: "publishFindingPlaceDetail",
 	            placeholder: "Place detail",
 	            value: this.props.json['place_detail'],
-	            onChange: this.props.placeDetailHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingTime", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失时间"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement(Datetime, {
-	            dateFormat: "YYYY/MM/DD",
+	            onChange: this.props.placeDetailHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingTime", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失时间 ", React.createElement("br", null), "(年-月-日 时:分:秒)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement(Datetime, {
+	            dateFormat: "YYYY-MM-DD",
 	            timeFormat: "hh:mm:ss",
 	            value: this.props.json['time'],
 	            onChange: this.props.timeHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细描述"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("textarea", { className: "form-control",
@@ -23164,7 +23206,7 @@
 	        if (this.props.status == -1) return '选择文件';else if (this.props.status == 0) return '上传成功';else if (this.props.status == 1) return '上传失败';else if (this.props.status == 2) return '正在上传...';else return '';
 	    },
 	    render: function render() {
-	        return React.createElement("div", { className: "PublishFindingImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息"), React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("img", { src: this.props.json['img'] }), React.createElement("br", null), React.createElement("br", null), React.createElement("a", { href: "javascript:void(0);", className: "btn btn-success publishFindingImageBtn" }, React.createElement("input", { id: "fileupload", type: "file", name: "files[]", multiple: true }), this.getButtonText()))))));
+	        return React.createElement("div", { className: "publishFindingImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息 (必填)"), React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("img", { src: this.props.json['img'] }), React.createElement("br", null), React.createElement("br", null), React.createElement("a", { href: "javascript:void(0);", className: "btn btn-success publishFindingImageBtn" }, React.createElement("input", { id: "fileupload", type: "file", name: "files[]", multiple: true }), this.getButtonText()))))));
 	    }
 	});
 
@@ -23174,13 +23216,16 @@
 	            finding: FindingStore.getFirstFinding(),
 	            itemTypes: ItemStore.getItems(),
 	            places: PlaceStore.getPlaces(),
-	            uploadImageStatus: FindingStore.getUploadImageStatus()
+	            uploadImageStatus: FindingStore.getUploadImageStatus(),
+	            updateResult: FindingStore.getUpdateResult(),
+	            updating: false
 	        };
 	    },
 
 	    componentDidMount: function componentDidMount() {
 	        FindingStore.addChangeListener(this._onFindingChange);
 	        FindingStore.addUploadImageListener(this._onUploadImageChange);
+	        FindingStore.addUpdateListener(this._onUpdate);
 	        ItemStore.addChangeListener(this._onItemChange);
 	        ItemStore.addSelectListener(this._onItemSelectChange);
 	        PlaceStore.addChangeListener(this._onPlaceChange);
@@ -23194,6 +23239,7 @@
 	    componentWillUnmount: function componentWillUnmount() {
 	        FindingStore.removeChangeListener(this._onFindingChange);
 	        FindingStore.removeUploadImageListener(this._onUploadImageChange);
+	        FindingStore.removeUpdateListener(this._onUpdate);
 	        ItemStore.removeChangeListener(this._onItemChange);
 	        ItemStore.removeSelectListener(this._onItemSelectChange);
 	        PlaceStore.removeChangeListener(this._onPlaceChange);
@@ -23234,6 +23280,20 @@
 	        });
 	    },
 
+	    _onUpdate: function _onUpdate() {
+	        this.setState({
+	            updateResult: FindingStore.getUpdateResult(),
+	            updating: true
+	        });
+	        if (this.state.updateResult == 0) window.location.href = '/';
+	        var that = this;
+	        setTimeout(function () {
+	            that.setState({
+	                updating: false
+	            });
+	        }, 2100);
+	    },
+
 	    descriptionChange: function descriptionChange(ev) {
 	        FindingStore.setDescription(ev.target.value);
 	        FindingStore.emitChange();
@@ -23248,7 +23308,7 @@
 	    },
 
 	    timeChange: function timeChange(ev) {
-	        FindingStore.setTime(ev.format('YYYY/MM/DD hh:mm:ss'));
+	        FindingStore.setTime(ev.format('YYYY-MM-DD hh:mm:ss'));
 	        FindingStore.emitChange();
 	    },
 
@@ -23268,11 +23328,27 @@
 	    },
 
 	    publish: function publish() {
+	        if (this.props.id == '') {
+	            FindingAction.createFinding(this.state.finding);
+	        } else {
+	            FindingAction.updateFinding(this.state.finding);
+	        }
 	        console.log(this.state.finding);
 	    },
 
+	    getAlertText: function getAlertText() {
+	        if (this.state.updateResult == 0) return '更新成功';else if (this.state.updateResult == 1) return '您有无效输入, 请检查';else return '更新失败, 请重新登录';
+	    },
+
+	    getAlertClass: function getAlertClass() {
+	        var c = 'alert alert-dismissible publishFindingAlert';
+	        if (this.state.updating) c += ' updating';
+	        if (this.state.updateResult == 0) c += ' alert-success';else c += ' alert-warning';
+	        return c;
+	    },
+
 	    render: function render() {
-	        return React.createElement("div", { className: "publishFinding" }, React.createElement(PublishFindingBasicInfo, {
+	        return React.createElement("div", { className: "publishFinding" }, React.createElement("div", { className: this.getAlertClass() }, React.createElement("p", null, this.getAlertText())), React.createElement(PublishFindingBasicInfo, {
 	            json: this.state.finding,
 	            items: this.state.itemTypes,
 	            places: this.state.places,
@@ -23284,7 +23360,7 @@
 	            detailHandler: this.detailChange,
 	            payHandler: this.payChange }), React.createElement(PublishFindingImage, {
 	            json: this.state.finding,
-	            status: this.state.uploadImageStatus }), React.createElement("form", { className: "form-horizontal" }, React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("a", { href: "#", className: "btn btn-success", onClick: this.publish }, "发布")))));
+	            status: this.state.uploadImageStatus }), React.createElement("hr", null), React.createElement("form", { className: "form-horizontal" }, React.createElement("div", { className: "form-group" }, React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-2" }, React.createElement("a", { href: "#", className: "btn btn-success publishBtn", onClick: this.publish }, "发布")))), React.createElement("br", null), React.createElement("br", null));
 	    }
 	});
 

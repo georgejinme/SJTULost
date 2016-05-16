@@ -1,8 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from lost.models import Finding
+from lost.models import User
 import lost.app.item as Item
 import lost.app.place as Place
 import lost.util.time as time
+import lost.util.number as number
 import django.utils.timezone as timezone
 import qiniu
 import qiniu.config
@@ -25,6 +27,70 @@ def upload_image(id, file):
         return ''
     else:
         return "http://7xtbqj.com1.z0.glb.clouddn.com/" + file_name
+
+
+def check_description(d):
+    if len(d) == 0:
+        return False
+    else:
+        return True
+
+
+def check_img(i):
+    if len(i) == 0:
+        return False
+    else:
+        return True
+
+
+def check_items(i):
+    if len(i) == 0:
+        return False
+    else:
+        return True
+
+
+def check_time(t):
+    return time.is_valid_date(t)
+
+
+def check_places(p):
+    if len(p) == 0:
+        return False
+    else:
+        return True
+
+
+def check_place_detail(pd):
+    if len(pd) == 0:
+        return False
+    else:
+        return True
+
+
+def check_detail(d):
+    if len(d) == 0:
+        return False
+    else:
+        return True
+
+
+def check_pay(p):
+    if len(p) == 0:
+        return False
+    else:
+        return number.is_valid_float(p)
+
+
+def check_finding(j):
+    return check_description(j['description']) and \
+            check_img(j['img']) and \
+            check_time(j['time']) and \
+            check_items(j['item_type_ids']) and \
+            check_places(j['place_ids']) and \
+            check_place_detail(j['place_detail']) and \
+            check_detail(j['detail']) and \
+            check_pay(j['pay'])
 
 
 # internal function
@@ -113,16 +179,69 @@ def get_findings_with_id(request):
 # 1: fail
 
 def publish_finding_upload_image(request):
-    url = upload_image(request.session['user_id'], request.FILES[u'files[]'])
-    print url
-    if url == '':
-        return JsonResponse({'code': 1,
-                             'url': url
-                             }, safe=False)
+    if request.session.get('user_id', '') != '':
+        url = upload_image(request.session['user_id'], request.FILES[u'files[]'])
+        if url == '':
+            return JsonResponse({'code': 1,
+                                 'url': ''
+                                 }, safe=False)
+        else:
+            return JsonResponse({'code': 0,
+                                 'url': url
+                                 }, safe=False)
     else:
-        return JsonResponse({'code': 0,
-                             'url': url
+        return JsonResponse({'code': 1,
+                             'url': ''
                              }, safe=False)
+
+
+# code:
+# 0: success
+# 1: invalid format
+# 2: fail
+
+
+def create_finding(request):
+    finding_dict = {
+        'description': request.POST['description'],
+        'img': request.POST['img'],
+        'item_type_ids': request.POST.getlist('item_type_ids[]'),
+        'time': request.POST['time'],
+        'place_ids': request.POST.getlist('place_ids[]'),
+        'place_detail': request.POST['place_detail'],
+        'detail': request.POST['detail'],
+        'pay': request.POST['pay']
+    }
+    if not check_finding(finding_dict):
+        return JsonResponse({
+            'code': 1
+        }, safe=False)
+    else:
+        if request.session.get('user_id', '') != '':
+            user = User.objects.get(id=request.session['user_id'])
+            new_finding = Finding(user_id=user,
+                                  description=finding_dict['description'],
+                                  pay=finding_dict['pay'],
+                                  state=0,
+                                  image=finding_dict['img'],
+                                  place_detail=finding_dict['place_detail'],
+                                  detail=finding_dict['detail'], lost_time=finding_dict['time'])
+            new_finding.save()
+            for i in finding_dict['item_type_ids']:
+                item = Item.get_item_type_by_id(int(i))
+                new_finding.type_id.add(item)
+            for p in finding_dict['place_ids']:
+                place = Place.get_place_by_id(int(p))
+                new_finding.place_ids.add(place)
+            return JsonResponse({
+                'code': 0
+            }, safe=False)
+        else:
+            return JsonResponse({
+                'code': 2
+            }, safe=False)
+
+
 
 
 
