@@ -39,6 +39,13 @@ var ItemStore = assign({}, EventEmitter.prototype, {
         }
     },
 
+    singleSelectItem: function () {
+        for (var i = 0; i < this.items.length; ++i) {
+            if (index == i) this.selectedItems[i] = true;
+            else this.selectedItems[i] = false;
+        }
+    },
+
     clearSelectedItems: function() {
         this.selectedItems = [];
         for (var i = 0; i < this.items.length; ++i) {

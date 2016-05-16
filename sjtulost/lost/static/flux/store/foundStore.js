@@ -18,7 +18,7 @@ var FoundStore = assign({}, EventEmitter.prototype, {
          user_phone: string
          time:
          place:
-         place_ids
+         place_id
          place_detail:
          detail:
          state:

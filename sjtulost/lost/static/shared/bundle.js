@@ -21660,7 +21660,7 @@
 	         user_phone: string
 	         time:
 	         place:
-	         place_ids
+	         place_id
 	         place_detail:
 	         detail:
 	         state:
@@ -21841,6 +21841,12 @@
 	            } else {
 	                this.clearSelectedItems();
 	            }
+	        }
+	    },
+
+	    singleSelectItem: function singleSelectItem() {
+	        for (var i = 0; i < this.items.length; ++i) {
+	            if (index == i) this.selectedItems[i] = true;else this.selectedItems[i] = false;
 	        }
 	    },
 
@@ -22365,7 +22371,7 @@
 	            'img': found['img'],
 	            'item_type_ids': found['item_type_ids'],
 	            'time': found['time'],
-	            'place_ids': found['place_ids'],
+	            'place_id': found['place_id'],
 	            'place_detail': found['place_detail'],
 	            'detail': found['detail']
 	        }, function (res) {
@@ -22383,7 +22389,7 @@
 	            'img': found['img'],
 	            'item_type_ids': found['item_type_ids'],
 	            'time': found['time'],
-	            'place_ids': found['place_ids'],
+	            'place_id': found['place_id'],
 	            'place_detail': found['place_detail'],
 	            'detail': found['detail']
 	        }, function (res) {
@@ -56960,11 +56966,11 @@
 	    },
 
 	    publish: function publish() {
-	        //if (this.props.id == '') {
-	        //    FoundAction.createFound(this.state.found)
-	        //} else {
-	        //    FoundAction.updateFound(this.state.found)
-	        //}
+	        if (this.props.id == '') {
+	            FoundAction.createFound(this.state.found);
+	        } else {
+	            FoundAction.updateFound(this.state.found);
+	        }
 	        console.log(this.state.found);
 	    },
 

@@ -17,7 +17,7 @@ def upload_image(id, file):
     current_time = timezone.now()
     current_time_str = str(current_time)
     current_time_str = current_time_str.replace(' ', '').replace('.', '').replace('-', '').replace(':', '')
-    file_name = str(id) + current_time_str + '.jpg'
+    file_name = str(id) + current_time_str + 'finding.jpg'
 
     bucket_src = 'sjtulost'
     q = qiniu.Auth(ACCESS_KEY, SECRET_KEY)
@@ -225,7 +225,8 @@ def create_finding(request):
                                   state=0,
                                   image=finding_dict['img'],
                                   place_detail=finding_dict['place_detail'],
-                                  detail=finding_dict['detail'], lost_time=finding_dict['time'])
+                                  detail=finding_dict['detail'],
+                                  lost_time=finding_dict['time'])
             new_finding.save()
             for i in finding_dict['item_type_ids']:
                 item = Item.get_item_type_by_id(int(i))
@@ -272,6 +273,7 @@ def update_finding(request):
                            lost_time=finding_dict['time'])
 
             finding.place_ids.clear()
+            finding.type_id.clear()
             for i in finding_dict['item_type_ids']:
                 item = Item.get_item_type_by_id(int(i))
                 finding.type_id.add(item)

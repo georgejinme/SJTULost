@@ -56,5 +56,9 @@ urlpatterns = [
     url(r'^createfinding/$', 'lost.app.finding.create_finding',name='create_finding'),
     url(r'^updatefinding/$', 'lost.app.finding.update_finding', name='update_finding'),
 
+    url(r'^publishfounduploadimage/$', 'lost.app.found.publish_found_upload_image', name='publish_found_upload_image'),
+    url(r'^createfound/$', 'lost.app.found.create_found', name='create_found'),
+    url(r'^updatefound/$', 'lost.app.found.update_found', name='update_found'),
+
     url(r'^admin/', include(admin.site.urls)),
 ]

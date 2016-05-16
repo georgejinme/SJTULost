@@ -278,11 +278,11 @@ var PublishFound = React.createClass({
 
 
     publish: function() {
-        //if (this.props.id == '') {
-        //    FoundAction.createFound(this.state.found)
-        //} else {
-        //    FoundAction.updateFound(this.state.found)
-        //}
+        if (this.props.id == '') {
+            FoundAction.createFound(this.state.found)
+        } else {
+            FoundAction.updateFound(this.state.found)
+        }
         console.log(this.state.found)
     },
 

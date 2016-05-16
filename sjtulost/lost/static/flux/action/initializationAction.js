@@ -155,7 +155,7 @@ var FoundAction = {
             'img': found['img'],
             'item_type_ids': found['item_type_ids'],
             'time': found['time'],
-            'place_ids': found['place_ids'],
+            'place_id': found['place_id'],
             'place_detail': found['place_detail'],
             'detail': found['detail']
         }, function(res) {
@@ -173,7 +173,7 @@ var FoundAction = {
             'img': found['img'],
             'item_type_ids': found['item_type_ids'],
             'time': found['time'],
-            'place_ids': found['place_ids'],
+            'place_id': found['place_id'],
             'place_detail': found['place_detail'],
             'detail': found['detail']
         }, function(res) {
