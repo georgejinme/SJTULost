@@ -136,6 +136,7 @@ var MeFindingItem = React.createClass({
                        className={this.getButtonActive()}
                        onClick = {this.props.findingHandler}>已经找到
                     </a>
+                    <a href="#" className="btn btn-success meFindingEditBtn">编辑</a>
                 </div>
             </div>
         )
@@ -260,6 +261,7 @@ var MeFoundItem = React.createClass({
                        id = {idOperation.encodeId('meFound', this.props.json['id'])}
                        className={this.getButtonActive()}
                        onClick={this.props.foundHandler}>已经归还</a>
+                    <a href="#" className="btn btn-success meFoundEditBtn">编辑</a>
                 </div>
             </div>
         )
@@ -438,6 +440,8 @@ var Me = React.createClass({
                     <MeDisplay
                         selected = {this.state.selectedNavItem}
                     />
+                    <br/>
+                    <br/>
                 </div>
             </div>
         )

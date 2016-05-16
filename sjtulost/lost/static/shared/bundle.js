@@ -23088,7 +23088,7 @@
 	        return React.createElement("div", { className: "row meFindingItem" }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 meFindingItemImage" }, React.createElement("span", { className: this.badgeColor() }, this.badgeText()), React.createElement("img", { src: this.props.json['img'] })), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 meFindingItemDetail" }, React.createElement("a", { href: '/findingview/' + this.props.json['id'], target: "_blank" }, React.createElement("p", { className: "meFindingItemDetailTitle" }, this.props.json['description'])), React.createElement("p", { className: "meFindingItemDetailInfo" }, "物品类别: ", this.props.json['item_type']), React.createElement("p", { className: "meFindingItemDetailInfo" }, "遗失时间: ", this.props.json['time']), React.createElement("p", { className: "meFindingItemDetailInfo" }, "遗失地点: ", this.props.json['place']), React.createElement("p", { className: "meFindingItemDetailInfo" }, "详细位置: ", this.props.json['place_detail']), React.createElement("p", { className: "meFindingItemDetailInfo" }, "酬金: ", this.props.json['pay'], " 元"), React.createElement("a", { href: "#",
 	            id: idOperation.encodeId('meFinding', this.props.json['id']),
 	            className: this.getButtonActive(),
-	            onClick: this.props.findingHandler }, "已经找到")));
+	            onClick: this.props.findingHandler }, "已经找到"), React.createElement("a", { href: "#", className: "btn btn-success meFindingEditBtn" }, "编辑")));
 	    }
 	});
 
@@ -23175,7 +23175,7 @@
 	        return React.createElement("div", { className: "row meFoundItem" }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 meFoundItemImage" }, React.createElement("span", { className: this.badgeColor() }, this.badgeText()), React.createElement("img", { src: this.props.json['img'] })), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 meFoundItemDetail" }, React.createElement("a", { href: '/foundview/' + this.props.json['id'], target: "_blank" }, React.createElement("p", { className: "meFoundItemDetailTitle" }, this.props.json['description'])), React.createElement("p", { className: "meFoundItemDetailInfo" }, "物品类别: ", this.props.json['item_type']), React.createElement("p", { className: "meFoundItemDetailInfo" }, "遗失时间: ", this.props.json['time']), React.createElement("p", { className: "meFoundItemDetailInfo" }, "遗失地点: ", this.props.json['place']), React.createElement("p", { className: "meFoundItemDetailInfo" }, "详细位置: ", this.props.json['place_detail']), React.createElement("a", { href: "#",
 	            id: idOperation.encodeId('meFound', this.props.json['id']),
 	            className: this.getButtonActive(),
-	            onClick: this.props.foundHandler }, "已经归还")));
+	            onClick: this.props.foundHandler }, "已经归还"), React.createElement("a", { href: "#", className: "btn btn-success meFoundEditBtn" }, "编辑")));
 	    }
 	});
 
@@ -23290,7 +23290,7 @@
 	        return React.createElement("div", { className: "meContent row" }, React.createElement("div", { className: "col-lg-3 col-md-3 col-sm-3" }, React.createElement(MeNavigation, {
 	            selected: this.state.selectedNavItem,
 	            navClick: this.meNavClick })), React.createElement("div", { className: "col-lg-9 col-md-9 col-sm-9" }, React.createElement(MeDisplay, {
-	            selected: this.state.selectedNavItem })));
+	            selected: this.state.selectedNavItem }), React.createElement("br", null), React.createElement("br", null)));
 	    }
 	});
 
