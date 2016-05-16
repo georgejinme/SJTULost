@@ -45,7 +45,7 @@ var PublishFindingBasicInfo = React.createClass({
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="publishFindingItem" className="col-lg-2 col-md-2 col-sm-2 control-label">物品类别</label>
+                            <label htmlFor="publishFindingItem" className="col-lg-2 col-md-2 col-sm-2 control-label">物品类别 (多选)</label>
                             <div className="col-lg-10 col-md-10 col-sm-10">
                                 <div className = 'row'>
                                     {
@@ -56,7 +56,7 @@ var PublishFindingBasicInfo = React.createClass({
                                                     <label>
                                                         <input type="checkbox"
                                                                checked={itemChecked(val)}
-                                                               id = {idOperation.encodeId('publishItem', index)}
+                                                               id = {idOperation.encodeId('publishFindingItem', index)}
                                                                onChange = {itemTypeHandler}/> {val['description']}
                                                     </label>
                                                 </div>
@@ -67,7 +67,7 @@ var PublishFindingBasicInfo = React.createClass({
                             </div>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="publishFindingPlace" className="col-lg-2 col-md-2 col-sm-2 control-label">丢失地点</label>
+                            <label htmlFor="publishFindingPlace" className="col-lg-2 col-md-2 col-sm-2 control-label">丢失地点 (多选)</label>
                             <div className="col-lg-10 col-md-10 col-sm-10">
                                 <div className = 'row'>
                                     {
@@ -78,7 +78,7 @@ var PublishFindingBasicInfo = React.createClass({
                                                     <label>
                                                         <input type="checkbox"
                                                                checked={placeChecked(val)}
-                                                               id = {idOperation.encodeId('publishPlace', index)}
+                                                               id = {idOperation.encodeId('publishFindingPlace', index)}
                                                                onChange={placeHandler}/> {val['description']}
                                                     </label>
                                                 </div>
@@ -159,7 +159,7 @@ var PublishFindingImage = React.createClass({
                         <legend>图片信息 (必填)</legend>
                         <div className="form-group">
                             <a href = "javascript:void(0);" className="col-lg-2 col-md-2 col-sm-2 btn btn-success publishFindingImageBtn">
-                                <input id="fileupload" type="file" name="files[]" multiple />{this.getButtonText()}
+                                <input id="findingFileupload" type="file" name="files[]" multiple />{this.getButtonText()}
                             </a>
                             <div className="col-lg-10 col-md-10 col-sm-10">
                                 <img src={this.props.json['img']} />

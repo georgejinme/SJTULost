@@ -10,15 +10,20 @@ def found_item_types(found):
     found_item_types_array = [i.description for i in found.type_id.all()]
     return ",".join(found_item_types_array)
 
+def finding_item_types_ids(finding):
+    return [i.id for i in finding.type_id.all()]
+
 
 def found_format(founds_array):
     founds_dict = [dict({'id': f.id,
                          'description': f.description,
                          'img': f.image,
                          'item_type': found_item_types(f),
+                         'item_type_ids': finding_item_types_ids(f),
                          'user_phone': f.user_id.phone,
                          'time': time.timeString(f.found_time),
                          'place': f.place_id.description,
+                         'place_id': f.place_id.id,
                          'place_detail': f.place_detail,
                          'detail': f.detail,
                          'state': f.state}) for f in founds_array]

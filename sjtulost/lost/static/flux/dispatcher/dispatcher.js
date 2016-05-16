@@ -57,12 +57,14 @@ AppDispatcher.register(function (action) {
             break;
 
         case 'ITEM_TYPE_SELECT':
-            ItemStore.selectItem(action.id);
+            if (action.mode == 'single') ItemStore.singleSelectItem(action.id);
+            else if (action.mode =='multi') ItemStore.multiSelectItem(action.id);
             ItemStore.emitSelect();
             break;
 
         case 'PLACE_SELECT':
-            PlaceStore.selectPlace(action.id);
+            if (action.mode == 'single') PlaceStore.singleSelectPlace(action.id);
+            else if (action.mode =='multi') PlaceStore.multiSelectPlace(action.id);
             PlaceStore.emitSelect();
             break;
 
@@ -86,6 +88,23 @@ AppDispatcher.register(function (action) {
         case 'PUBLISH_FINDING_UPDATE':
             FindingStore.setUpdateResult(action.result);
             FindingStore.emitUpdateResult();
+            break;
+
+        case 'PUBLISH_FOUND_UPLOAD_IMAGE':
+            FoundStore.setImage(action.img);
+            FoundStore.setUploadImageStatus(action.status);
+            FoundStore.emitChange();
+            FoundStore.emitUploadImage();
+            break;
+
+        case 'PUBLISH_FOUND_CREATE':
+            FoundStore.setUpdateResult(action.result);
+            FoundStore.emitUpdateResult();
+            break;
+
+        case 'PUBLISH_FOUND_UPDATE':
+            FoundStore.setUpdateResult(action.result);
+            FoundStore.emitUpdateResult();
             break;
 
         default:

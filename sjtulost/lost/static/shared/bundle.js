@@ -20652,12 +20652,12 @@
 	            break;
 
 	        case 'ITEM_TYPE_SELECT':
-	            ItemStore.selectItem(action.id);
+	            if (action.mode == 'single') ItemStore.singleSelectItem(action.id);else if (action.mode == 'multi') ItemStore.multiSelectItem(action.id);
 	            ItemStore.emitSelect();
 	            break;
 
 	        case 'PLACE_SELECT':
-	            PlaceStore.selectPlace(action.id);
+	            if (action.mode == 'single') PlaceStore.singleSelectPlace(action.id);else if (action.mode == 'multi') PlaceStore.multiSelectPlace(action.id);
 	            PlaceStore.emitSelect();
 	            break;
 
@@ -20681,6 +20681,23 @@
 	        case 'PUBLISH_FINDING_UPDATE':
 	            FindingStore.setUpdateResult(action.result);
 	            FindingStore.emitUpdateResult();
+	            break;
+
+	        case 'PUBLISH_FOUND_UPLOAD_IMAGE':
+	            FoundStore.setImage(action.img);
+	            FoundStore.setUploadImageStatus(action.status);
+	            FoundStore.emitChange();
+	            FoundStore.emitUploadImage();
+	            break;
+
+	        case 'PUBLISH_FOUND_CREATE':
+	            FoundStore.setUpdateResult(action.result);
+	            FoundStore.emitUpdateResult();
+	            break;
+
+	        case 'PUBLISH_FOUND_UPDATE':
+	            FoundStore.setUpdateResult(action.result);
+	            FoundStore.emitUpdateResult();
 	            break;
 
 	        default:
@@ -21639,9 +21656,11 @@
 	         description: string
 	         img: string
 	         item_type:
+	         item_type_ids
 	         user_phone: string
 	         time:
 	         place:
+	         place_ids
 	         place_detail:
 	         detail:
 	         state:
@@ -21649,7 +21668,18 @@
 	     */
 
 	    founds: [],
+	    /*
+	     0: success
+	     1: fail
+	     */
 	    updateResult: 0,
+	    /*
+	     -1: 选择文件
+	     0: success
+	     1: fail
+	     2: uploading
+	     */
+	    uploadImageStatus: -1,
 
 	    getDefaultFound: function getDefaultFound() {
 	        return {
@@ -21657,9 +21687,11 @@
 	            description: '',
 	            img: '',
 	            item_type: '',
+	            item_type_ids: [],
 	            user_phone: '',
 	            time: '',
 	            place: '',
+	            place_id: 0,
 	            place_detail: '',
 	            detail: '',
 	            state: 0
@@ -21674,6 +21706,34 @@
 
 	    setFounds: function setFounds(array) {
 	        this.founds = array;
+	    },
+
+	    setDescription: function setDescription(d) {
+	        this.founds[0]['description'] = d;
+	    },
+
+	    setImage: function setImage(i) {
+	        this.founds[0]['img'] = i;
+	    },
+
+	    setItemTypeWithId: function setItemTypeWithId(ids) {
+	        this.founds[0]['item_type_ids'] = ids;
+	    },
+
+	    setPlacesWithId: function setPlacesWithId(id) {
+	        this.founds[0]['place_id'] = id;
+	    },
+
+	    setTime: function setTime(t) {
+	        this.founds[0]['time'] = t;
+	    },
+
+	    setPlaceDetail: function setPlaceDetail(pd) {
+	        this.founds[0]['place_detail'] = pd;
+	    },
+
+	    setDetail: function setDetail(d) {
+	        this.founds[0]['detail'] = d;
 	    },
 
 	    getFirstFound: function getFirstFound() {
@@ -21691,12 +21751,24 @@
 	        this.updateResult = re;
 	    },
 
+	    getUploadImageStatus: function getUploadImageStatus() {
+	        return this.uploadImageStatus;
+	    },
+
+	    setUploadImageStatus: function setUploadImageStatus(s) {
+	        this.uploadImageStatus = s;
+	    },
+
 	    emitChange: function emitChange() {
 	        this.emit('change');
 	    },
 
 	    emitUpdateResult: function emitUpdateResult() {
 	        this.emit('update');
+	    },
+
+	    emitUploadImage: function emitUploadImage() {
+	        this.emit('upload');
 	    },
 
 	    addUpdateListener: function addUpdateListener(callback) {
@@ -21713,6 +21785,14 @@
 
 	    removeChangeListener: function removeChangeListener(callback) {
 	        this.removeListener('change', callback);
+	    },
+
+	    addUploadImageListener: function addUploadImageListener(callback) {
+	        this.on('upload', callback);
+	    },
+
+	    removeUploadImageListener: function removeUploadImageListener(callback) {
+	        this.removeListener('upload', callback);
 	    }
 
 	});
@@ -21745,7 +21825,7 @@
 	    items: [],
 	    selectedItems: [],
 
-	    selectItem: function selectItem(index) {
+	    multiSelectItem: function multiSelectItem(index) {
 	        if (this.selectedItems[0] == true) {
 	            if (index != 0) {
 	                this.selectedItems[0] = false;
@@ -21871,7 +21951,7 @@
 	    places: [],
 	    selectedPlaces: [],
 
-	    selectPlace: function selectPlace(index) {
+	    multiSelectPlace: function multiSelectPlace(index) {
 	        if (this.selectedPlaces[0] == true) {
 	            if (index != 0) {
 	                this.selectedPlaces[0] = false;
@@ -21887,6 +21967,12 @@
 	            } else {
 	                this.clearSelectedPlaces();
 	            }
+	        }
+	    },
+
+	    singleSelectPlace: function singleSelectPlace(index) {
+	        for (var i = 0; i < this.places.length; ++i) {
+	            if (index == i) this.selectedPlaces[i] = true;else this.selectedPlaces[i] = false;
 	        }
 	    },
 
@@ -21941,6 +22027,14 @@
 	            if (this.selectedPlaces[i]) ids.push(this.places[i]['id']);
 	        }
 	        return ids;
+	    },
+
+	    getSingleSelectedPlaceId: function getSingleSelectedPlaceId() {
+	        var id = '';
+	        for (var i = 1; i < this.places.length; ++i) {
+	            if (this.selectedPlaces[i]) id = this.places[i]['id'];
+	        }
+	        return id;
 	    },
 
 	    emitChange: function emitChange() {
@@ -22154,7 +22248,7 @@
 	    },
 
 	    uploadImageInit: function uploadImageInit() {
-	        $('#fileupload').fileupload({
+	        $('#findingFileupload').fileupload({
 	            url: '/publishfindinguploadimage/',
 	            dataType: 'json',
 	            done: function done(e, data) {
@@ -22242,6 +22336,62 @@
 	                foundArray: data
 	            });
 	        });
+	    },
+
+	    uploadImageInit: function uploadImageInit() {
+	        $('#foundFileupload').fileupload({
+	            url: '/publishfounduploadimage/',
+	            dataType: 'json',
+	            done: function done(e, data) {
+	                AppDispatcher.dispatch({
+	                    actionType: 'PUBLISH_FOUND_UPLOAD_IMAGE',
+	                    img: data['result']['url'],
+	                    status: data['result']['code']
+	                });
+	            },
+	            send: function send(e, data) {
+	                AppDispatcher.dispatch({
+	                    actionType: 'PUBLISH_FOUND_UPLOAD_IMAGE',
+	                    img: '',
+	                    status: 2
+	                });
+	            }
+	        });
+	    },
+
+	    createFound: function createFound(found) {
+	        $.post('/createfound/', {
+	            'description': found['description'],
+	            'img': found['img'],
+	            'item_type_ids': found['item_type_ids'],
+	            'time': found['time'],
+	            'place_ids': found['place_ids'],
+	            'place_detail': found['place_detail'],
+	            'detail': found['detail']
+	        }, function (res) {
+	            AppDispatcher.dispatch({
+	                actionType: 'PUBLISH_FOUND_CREATE',
+	                result: res['code']
+	            });
+	        });
+	    },
+
+	    updateFound: function updateFound(found) {
+	        $.post('/updatefound/', {
+	            'id': found['id'],
+	            'description': found['description'],
+	            'img': found['img'],
+	            'item_type_ids': found['item_type_ids'],
+	            'time': found['time'],
+	            'place_ids': found['place_ids'],
+	            'place_detail': found['place_detail'],
+	            'detail': found['detail']
+	        }, function (res) {
+	            AppDispatcher.dispatch({
+	                actionType: 'PUBLISH_FOUND_UPDATE',
+	                result: res['code']
+	            });
+	        });
 	    }
 	};
 
@@ -22255,9 +22405,12 @@
 	        });
 	    },
 	    select: function select(id) {
+	        var mode = arguments.length <= 1 || arguments[1] === undefined ? 'multi' : arguments[1];
+
 	        AppDispatcher.dispatch({
 	            actionType: 'ITEM_TYPE_SELECT',
-	            id: id
+	            id: id,
+	            mode: mode
 	        });
 	    }
 	};
@@ -22272,9 +22425,12 @@
 	        });
 	    },
 	    select: function select(id) {
+	        var mode = arguments.length <= 1 || arguments[1] === undefined ? 'multi' : arguments[1];
+
 	        AppDispatcher.dispatch({
 	            actionType: 'PLACE_SELECT',
-	            id: id
+	            id: id,
+	            mode: mode
 	        });
 	    }
 	};
@@ -23172,17 +23328,17 @@
 	            id: "publishFindingTitle",
 	            placeholder: "Title",
 	            value: this.props.json['description'],
-	            onChange: this.props.descriptionHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingItem", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "物品类别"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.items.map(function (val, index) {
+	            onChange: this.props.descriptionHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingItem", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "物品类别 (多选)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.items.map(function (val, index) {
 	            if (index == 0) return;
 	            return React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox",
 	                checked: itemChecked(val),
-	                id: idOperation.encodeId('publishItem', index),
+	                id: idOperation.encodeId('publishFindingItem', index),
 	                onChange: itemTypeHandler }), " ", val['description']));
-	        })))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingPlace", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失地点"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.places.map(function (val, index) {
+	        })))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingPlace", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失地点 (多选)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.places.map(function (val, index) {
 	            if (index == 0) return;
 	            return React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox",
 	                checked: placeChecked(val),
-	                id: idOperation.encodeId('publishPlace', index),
+	                id: idOperation.encodeId('publishFindingPlace', index),
 	                onChange: placeHandler }), " ", val['description']));
 	        })))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingPlaceDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细位置"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
 	            className: "form-control",
@@ -23211,7 +23367,7 @@
 	        if (this.props.status == -1) return '选择文件';else if (this.props.status == 0) return '上传成功';else if (this.props.status == 1) return '上传失败';else if (this.props.status == 2) return '正在上传...';else return '';
 	    },
 	    render: function render() {
-	        return React.createElement("div", { className: "publishFindingImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息 (必填)"), React.createElement("div", { className: "form-group" }, React.createElement("a", { href: "javascript:void(0);", className: "col-lg-2 col-md-2 col-sm-2 btn btn-success publishFindingImageBtn" }, React.createElement("input", { id: "fileupload", type: "file", name: "files[]", multiple: true }), this.getButtonText()), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("img", { src: this.props.json['img'] }))))));
+	        return React.createElement("div", { className: "publishFindingImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息 (必填)"), React.createElement("div", { className: "form-group" }, React.createElement("a", { href: "javascript:void(0);", className: "col-lg-2 col-md-2 col-sm-2 btn btn-success publishFindingImageBtn" }, React.createElement("input", { id: "findingFileupload", type: "file", name: "files[]", multiple: true }), this.getButtonText()), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("img", { src: this.props.json['img'] }))))));
 	    }
 	});
 
@@ -56619,13 +56775,223 @@
 /* 435 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var React = __webpack_require__(1);
+	var Datetime = __webpack_require__(180);
+
+	var idOperation = __webpack_require__(173);
+
+	var FoundStore = __webpack_require__(166);
+	var FoundAction = __webpack_require__(171).FoundAction;
+
+	var ItemTypeAction = __webpack_require__(171).ItemTypeAction;
+	var ItemStore = __webpack_require__(167);
+	var PlaceAction = __webpack_require__(171).PlaceAction;
+	var PlaceStore = __webpack_require__(168);
+
+	var PublishFoundBasicInfo = React.createClass({ displayName: "PublishFoundBasicInfo",
+	    getItemChecked: function getItemChecked(val) {
+	        if (this.props.json['item_type_ids'].indexOf(val['id']) == -1) return '';else return 'checked';
+	    },
+
+	    getPlaceChecked: function getPlaceChecked(val) {
+	        if (this.props.json['place_id'] != val['id']) return '';else return 'checked';
+	    },
+
+	    render: function render() {
+	        var itemChecked = this.getItemChecked;
+	        var placeChecked = this.getPlaceChecked;
+	        var itemTypeHandler = this.props.itemTypeHandler;
+	        var placeHandler = this.props.placeHandler;
+	        return React.createElement("div", { className: "publishFoundBasicInfo" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "基本信息 (所有信息必填)"), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundTitle", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "标题"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
+	            className: "form-control",
+	            id: "publishFoundTitle",
+	            placeholder: "Title",
+	            value: this.props.json['description'],
+	            onChange: this.props.descriptionHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundItem", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "物品类别 (多选)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.items.map(function (val, index) {
+	            if (index == 0) return;
+	            return React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox",
+	                checked: itemChecked(val),
+	                id: idOperation.encodeId('publishFoundItem', index),
+	                onChange: itemTypeHandler }), " ", val['description']));
+	        })))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundPlace", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失地点 (单选)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("div", { className: "row" }, this.props.places.map(function (val, index) {
+	            if (index == 0) return;
+	            return React.createElement("div", { className: "checkbox col-lg-2 col-md-2 col-sm-2" }, React.createElement("label", null, React.createElement("input", { type: "checkbox",
+	                checked: placeChecked(val),
+	                id: idOperation.encodeId('publishFoundPlace', index),
+	                onChange: placeHandler }), " ", val['description']));
+	        })))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundPlaceDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细位置"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("input", { type: "text",
+	            className: "form-control",
+	            id: "publishFoundPlaceDetail",
+	            placeholder: "Place detail",
+	            value: this.props.json['place_detail'],
+	            onChange: this.props.placeDetailHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundTime", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失时间 ", React.createElement("br", null), "(年-月-日 时:分:秒)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement(Datetime, {
+	            dateFormat: "YYYY-MM-DD",
+	            timeFormat: "hh:mm:ss",
+	            value: this.props.json['time'],
+	            onChange: this.props.timeHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细描述"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("textarea", { className: "form-control",
+	            rows: "3",
+	            id: "publishFoundDetail",
+	            value: this.props.json['detail'],
+	            onChange: this.props.detailHandler }), React.createElement("span", { className: "help-block" }, "请尽量提供详细信息"))))));
+	    }
+	});
+
+	var PublishFoundImage = React.createClass({ displayName: "PublishFoundImage",
+	    getButtonText: function getButtonText() {
+	        if (this.props.status == -1) return '选择文件';else if (this.props.status == 0) return '上传成功';else if (this.props.status == 1) return '上传失败';else if (this.props.status == 2) return '正在上传...';else return '';
+	    },
+	    render: function render() {
+	        return React.createElement("div", { className: "publishFoundImage" }, React.createElement("form", { className: "form-horizontal" }, React.createElement("fieldset", null, React.createElement("legend", null, "图片信息 (必填)"), React.createElement("div", { className: "form-group" }, React.createElement("a", { href: "javascript:void(0);", className: "col-lg-2 col-md-2 col-sm-2 btn btn-success publishFoundImageBtn" }, React.createElement("input", { id: "foundFileupload", type: "file", name: "files[]", multiple: true }), this.getButtonText()), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("img", { src: this.props.json['img'] }))))));
+	    }
+	});
 
 	var PublishFound = React.createClass({ displayName: "PublishFound",
+	    getInitialState: function getInitialState() {
+	        return {
+	            found: FoundStore.getFirstFound(),
+	            itemTypes: ItemStore.getItems(),
+	            places: PlaceStore.getPlaces(),
+	            uploadImageStatus: FoundStore.getUploadImageStatus(),
+	            updateResult: FoundStore.getUpdateResult(),
+	            updating: false
+	        };
+	    },
+
+	    componentDidMount: function componentDidMount() {
+	        FoundStore.addChangeListener(this._onFoundChange);
+	        FoundStore.addUploadImageListener(this._onUploadImageChange);
+	        FoundStore.addUpdateListener(this._onUpdate);
+	        ItemStore.addChangeListener(this._onItemChange);
+	        ItemStore.addSelectListener(this._onItemSelectChange);
+	        PlaceStore.addChangeListener(this._onPlaceChange);
+	        PlaceStore.addSelectListener(this._onPlaceSelectChange);
+	        if (this.props.id != '') FoundAction.fetchDataWithId(this.props.id);
+	        FoundAction.uploadImageInit();
+	        ItemTypeAction.fetchData();
+	        PlaceAction.fetchData();
+	    },
+
+	    componentWillUnmount: function componentWillUnmount() {
+	        FoundStore.removeChangeListener(this._onFoundChange);
+	        FoundStore.removeUploadImageListener(this._onUploadImageChange);
+	        FoundStore.removeUpdateListener(this._onUpdate);
+	        ItemStore.removeChangeListener(this._onItemChange);
+	        ItemStore.removeSelectListener(this._onItemSelectChange);
+	        PlaceStore.removeChangeListener(this._onPlaceChange);
+	        PlaceStore.removeSelectListener(this._onPlaceSelectChange);
+	    },
+
+	    _onFoundChange: function _onFoundChange() {
+	        this.setState({
+	            found: FoundStore.getFirstFound()
+	        });
+	    },
+
+	    _onItemChange: function _onItemChange() {
+	        this.setState({
+	            itemTypes: ItemStore.getItems()
+	        });
+	    },
+
+	    _onPlaceChange: function _onPlaceChange() {
+	        this.setState({
+	            places: PlaceStore.getPlaces()
+	        });
+	    },
+
+	    _onItemSelectChange: function _onItemSelectChange() {
+	        FoundStore.setItemTypeWithId(ItemStore.getSelectedItemsIdWithoutAll());
+	        FoundStore.emitChange();
+	    },
+
+	    _onPlaceSelectChange: function _onPlaceSelectChange() {
+	        FoundStore.setPlacesWithId(PlaceStore.getSingleSelectedPlaceId());
+	        FoundStore.emitChange();
+	    },
+
+	    _onUploadImageChange: function _onUploadImageChange() {
+	        this.setState({
+	            uploadImageStatus: FoundStore.getUploadImageStatus()
+	        });
+	    },
+
+	    _onUpdate: function _onUpdate() {
+	        this.setState({
+	            updateResult: FoundStore.getUpdateResult(),
+	            updating: true
+	        });
+	        if (this.state.updateResult == 0) window.location.href = '/';
+	        var that = this;
+	        setTimeout(function () {
+	            that.setState({
+	                updating: false
+	            });
+	        }, 2100);
+	    },
+
+	    descriptionChange: function descriptionChange(ev) {
+	        FoundStore.setDescription(ev.target.value);
+	        FoundStore.emitChange();
+	    },
+
+	    itemTypeChange: function itemTypeChange(ev) {
+	        ItemTypeAction.select(idOperation.decodeId(ev.target.id));
+	    },
+
+	    placeChange: function placeChange(ev) {
+	        PlaceAction.select(idOperation.decodeId(ev.target.id), 'single');
+	    },
+
+	    timeChange: function timeChange(ev) {
+	        FoundStore.setTime(ev.format('YYYY-MM-DD hh:mm:ss'));
+	        FoundStore.emitChange();
+	    },
+
+	    placeDetailChange: function placeDetailChange(ev) {
+	        FoundStore.setPlaceDetail(ev.target.value);
+	        FoundStore.emitChange();
+	    },
+
+	    detailChange: function detailChange(ev) {
+	        FoundStore.setDetail(ev.target.value);
+	        FoundStore.emitChange();
+	    },
+
+	    publish: function publish() {
+	        //if (this.props.id == '') {
+	        //    FoundAction.createFound(this.state.found)
+	        //} else {
+	        //    FoundAction.updateFound(this.state.found)
+	        //}
+	        console.log(this.state.found);
+	    },
+
+	    getAlertText: function getAlertText() {
+	        if (this.state.updateResult == 0) return '更新成功';else if (this.state.updateResult == 1) return '您有无效输入, 请检查';else return '更新失败, 请重新登录';
+	    },
+
+	    getAlertClass: function getAlertClass() {
+	        var c = 'alert alert-dismissible publishFoundAlert';
+	        if (this.state.updating) c += ' updating';
+	        if (this.state.updateResult == 0) c += ' alert-success';else c += ' alert-warning';
+	        return c;
+	    },
+
 	    render: function render() {
-	        return React.createElement("div", null, "sdfsdf");
+	        return React.createElement("div", { className: "publishFound" }, React.createElement("div", { className: this.getAlertClass() }, React.createElement("p", null, this.getAlertText())), React.createElement(PublishFoundBasicInfo, {
+	            json: this.state.found,
+	            items: this.state.itemTypes,
+	            places: this.state.places,
+	            descriptionHandler: this.descriptionChange,
+	            itemTypeHandler: this.itemTypeChange,
+	            placeHandler: this.placeChange,
+	            timeHandler: this.timeChange,
+	            placeDetailHandler: this.placeDetailChange,
+	            detailHandler: this.detailChange }), React.createElement(PublishFoundImage, {
+	            json: this.state.found,
+	            status: this.state.uploadImageStatus }), React.createElement("hr", null), React.createElement("a", { href: "#", className: "btn btn-success publishBtn", onClick: this.publish }, "发布"), React.createElement("br", null), React.createElement("br", null));
 	    }
 	});
 

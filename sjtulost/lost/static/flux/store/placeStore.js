@@ -20,7 +20,7 @@ var PlaceStore = assign({}, EventEmitter.prototype, {
     places: [],
     selectedPlaces: [],
 
-    selectPlace: function(index) {
+    multiSelectPlace: function(index) {
         if (this.selectedPlaces[0] == true) {
             if (index != 0) {
                 this.selectedPlaces[0] = false;
@@ -36,6 +36,13 @@ var PlaceStore = assign({}, EventEmitter.prototype, {
             } else {
                 this.clearSelectedPlaces();
             }
+        }
+    },
+
+    singleSelectPlace: function(index) {
+        for (var i = 0; i < this.places.length; ++i) {
+            if (index == i) this.selectedPlaces[i] = true;
+            else this.selectedPlaces[i] = false;
         }
     },
 
@@ -90,6 +97,14 @@ var PlaceStore = assign({}, EventEmitter.prototype, {
             if (this.selectedPlaces[i]) ids.push(this.places[i]['id'])
         }
         return ids;
+    },
+
+    getSingleSelectedPlaceId: function() {
+        var id = '';
+        for (var i = 1; i < this.places.length; ++i) {
+            if (this.selectedPlaces[i]) id = this.places[i]['id']
+        }
+        return id;
     },
 
     emitChange: function () {

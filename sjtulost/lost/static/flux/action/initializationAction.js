@@ -38,7 +38,7 @@ var FindingAction = {
     },
 
     uploadImageInit: function() {
-        $('#fileupload').fileupload({
+        $('#findingFileupload').fileupload({
             url: '/publishfindinguploadimage/',
             dataType: 'json',
             done: function (e, data) {
@@ -126,6 +126,62 @@ var FoundAction = {
                 foundArray: data
             })
         })
+    },
+
+    uploadImageInit: function() {
+        $('#foundFileupload').fileupload({
+            url: '/publishfounduploadimage/',
+            dataType: 'json',
+            done: function (e, data) {
+                AppDispatcher.dispatch({
+                    actionType: 'PUBLISH_FOUND_UPLOAD_IMAGE',
+                    img: data['result']['url'],
+                    status: data['result']['code']
+                });
+            },
+            send: function(e, data) {
+                AppDispatcher.dispatch({
+                    actionType: 'PUBLISH_FOUND_UPLOAD_IMAGE',
+                    img: '',
+                    status: 2
+                });
+            }
+        });
+    },
+
+    createFound: function(found) {
+        $.post('/createfound/', {
+            'description': found['description'],
+            'img': found['img'],
+            'item_type_ids': found['item_type_ids'],
+            'time': found['time'],
+            'place_ids': found['place_ids'],
+            'place_detail': found['place_detail'],
+            'detail': found['detail']
+        }, function(res) {
+            AppDispatcher.dispatch({
+                actionType: 'PUBLISH_FOUND_CREATE',
+                result: res['code']
+            })
+        })
+    },
+
+    updateFound: function(found) {
+        $.post('/updatefound/', {
+            'id': found['id'],
+            'description': found['description'],
+            'img': found['img'],
+            'item_type_ids': found['item_type_ids'],
+            'time': found['time'],
+            'place_ids': found['place_ids'],
+            'place_detail': found['place_detail'],
+            'detail': found['detail']
+        }, function(res) {
+            AppDispatcher.dispatch({
+                actionType: 'PUBLISH_FOUND_UPDATE',
+                result: res['code']
+            })
+        })
     }
 };
 
@@ -140,10 +196,11 @@ var ItemTypeAction = {
             })
         });
     },
-    select: function(id) {
+    select: function(id, mode='multi') {
         AppDispatcher.dispatch({
             actionType: 'ITEM_TYPE_SELECT',
-            id: id
+            id: id,
+            mode: mode
         })
     }
 };
@@ -157,10 +214,11 @@ var PlaceAction = {
             })
         });
     },
-    select: function(id) {
+    select: function(id, mode='multi') {
         AppDispatcher.dispatch({
             actionType: 'PLACE_SELECT',
-            id: id
+            id: id,
+            mode: mode
         })
     }
 };

@@ -20,7 +20,7 @@ var ItemStore = assign({}, EventEmitter.prototype, {
     items: [],
     selectedItems: [],
 
-    selectItem: function(index) {
+    multiSelectItem: function(index) {
         if (this.selectedItems[0] == true) {
             if (index != 0) {
                 this.selectedItems[0] = false;

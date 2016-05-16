@@ -14,9 +14,11 @@ var FoundStore = assign({}, EventEmitter.prototype, {
          description: string
          img: string
          item_type:
+         item_type_ids
          user_phone: string
          time:
          place:
+         place_ids
          place_detail:
          detail:
          state:
@@ -24,7 +26,18 @@ var FoundStore = assign({}, EventEmitter.prototype, {
      */
 
     founds: [],
+    /*
+     0: success
+     1: fail
+     */
     updateResult: 0,
+    /*
+     -1: 选择文件
+     0: success
+     1: fail
+     2: uploading
+     */
+    uploadImageStatus: -1,
 
     getDefaultFound: function() {
         return {
@@ -32,9 +45,11 @@ var FoundStore = assign({}, EventEmitter.prototype, {
             description: '',
             img: '',
             item_type: '',
+            item_type_ids: [],
             user_phone: '',
             time: '',
             place: '',
+            place_id: 0,
             place_detail: '',
             detail: '',
             state: 0
@@ -47,6 +62,34 @@ var FoundStore = assign({}, EventEmitter.prototype, {
 
     setFounds: function(array) {
         this.founds = array;
+    },
+
+    setDescription: function(d) {
+        this.founds[0]['description'] = d;
+    },
+
+    setImage: function (i) {
+        this.founds[0]['img'] = i;
+    },
+
+    setItemTypeWithId: function(ids) {
+        this.founds[0]['item_type_ids'] = ids
+    },
+
+    setPlacesWithId: function(id) {
+        this.founds[0]['place_id'] = id
+    },
+
+    setTime: function(t) {
+        this.founds[0]['time'] = t
+    },
+
+    setPlaceDetail: function(pd) {
+        this.founds[0]['place_detail'] = pd
+    },
+
+    setDetail: function(d) {
+        this.founds[0]['detail'] = d
     },
 
     getFirstFound: function() {
@@ -64,12 +107,24 @@ var FoundStore = assign({}, EventEmitter.prototype, {
         this.updateResult = re
     },
 
+    getUploadImageStatus: function(){
+        return this.uploadImageStatus
+    },
+
+    setUploadImageStatus: function(s) {
+        this.uploadImageStatus = s
+    },
+
     emitChange: function () {
         this.emit('change');
     },
 
     emitUpdateResult: function() {
         this.emit('update')
+    },
+
+    emitUploadImage: function() {
+        this.emit('upload')
     },
 
     addUpdateListener: function(callback) {
@@ -86,6 +141,14 @@ var FoundStore = assign({}, EventEmitter.prototype, {
 
     removeChangeListener: function(callback) {
         this.removeListener('change', callback);
+    },
+
+    addUploadImageListener: function(callback) {
+        this.on('upload', callback);
+    },
+
+    removeUploadImageListener: function(callback) {
+        this.removeListener('upload', callback);
     }
 
 });
