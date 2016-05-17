@@ -204,6 +204,10 @@ td.rdtYear:hover {
     display: none !important;
 }
 
+.footer p{
+    margin-bottom: 0px;
+}
+
 /*
     For Homepage
 */

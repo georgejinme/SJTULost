@@ -88,6 +88,25 @@ var Navigation = React.createClass({
     }
 });
 
+var Footer = React.createClass({
+    render:function() {
+        return (
+            <div className="footer">
+                <p>Made by
+                    <a href="http://georgejin.me" target="_blank"> George Jin.</a>
+                </p>
+                <p>Code released on
+                    <a href="https://github.com/gougoumemeda/SJTULost" target="_blank"> Github</a>
+                </p>
+                <p>Bug? Suggestion? Please contact me at
+                    <a href="mailto:gougoumemeda@sjtu.edu.cn"> gougoumemeda@sjtu.edu.cn</a>
+                </p>
+                <br/>
+            </div>
+        )
+    }
+});
+
 var App = React.createClass({
     url: window.location.href.split('/')[3],
     id: window.location.href.split('/')[4],
@@ -98,6 +117,8 @@ var App = React.createClass({
                 <div className="container">
                     <Navigation />
                     <Homepage />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'finding'){
@@ -105,6 +126,8 @@ var App = React.createClass({
                 <div className="container">
                     <Navigation />
                     <Finding />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'found') {
@@ -112,6 +135,8 @@ var App = React.createClass({
                 <div className="container">
                     <Navigation />
                     <Found />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'rank') {
@@ -119,6 +144,8 @@ var App = React.createClass({
                 <div className="container">
                     <Navigation />
                     <Rank />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'findingview') {
@@ -128,6 +155,8 @@ var App = React.createClass({
                     <FindingView
                         id = {this.id}
                     />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'foundview') {
@@ -137,6 +166,8 @@ var App = React.createClass({
                     <FoundView
                         id = {this.id}
                     />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'me') {
@@ -144,6 +175,8 @@ var App = React.createClass({
                 <div className="meContainer">
                     <Navigation />
                     <Me />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'publishfinding') {
@@ -153,6 +186,8 @@ var App = React.createClass({
                     <PublishFinding
                         id = {this.id}
                     />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         } else if (this.url == 'publishfound') {
@@ -162,6 +197,8 @@ var App = React.createClass({
                     <PublishFound
                         id = {this.id}
                     />
+                    <hr/>
+                    <Footer />
                 </div>
             )
         }

@@ -103,33 +103,39 @@
 	    }
 	});
 
+	var Footer = React.createClass({ displayName: "Footer",
+	    render: function render() {
+	        return React.createElement("div", { className: "footer" }, React.createElement("p", null, "Made by", React.createElement("a", { href: "http://georgejin.me", target: "_blank" }, " George Jin.")), React.createElement("p", null, "Code released on", React.createElement("a", { href: "https://github.com/gougoumemeda/SJTULost", target: "_blank" }, " Github")), React.createElement("p", null, "Bug? Suggestion? Please contact me at", React.createElement("a", { href: "mailto:gougoumemeda@sjtu.edu.cn" }, " gougoumemeda@sjtu.edu.cn")), React.createElement("br", null));
+	    }
+	});
+
 	var App = React.createClass({ displayName: "App",
 	    url: window.location.href.split('/')[3],
 	    id: window.location.href.split('/')[4],
 
 	    render: function render() {
 	        if (this.url == '') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Homepage, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Homepage, null), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'finding') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Finding, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Finding, null), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'found') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Found, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Found, null), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'rank') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Rank, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Rank, null), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'findingview') {
 	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(FindingView, {
-	                id: this.id }));
+	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'foundview') {
 	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(FoundView, {
-	                id: this.id }));
+	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'me') {
-	            return React.createElement("div", { className: "meContainer" }, React.createElement(Navigation, null), React.createElement(Me, null));
+	            return React.createElement("div", { className: "meContainer" }, React.createElement(Navigation, null), React.createElement(Me, null), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'publishfinding') {
 	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(PublishFinding, {
-	                id: this.id }));
+	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'publishfound') {
 	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(PublishFound, {
-	                id: this.id }));
+	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
 	        }
 	    }
 	});
