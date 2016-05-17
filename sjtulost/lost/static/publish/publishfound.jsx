@@ -262,7 +262,7 @@ var PublishFound = React.createClass({
     },
 
     timeChange: function(ev) {
-        FoundStore.setTime(ev.format('YYYY-MM-DD hh:mm:ss'));
+        FoundStore.setTime(ev.format('YYYY-MM-DD HH:mm:ss'));
         FoundStore.emitChange();
     },
 
