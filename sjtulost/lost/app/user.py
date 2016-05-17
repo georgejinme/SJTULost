@@ -62,7 +62,7 @@ def check_user_exists_in_databases(user_info):
     user_name = user_info['entities'][0]['name']
     user = User.objects.filter(student_number = stu_id)
     if len(user) == 0:
-        new_user = User(phone = 0, name = user_name, student_number = stu_id)
+        new_user = User(phone = '0', name = user_name, student_number = stu_id)
         new_user.save()
         return new_user.id
     return user[0].id

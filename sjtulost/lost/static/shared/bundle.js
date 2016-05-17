@@ -22486,7 +22486,7 @@
 	    render: function render() {
 	        var handler = this.props.handler;
 	        var classes = this.getSelectedClass;
-	        return React.createElement("div", { className: "row" }, React.createElement("p", { className: "col-lg-2 col-md-2 col-sm-2 findingTypeLabel" }, this.props.typeName), React.createElement("ul", { className: "nav nav-pills col-lg-10 col-md-10 col-sm-10 findingTypeNav" }, this.props.data.map(function (val, index) {
+	        return React.createElement("div", { className: "row" }, React.createElement("p", { className: "col-lg-1 col-md-1 col-sm-1 findingTypeLabel" }, this.props.typeName), React.createElement("ul", { className: "nav nav-pills col-lg-11 col-md-11 col-sm-11 findingTypeNav" }, this.props.data.map(function (val, index) {
 	            return React.createElement("li", { className: classes(index) }, React.createElement("a", { id: idOperation.encodeId('type', index),
 	                href: "javascript:void(0);",
 	                onClick: handler }, val['description']));
@@ -22664,7 +22664,7 @@
 	    render: function render() {
 	        var handler = this.props.handler;
 	        var classes = this.getSelectedClass;
-	        return React.createElement("div", { className: "row" }, React.createElement("p", { className: "col-lg-2 col-md-2 col-sm-2 foundTypeLabel" }, this.props.typeName), React.createElement("ul", { className: "nav nav-pills col-lg-10 col-md-10 col-sm-10 foundTypeNav" }, this.props.data.map(function (val, index) {
+	        return React.createElement("div", { className: "row" }, React.createElement("p", { className: "col-lg-1 col-md-1 col-sm-1 foundTypeLabel" }, this.props.typeName), React.createElement("ul", { className: "nav nav-pills col-lg-11 col-md-11 col-sm-11 foundTypeNav" }, this.props.data.map(function (val, index) {
 	            return React.createElement("li", { className: classes(index) }, React.createElement("a", { id: idOperation.encodeId('type', index),
 	                href: "javascript:void(0);",
 	                onClick: handler }, val['description']));
@@ -23355,7 +23355,7 @@
 	            value: this.props.json['place_detail'],
 	            onChange: this.props.placeDetailHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingTime", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失时间 ", React.createElement("br", null), "(年-月-日 时:分:秒)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement(Datetime, {
 	            dateFormat: "YYYY-MM-DD",
-	            timeFormat: "hh:mm:ss",
+	            timeFormat: "HH:mm:ss",
 	            value: this.props.json['time'],
 	            onChange: this.props.timeHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFindingDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细描述"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("textarea", { className: "form-control",
 	            rows: "3",
@@ -23477,7 +23477,8 @@
 	    },
 
 	    timeChange: function timeChange(ev) {
-	        FindingStore.setTime(ev.format('YYYY-MM-DD hh:mm:ss'));
+	        console.log(ev.format('YYYY-MM-DD HH:mm:ss'));
+	        FindingStore.setTime(ev.format('YYYY-MM-DD HH:mm:ss'));
 	        FindingStore.emitChange();
 	    },
 
@@ -23506,7 +23507,7 @@
 	    },
 
 	    getAlertText: function getAlertText() {
-	        if (this.state.updateResult == 0) return '更新成功';else if (this.state.updateResult == 1) return '您有无效输入, 请检查';else return '更新失败, 请重新登录';
+	        if (this.state.updateResult == 0) return '更新成功';else if (this.state.updateResult == 1) return '您有无效输入, 请检查';else if (this.state.updateResult == 2) return '更新失败, 请重新登录';else return '请先前往个人主页填写正确的手机号码';
 	    },
 
 	    getAlertClass: function getAlertClass() {
@@ -56834,9 +56835,9 @@
 	            id: "publishFoundPlaceDetail",
 	            placeholder: "Place detail",
 	            value: this.props.json['place_detail'],
-	            onChange: this.props.placeDetailHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundTime", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "丢失时间 ", React.createElement("br", null), "(年-月-日 时:分:秒)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement(Datetime, {
+	            onChange: this.props.placeDetailHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundTime", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "发现时间 ", React.createElement("br", null), "(年-月-日 时:分:秒)"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement(Datetime, {
 	            dateFormat: "YYYY-MM-DD",
-	            timeFormat: "hh:mm:ss",
+	            timeFormat: "HH:mm:ss",
 	            value: this.props.json['time'],
 	            onChange: this.props.timeHandler }))), React.createElement("div", { className: "form-group" }, React.createElement("label", { htmlFor: "publishFoundDetail", className: "col-lg-2 col-md-2 col-sm-2 control-label" }, "详细描述"), React.createElement("div", { className: "col-lg-10 col-md-10 col-sm-10" }, React.createElement("textarea", { className: "form-control",
 	            rows: "3",
@@ -56977,7 +56978,7 @@
 	    },
 
 	    getAlertText: function getAlertText() {
-	        if (this.state.updateResult == 0) return '更新成功';else if (this.state.updateResult == 1) return '您有无效输入, 请检查';else return '更新失败, 请重新登录';
+	        if (this.state.updateResult == 0) return '更新成功';else if (this.state.updateResult == 1) return '您有无效输入, 请检查';else if (this.state.updateResult == 2) return '更新失败, 请重新登录';else return '请先前往个人主页填写正确的手机号码';
 	    },
 
 	    getAlertClass: function getAlertClass() {

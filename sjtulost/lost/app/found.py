@@ -182,20 +182,23 @@ def create_found(request):
     else:
         if request.session.get('user_id', '') != '':
             user = User.objects.get(id=request.session['user_id'])
-            place = Place.get_place_by_id(int(found_dict['place_id']))
-            new_found = Found(user_id=user,
-                              description=found_dict['description'],
-                              state=0,
-                              image=found_dict['img'],
-                              place_detail=found_dict['place_detail'],
-                              detail=found_dict['detail'],
-                              place_id=place,
-                              found_time=found_dict['time'])
-            new_found.save()
-            for i in found_dict['item_type_ids']:
-                item = Item.get_item_type_by_id(int(i))
-                new_found.type_id.add(item)
-            code = 0
+            if user.phone == '0':
+                code = 3
+            else:
+                place = Place.get_place_by_id(int(found_dict['place_id']))
+                new_found = Found(user_id=user,
+                                  description=found_dict['description'],
+                                  state=0,
+                                  image=found_dict['img'],
+                                  place_detail=found_dict['place_detail'],
+                                  detail=found_dict['detail'],
+                                  place_id=place,
+                                  found_time=found_dict['time'])
+                new_found.save()
+                for i in found_dict['item_type_ids']:
+                    item = Item.get_item_type_by_id(int(i))
+                    new_found.type_id.add(item)
+                code = 0
         else:
             code = 2
     return JsonResponse({

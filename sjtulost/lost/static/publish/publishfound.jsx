@@ -102,11 +102,11 @@ var PublishFoundBasicInfo = React.createClass({
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="publishFoundTime" className="col-lg-2 col-md-2 col-sm-2 control-label">丢失时间 <br/>(年-月-日 时:分:秒)</label>
+                            <label htmlFor="publishFoundTime" className="col-lg-2 col-md-2 col-sm-2 control-label">发现时间 <br/>(年-月-日 时:分:秒)</label>
                             <div className="col-lg-10 col-md-10 col-sm-10">
                                 <Datetime
                                     dateFormat = "YYYY-MM-DD"
-                                    timeFormat = "hh:mm:ss"
+                                    timeFormat = "HH:mm:ss"
                                     value = {this.props.json['time']}
                                     onChange = {this.props.timeHandler}
                                 />
@@ -289,7 +289,8 @@ var PublishFound = React.createClass({
     getAlertText: function() {
         if (this.state.updateResult == 0) return '更新成功';
         else if (this.state.updateResult == 1) return '您有无效输入, 请检查';
-        else return '更新失败, 请重新登录'
+        else if (this.state.updateResult == 2) return '更新失败, 请重新登录';
+        else return '请先前往个人主页填写正确的手机号码';
     },
 
     getAlertClass: function() {

@@ -21,8 +21,8 @@ var FindingTypeRow = React.createClass({
         var classes = this.getSelectedClass;
         return (
             <div className="row">
-                <p className="col-lg-2 col-md-2 col-sm-2 findingTypeLabel">{ this.props.typeName }</p>
-                <ul className="nav nav-pills col-lg-10 col-md-10 col-sm-10 findingTypeNav">
+                <p className="col-lg-1 col-md-1 col-sm-1 findingTypeLabel">{ this.props.typeName }</p>
+                <ul className="nav nav-pills col-lg-11 col-md-11 col-sm-11 findingTypeNav">
                     {
                         this.props.data.map(function(val, index){
                             return (

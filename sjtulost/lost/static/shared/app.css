@@ -274,13 +274,13 @@ td.rdtYear:hover {
     margin-top: 90px;
 }
 
-.findingContent .findingType {
-    width: 60%;
-}
-
 .findingContent .findingTypeLabel {
     height: 30px;
     line-height: 30px;
+}
+
+.findingContent .findingTypeNav li{
+    margin-bottom: 3px;
 }
 
 .findingContent .findingTypeNav li a{
@@ -353,13 +353,13 @@ td.rdtYear:hover {
     margin-top: 90px;
 }
 
-.foundContent .foundType {
-    width: 60%;
-}
-
 .foundContent .foundTypeLabel {
     height: 30px;
     line-height: 30px;
+}
+
+.foundContent .foundTypeNav li{
+    margin-bottom: 3px;
 }
 
 .foundContent .foundTypeNav li a{

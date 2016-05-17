@@ -176,6 +176,7 @@ def publish_finding_upload_image(request):
 # 0: success
 # 1: invalid format
 # 2: fail
+# 3: user_phone
 
 
 def create_finding(request):
@@ -195,22 +196,25 @@ def create_finding(request):
     else:
         if request.session.get('user_id', '') != '':
             user = User.objects.get(id=request.session['user_id'])
-            new_finding = Finding(user_id=user,
-                                  description=finding_dict['description'],
-                                  pay=finding_dict['pay'],
-                                  state=0,
-                                  image=finding_dict['img'],
-                                  place_detail=finding_dict['place_detail'],
-                                  detail=finding_dict['detail'],
-                                  lost_time=finding_dict['time'])
-            new_finding.save()
-            for i in finding_dict['item_type_ids']:
-                item = Item.get_item_type_by_id(int(i))
-                new_finding.type_id.add(item)
-            for p in finding_dict['place_ids']:
-                place = Place.get_place_by_id(int(p))
-                new_finding.place_ids.add(place)
-            code = 0
+            if user.phone == '0':
+                code = 3
+            else:
+                new_finding = Finding(user_id=user,
+                                      description=finding_dict['description'],
+                                      pay=finding_dict['pay'],
+                                      state=0,
+                                      image=finding_dict['img'],
+                                      place_detail=finding_dict['place_detail'],
+                                      detail=finding_dict['detail'],
+                                      lost_time=finding_dict['time'])
+                new_finding.save()
+                for i in finding_dict['item_type_ids']:
+                    item = Item.get_item_type_by_id(int(i))
+                    new_finding.type_id.add(item)
+                for p in finding_dict['place_ids']:
+                    place = Place.get_place_by_id(int(p))
+                    new_finding.place_ids.add(place)
+                code = 0
         else:
             code = 2
     return JsonResponse({

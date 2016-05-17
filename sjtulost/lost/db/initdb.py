@@ -68,3 +68,81 @@ def init_database(request):
     found2.type_id.add(Item1)
     return HttpResponse(u'Initialization Complete!')
 
+def init_items():
+    items = [
+        '钱包',
+        '手机',
+        '钥匙',
+        '耳机',
+        '衣裤',
+        '电脑',
+        '电子设备',
+        '自行车',
+        '校园卡',
+        '手表',
+        '饰品',
+        '书本',
+        '水杯',
+        '眼镜',
+        '证件',
+        '其他'
+    ]
+    for each in items:
+        print each
+        item = Models.ItemType(description=each)
+        item.save()
+
+def init_places():
+    places = [
+        '拖鞋门',
+        '菁菁堂',
+        '光体',
+        '新体',
+        '男体',
+        '上院',
+        '中院',
+        '下院',
+        '东上院',
+        '东中院',
+        '东下院',
+        '致远游泳馆',
+        '华联',
+        '西一区(X08-X24)',
+        '西二区(X25-X34)',
+        '西三区(X35-X49)',
+        '西四区(X50-X62)',
+        '西五区(X63-X70)',
+        '东一区(D01-D14)',
+        '东二区(D15-D19)',
+        '东三区(D20-D27)',
+        '东四区(D28-D33)',
+        '蓁蓁楼',
+        '光彪楼',
+        '包图',
+        '李图',
+        '新图',
+        '新行政楼',
+        '电群',
+        '电院大草坪',
+        '一餐',
+        '二餐',
+        '三餐',
+        '四餐',
+        '五餐',
+        '六餐',
+        '学活',
+        '学服',
+        '东转',
+        '南体',
+        '其他'
+    ]
+    for each in places:
+        print each
+        place = Models.Place(description=each)
+        place.save()
+
+
+def init_database_live(request):
+    init_items()
+    init_places()
+    return HttpResponse(u'Initialization Complete!')
