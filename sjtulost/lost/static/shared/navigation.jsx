@@ -57,7 +57,7 @@ var Navigation = React.createClass({
             <div className="navbar navbar-default navbar-fixed-top">
                 <div className="container">
                     <div className="navbar-header">
-                        <a href="/" className="navbar-brand" target = "_blank">SJTU Lost</a>
+                        <a href="/" className="navbar-brand">SJTU Lost</a>
                     </div>
                     <div className="navbar-collapse collapse" id="navbar-main">
                         <ul className="nav navbar-nav">

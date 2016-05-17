@@ -144,17 +144,20 @@ def publish_found_upload_image(request):
     if request.session.get('user_id', '') != '':
         url = qiniu.upload_image(request.session['user_id'], request.FILES[u'files[]'], 'found')
         if url == '':
-            return JsonResponse({'code': 1,
-                                 'url': ''
-                                 }, safe=False)
+            return JsonResponse({
+                'code': 1,
+                'url': ''
+            }, safe=False)
         else:
-            return JsonResponse({'code': 0,
-                                 'url': url
-                                 }, safe=False)
+            return JsonResponse({
+                'code': 0,
+                'url': url
+            }, safe=False)
     else:
-        return JsonResponse({'code': 1,
-                             'url': ''
-                             }, safe=False)
+        return JsonResponse({
+            'code': 1,
+            'url': ''
+        }, safe=False)
 
 
 # code:
