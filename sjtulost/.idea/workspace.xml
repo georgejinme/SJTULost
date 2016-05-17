@@ -21,7 +21,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sjtulost/urls.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="140">
@@ -29,6 +29,16 @@
               <folding>
                 <element signature="e#617#658#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="rank.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lost/app/rank.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="15" column="37" selection-start-line="15" selection-start-column="37" selection-end-line="15" selection-end-column="37" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -91,16 +101,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="time.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lost/util/time.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="number.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lost/util/number.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -156,7 +156,6 @@
         <option value="$PROJECT_DIR$/lost/db/init.py" />
         <option value="$PROJECT_DIR$/lost/app/item.py" />
         <option value="$PROJECT_DIR$/lost/app/place.py" />
-        <option value="$PROJECT_DIR$/lost/app/rank.py" />
         <option value="$PROJECT_DIR$/lost/models.py" />
         <option value="$PROJECT_DIR$/lost/app/login.py" />
         <option value="$PROJECT_DIR$/sjtulost/settings.py" />
@@ -170,6 +169,7 @@
         <option value="$PROJECT_DIR$/lost/app/found.py" />
         <option value="$PROJECT_DIR$/lost/db/initdb.py" />
         <option value="$PROJECT_DIR$/sjtulost/urls.py" />
+        <option value="$PROJECT_DIR$/lost/app/rank.py" />
       </list>
     </option>
   </component>
@@ -715,13 +715,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lost/app/login.py" />
-    <entry file="file://$PROJECT_DIR$/lost/app/rank.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sjtulost/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1170">
@@ -847,6 +840,14 @@
           <folding>
             <element signature="e#617#658#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lost/app/rank.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="15" column="37" selection-start-line="15" selection-start-column="37" selection-end-line="15" selection-end-column="37" />
+          <folding />
         </state>
       </provider>
     </entry>

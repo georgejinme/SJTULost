@@ -10,7 +10,7 @@ def get_all_ranks(request):
     users_dict = [dict({
         'name': u.name,
         'student_id': u.student_number,
-        'times': len(u.finding_set.all())
+        'times': len(u.found_set.all())
     }) for u in users]
     sorted_rank = sorted(users_dict, key=lambda x: x['times'], reverse=True)
     return JsonResponse(sorted_rank, safe=False)
