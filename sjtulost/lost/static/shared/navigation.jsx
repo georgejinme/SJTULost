@@ -19,11 +19,14 @@ var FoundView = require('../found/foundview');
 var Me = require('../me/me');
 var PublishFinding = require('../publish/publishfinding');
 var PublishFound = require('../publish/publishfound');
+var SearchFinding = require('../search/searchfinding');
+var SearchFound = require('../search/searchfound');
 
 var Navigation = React.createClass({
     getInitialState: function() {
         return {
-            userInfo: UserInfoStore.getUserInfo()
+            userInfo: UserInfoStore.getUserInfo(),
+            searchInfo: ''
         }
     },
 
@@ -39,6 +42,12 @@ var Navigation = React.createClass({
     _onChange: function () {
         this.setState({
             userInfo: UserInfoStore.getUserInfo()
+        });
+    },
+
+    searchChange:function(ev) {
+        this.setState({
+            searchInfo: ev.target.value
         });
     },
 
@@ -71,6 +80,17 @@ var Navigation = React.createClass({
                                 <a href = "/rank/">排行</a>
                             </li>
                         </ul>
+                        <form className="navbar-form navbar-left" role="search">
+                            <div className="form-group">
+                                <input type="text"
+                                       className="form-control"
+                                       placeholder="搜索"
+                                       value={this.state.searchInfo}
+                                       onChange={this.searchChange}/>
+                            </div>
+                            <a href={'/searchfinding/' + this.state.searchInfo} className="btn btn-default searchButton">遗失物</a>
+                            <a href={'/searchfound/' + this.state.searchInfo} className="btn btn-default searchButton">拾到物</a>
+                        </form>
                         <ul className="nav navbar-nav navbar-right">
                             <li className={this.getPublishUrl()}>
                                 <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">发布<span className="caret" /></a>
@@ -198,6 +218,28 @@ var App = React.createClass({
                         id = {this.id}
                     />
                     <hr/>
+                    <Footer />
+                </div>
+            )
+        } else if (this.url == 'searchfinding') {
+            return (
+                <div className="container">
+                    <Navigation />
+                    <SearchFinding
+                        keyword = {this.id}
+                    />
+                    <hr/>
+                    <Footer />
+                </div>
+            )
+        } else if (this.url == 'searchfound') {
+            return (
+                <div className="container">
+                    <Navigation/>
+                    <SearchFound
+                        keyword = {this.id}
+                    />
+                    <hr />
                     <Footer />
                 </div>
             )

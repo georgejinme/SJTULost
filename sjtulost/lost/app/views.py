@@ -44,3 +44,11 @@ def publish_finding_with_id(request, id):
 
 def publish_found_with_id(request, id):
     return render(request, 'main.html')
+
+def search_finding(request, keyword):
+    print keyword
+    return render(request, 'main.html')
+
+def search_found(request, keyword):
+    print keyword
+    return render(request, 'main.html')

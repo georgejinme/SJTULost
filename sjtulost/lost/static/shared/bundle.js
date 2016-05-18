@@ -67,11 +67,14 @@
 	var Me = __webpack_require__(178);
 	var PublishFinding = __webpack_require__(179);
 	var PublishFound = __webpack_require__(435);
+	var SearchFinding = __webpack_require__(436);
+	var SearchFound = __webpack_require__(437);
 
 	var Navigation = React.createClass({ displayName: "Navigation",
 	    getInitialState: function getInitialState() {
 	        return {
-	            userInfo: UserInfoStore.getUserInfo()
+	            userInfo: UserInfoStore.getUserInfo(),
+	            searchInfo: ''
 	        };
 	    },
 
@@ -90,6 +93,12 @@
 	        });
 	    },
 
+	    searchChange: function searchChange(ev) {
+	        this.setState({
+	            searchInfo: ev.target.value
+	        });
+	    },
+
 	    getUrl: function getUrl() {
 	        if (this.state.userInfo['student_number'] == '') return '/loginwithjaccount/';else return '/me/';
 	    },
@@ -99,7 +108,11 @@
 	    },
 
 	    render: function render() {
-	        return React.createElement("div", { className: "navbar navbar-default navbar-fixed-top" }, React.createElement("div", { className: "container" }, React.createElement("div", { className: "navbar-header" }, React.createElement("a", { href: "/", className: "navbar-brand" }, "SJTU Lost")), React.createElement("div", { className: "navbar-collapse collapse", id: "navbar-main" }, React.createElement("ul", { className: "nav navbar-nav" }, React.createElement("li", null, React.createElement("a", { href: "/finding/" }, "丢失")), React.createElement("li", null, React.createElement("a", { href: "/found/" }, "拾物")), React.createElement("li", null, React.createElement("a", { href: "/rank/" }, "排行"))), React.createElement("ul", { className: "nav navbar-nav navbar-right" }, React.createElement("li", { className: this.getPublishUrl() }, React.createElement("a", { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-expanded": "false" }, "发布", React.createElement("span", { className: "caret" })), React.createElement("ul", { className: "dropdown-menu", role: "menu" }, React.createElement("li", null, React.createElement("a", { href: "/publishfinding/" }, "我丢失了")), React.createElement("li", null, React.createElement("a", { href: "/publishfound/" }, "我拾到了")))), React.createElement("li", null, React.createElement("a", { href: this.getUrl() }, this.state.userInfo['name']))))));
+	        return React.createElement("div", { className: "navbar navbar-default navbar-fixed-top" }, React.createElement("div", { className: "container" }, React.createElement("div", { className: "navbar-header" }, React.createElement("a", { href: "/", className: "navbar-brand" }, "SJTU Lost")), React.createElement("div", { className: "navbar-collapse collapse", id: "navbar-main" }, React.createElement("ul", { className: "nav navbar-nav" }, React.createElement("li", null, React.createElement("a", { href: "/finding/" }, "丢失")), React.createElement("li", null, React.createElement("a", { href: "/found/" }, "拾物")), React.createElement("li", null, React.createElement("a", { href: "/rank/" }, "排行"))), React.createElement("form", { className: "navbar-form navbar-left", role: "search" }, React.createElement("div", { className: "form-group" }, React.createElement("input", { type: "text",
+	            className: "form-control",
+	            placeholder: "搜索",
+	            value: this.state.searchInfo,
+	            onChange: this.searchChange })), React.createElement("a", { href: '/searchfinding/' + this.state.searchInfo, className: "btn btn-default searchButton" }, "遗失物"), React.createElement("a", { href: '/searchfound/' + this.state.searchInfo, className: "btn btn-default searchButton" }, "拾到物")), React.createElement("ul", { className: "nav navbar-nav navbar-right" }, React.createElement("li", { className: this.getPublishUrl() }, React.createElement("a", { href: "#", className: "dropdown-toggle", "data-toggle": "dropdown", role: "button", "aria-expanded": "false" }, "发布", React.createElement("span", { className: "caret" })), React.createElement("ul", { className: "dropdown-menu", role: "menu" }, React.createElement("li", null, React.createElement("a", { href: "/publishfinding/" }, "我丢失了")), React.createElement("li", null, React.createElement("a", { href: "/publishfound/" }, "我拾到了")))), React.createElement("li", null, React.createElement("a", { href: this.getUrl() }, this.state.userInfo['name']))))));
 	    }
 	});
 
@@ -136,6 +149,12 @@
 	        } else if (this.url == 'publishfound') {
 	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(PublishFound, {
 	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	        } else if (this.url == 'searchfinding') {
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(SearchFinding, {
+	                keyword: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	        } else if (this.url == 'searchfound') {
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(SearchFound, {
+	                keyword: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
 	        }
 	    }
 	});
@@ -57011,6 +57030,36 @@
 	});
 
 	module.exports = PublishFound;
+
+/***/ },
+/* 436 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var React = __webpack_require__(1);
+
+	var SearchFinding = React.createClass({ displayName: "SearchFinding",
+	    render: function render() {
+	        return React.createElement("div", null, "33");
+	    }
+	});
+
+	module.exports = SearchFinding;
+
+/***/ },
+/* 437 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var React = __webpack_require__(1);
+
+	var SearchFound = React.createClass({ displayName: "SearchFound",
+	    render: function render() {
+	        return React.createElement("div", null, "55");
+	    }
+	});
 
 /***/ }
 /******/ ]);

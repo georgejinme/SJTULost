@@ -1,5 +1,5 @@
 /sjtulost/.idea/
-/sjtulost/*.pyc
+*.pyc
 /sjtulost/*.log
 /sjtulost/*.sqlite3
 /sjtulost/lost/node_modules/
