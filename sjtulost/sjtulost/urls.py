@@ -58,6 +58,8 @@ urlpatterns = [
     url(r'^getfindingswithid/$', 'lost.app.finding.get_findings_with_id', name='get_findings_with_id'),
     url(r'^getfoundswithid/$', 'lost.app.found.get_founds_with_id', name='get_founds_with_id'),
 
+    url(r'^getfindingswithkeyword/$', 'lost.app.finding.get_findings_with_keyword', name='get_findings_with_keyword'),
+
     url(r'^publishfindinguploadimage/$', 'lost.app.finding.publish_finding_upload_image', name='publish_finding_upload_image'),
     url(r'^createfinding/$', 'lost.app.finding.create_finding',name='create_finding'),
     url(r'^updatefinding/$', 'lost.app.finding.update_finding', name='update_finding'),

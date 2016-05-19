@@ -37,6 +37,17 @@ var FindingAction = {
         })
     },
 
+    fetchDataWithKeyword: function(keyword){
+        $.post('/getfindingswithkeyword/', {
+            'keyword': keyword
+        }, function(data){
+            AppDispatcher.dispatch({
+                actionType: 'FINDING_INITIALIZATION',
+                findingArray: data
+            })
+        })
+    },
+
     uploadImageInit: function() {
         $('#findingFileupload').fileupload({
             url: '/publishfindinguploadimage/',

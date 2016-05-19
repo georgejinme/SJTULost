@@ -22278,6 +22278,17 @@
 	        });
 	    },
 
+	    fetchDataWithKeyword: function fetchDataWithKeyword(keyword) {
+	        $.post('/getfindingswithkeyword/', {
+	            'keyword': keyword
+	        }, function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FINDING_INITIALIZATION',
+	                findingArray: data
+	            });
+	        });
+	    },
+
 	    uploadImageInit: function uploadImageInit() {
 	        $('#findingFileupload').fileupload({
 	            url: '/publishfindinguploadimage/',
@@ -57044,19 +57055,30 @@
 
 	var SearchFindingHeader = React.createClass({ displayName: "SearchFindingHeader",
 	    render: function render() {
-	        return React.createElement("div", null, React.createElement("p", null, "为您显示带有关键字 ", React.createElement("strong", null, this.props.keyword), " 的结果, 共3条"));
+	        return React.createElement("div", null, React.createElement("p", null, "为您显示带有关键字 ", React.createElement("strong", null, this.props.keyword), " 的结果, 共", this.props.amount, "条"));
 	    }
 	});
 
 	var SearchFindingItem = React.createClass({ displayName: "SearchFindingItem",
+	    badgeColor: function badgeColor() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';else return 'label-success label';
+	    },
+
+	    badgeText: function badgeText() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';else return 'Completed';
+	    },
+
 	    render: function render() {
-	        return React.createElement("div", { className: "row searchFindingItem" }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFindingImage" }, React.createElement("span", { className: "label-danger label" }, "Uncompleted"), React.createElement("img", { src: "/static/image/qwt.jpg" })), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFindingItemContent" }, React.createElement("a", { href: "#", target: "_blank" }, React.createElement("p", { className: "searchFindingItemTitle" }, "haahha")), React.createElement("p", { className: "searchFindingItemDetail" }, "物品类别: 钥匙"), React.createElement("p", { className: "searchFindingItemDetail" }, "遗失时间: 2016-01-20 13:02:32"), React.createElement("p", { className: "searchFindingItemDetail" }, "遗失地点: 电群"), React.createElement("p", { className: "searchFindingItemDetail" }, "详细位置: 电群三号楼"), React.createElement("p", { className: "searchFindingItemDetail" }, "酬金: 40 元")));
+	        return React.createElement("div", { className: "row searchFindingItem" }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFindingImage" }, React.createElement("span", { className: this.badgeColor() }, this.badgeText()), React.createElement("img", { src: this.props.json['img'] })), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFindingItemContent" }, React.createElement("a", { href: '/findingview/' + this.props.json['id'], target: "_blank" }, React.createElement("p", { className: "searchFindingItemTitle" }, this.props.json['description'])), React.createElement("p", { className: "searchFindingItemDetail" }, "物品类别: ", this.props.json['item_type']), React.createElement("p", { className: "searchFindingItemDetail" }, "遗失时间: ", this.props.json['time']), React.createElement("p", { className: "searchFindingItemDetail" }, "遗失地点: ", this.props.json['place']), React.createElement("p", { className: "searchFindingItemDetail" }, "详细位置: ", this.props.json['place_detail']), React.createElement("p", { className: "searchFindingItemDetail" }, "酬金: ", this.props.json['pay'], " 元")));
 	    }
 	});
 
 	var SearchFindingContent = React.createClass({ displayName: "SearchFindingContent",
 	    render: function render() {
-	        return React.createElement("div", { className: "row searchFindingContent " }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)));
+	        return React.createElement("div", { className: "row searchFindingContent " }, this.props.findings.map(function (val, index) {
+	            return React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, {
+	                json: val }));
+	        }));
 	    }
 	});
 
@@ -57069,23 +57091,25 @@
 	    },
 
 	    componentDidMount: function componentDidMount() {
-	        UserInfoStore.addChangeListener(this._onChange);
-	        UserActions.fetchData();
+	        FindingStore.addChangeListener(this._onChange);
+	        FindingAction.fetchDataWithKeyword(decodeURI(this.props.keyword));
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
-	        UserInfoStore.removeChangeListener(this._onChange);
+	        FindingStore.removeChangeListener(this._onChange);
 	    },
 
 	    _onChange: function _onChange() {
 	        this.setState({
-	            userInfo: UserInfoStore.getUserInfo()
+	            findings: FindingStore.getFindingsWithAmount()
 	        });
 	    },
 
 	    render: function render() {
 	        return React.createElement("div", { className: "searchFinding" }, React.createElement(SearchFindingHeader, {
-	            keyword: decodeURI(this.props.keyword) }), React.createElement("hr", null), React.createElement(SearchFindingContent, null));
+	            keyword: decodeURI(this.props.keyword),
+	            amount: this.state.findings.length }), React.createElement("hr", null), React.createElement(SearchFindingContent, {
+	            findings: this.state.findings }));
 	    }
 	});
 

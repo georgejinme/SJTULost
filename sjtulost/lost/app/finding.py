@@ -135,6 +135,12 @@ def findings_with_item_and_place(item, place):
 def findings_with_id(finding_id):
     return finding_format([Finding.objects.get(id = finding_id)])
 
+def findings_with_description(d):
+    return Finding.objects.filter(description__contains=d)
+
+def findings_with_detail(d):
+    return Finding.objects.filter(detail__contains=d)
+
 # external function
 
 def get_all_findings(request):
@@ -150,6 +156,16 @@ def get_findings_with_filter(request):
 def get_findings_with_id(request):
     finding_id = request.POST['id']
     return JsonResponse(findings_with_id(finding_id), safe=False)
+
+def get_findings_with_keyword(request):
+    keyword = request.POST['keyword']
+    keyword_list = keyword.split(' ')
+    findings_set = Finding.objects.all().distinct()
+    for each in keyword_list:
+        each_findings_set = (findings_with_description(each) | findings_with_detail(each)).distinct()
+        findings_set = (findings_set & each_findings_set).distinct().order_by('-lost_time')
+    return JsonResponse(finding_format(findings_set), safe=False)
+
 
 # code:
 # 0: success
