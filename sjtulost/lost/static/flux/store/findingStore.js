@@ -42,6 +42,9 @@ var FindingStore = assign({}, EventEmitter.prototype, {
      */
     uploadImageStatus: -1,
 
+    //not this.findings.count
+    totalAmount: 0,
+
     getDefaultFinding: function() {
         return {
             id: 0,
@@ -61,12 +64,20 @@ var FindingStore = assign({}, EventEmitter.prototype, {
     },
 
 
-    getFindingsWithAmount: function(amount=this.findings.count) {
-        return this.findings.slice(0, amount);
+    getFindings: function() {
+        return this.findings;
     },
 
     setFindings: function(array) {
         this.findings = array;
+    },
+
+    getTotalAmount: function() {
+        return this.totalAmount
+    },
+
+    setTotalAmount: function(amount) {
+        this.totalAmount = amount
     },
 
     setDescription: function(d) {

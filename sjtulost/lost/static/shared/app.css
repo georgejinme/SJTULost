@@ -360,6 +360,20 @@ input:focus{
     text-decoration: none;
 }
 
+.findingPagination {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.findingPagination li a{
+    color: brown;
+}
+
+.findingPagination .active a {
+    background-color: brown;
+    border-color: brown;
+}
+
 
 /*
     For Founding

@@ -6,6 +6,9 @@ import lost.app.place as Place
 import lost.util.time as time
 import lost.util.number as number
 import lost.util.qiniu_tools as qiniu
+
+FINDINGS_AMOUNT_EACH_PAGE = 10
+
 def check_description(d):
     if len(d) == 0:
         return False
@@ -147,7 +150,10 @@ def findings_with_place_detail(pd):
 # external function
 
 def get_all_findings(request):
-    return JsonResponse(findings(), safe=False)
+    return JsonResponse({
+        'findings': findings(),
+        'amount': len(findings())
+    }, safe=False)
 
 
 def get_findings_with_filter(request):

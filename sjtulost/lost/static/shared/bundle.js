@@ -20655,6 +20655,7 @@
 	        case 'FINDING_UPDATE':
 	        case 'FINDING_VIEWING':
 	            FindingStore.setFindings(action.findingArray);
+	            FindingStore.setTotalAmount(action.amount);
 	            FindingStore.emitChange();
 	            break;
 
@@ -21537,6 +21538,9 @@
 	     */
 	    uploadImageStatus: -1,
 
+	    //not this.findings.count
+	    totalAmount: 0,
+
 	    getDefaultFinding: function getDefaultFinding() {
 	        return {
 	            id: 0,
@@ -21555,14 +21559,20 @@
 	        };
 	    },
 
-	    getFindingsWithAmount: function getFindingsWithAmount() {
-	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.findings.count : arguments[0];
-
-	        return this.findings.slice(0, amount);
+	    getFindings: function getFindings() {
+	        return this.findings;
 	    },
 
 	    setFindings: function setFindings(array) {
 	        this.findings = array;
+	    },
+
+	    getTotalAmount: function getTotalAmount() {
+	        return this.totalAmount;
+	    },
+
+	    setTotalAmount: function setTotalAmount(amount) {
+	        this.totalAmount = amount;
 	    },
 
 	    setDescription: function setDescription(d) {
@@ -21705,7 +21715,6 @@
 	     2: uploading
 	     */
 	    uploadImageStatus: -1,
-
 	    getDefaultFound: function getDefaultFound() {
 	        return {
 	            id: 0,
@@ -22246,11 +22255,14 @@
 	var AppDispatcher = __webpack_require__(158);
 
 	var FindingAction = {
-	    fetchData: function fetchData() {
-	        $.get('/getfindings/', function (data) {
+	    fetchData: function fetchData(position) {
+	        $.post('/getfindings/', {
+	            position: position
+	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FINDING_INITIALIZATION',
-	                findingArray: data
+	                findingArray: data['findings'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
@@ -22525,6 +22537,8 @@
 
 	var idOperation = __webpack_require__(173);
 
+	var findingsEachPage = 10;
+
 	var FindingTypeRow = React.createClass({ displayName: "FindingTypeRow",
 	    getSelectedClass: function getSelectedClass(index) {
 	        if (this.props.selectedData[index] == true) return 'active';else return '';
@@ -22577,14 +22591,58 @@
 	    }
 	});
 
+	var FindingPagination = React.createClass({ displayName: "FindingPagination",
+	    getLeftArrowClass: function getLeftArrowClass() {
+	        if (this.props.position == 0) return 'disabled';else return '';
+	    },
+
+	    getRightArrowClass: function getRightArrowClass() {
+	        var lastPos = 0;
+	        if (this.props.totalAmount % findingsEachPage == 0) lastPos = this.props.totalAmount / findingsEachPage;else lastPos = this.props.totalAmount / findingsEachPage + 1;
+	        lastPos = parseInt(lastPos);
+	        if (this.props.position == lastPos) return 'disabled';else return '';
+	    },
+
+	    getRangeClass: function getRangeClass(p) {
+	        if (p == this.props.position) return 'active';else return '';
+	    },
+
+	    getRange: function getRange() {
+	        var lastPos = 0;
+	        if (this.props.totalAmount % findingsEachPage == 0) lastPos = this.props.totalAmount / findingsEachPage;else lastPos = this.props.totalAmount / findingsEachPage + 1;
+	        lastPos = parseInt(lastPos);
+	        var resArray = [];
+	        if (lastPos < 5) {
+	            for (var i = 1; i <= lastPos; ++i) resArray.push(i);
+	        } else if (this.props.position < 3) resArray = [1, 2, 3, 4, 5];else if (this.props.position > lastPos - 2) {
+	            resArray = [lastPos - 4, lastPos - 3, lastPos - 2, lastPos - 1, lastPos];
+	        } else {
+	            resArray = [this.props.position - 2, this.props.position - 1, this.props.position, this.props.position + 1, this.props.position + 2];
+	        }
+	        return resArray;
+	    },
+
+	    render: function render() {
+	        var range = this.getRange();
+	        var rangeClass = this.getRangeClass;
+	        var clickRange = this.props.clickRange;
+	        return React.createElement("ul", { className: "pagination findingPagination" }, React.createElement("li", { className: this.getLeftArrowClass(), onClick: this.props.clickPrevious }, React.createElement("a", { href: "#" }, "«")), range.map(function (val, index) {
+	            return React.createElement("li", { className: rangeClass(val),
+	                onClick: clickRange }, React.createElement("a", { href: "#", id: idOperation.encodeId('findingPage', val) }, val));
+	        }), React.createElement("li", { className: this.getRightArrowClass, onClick: this.props.clickNext }, React.createElement("a", { href: "#" }, "»")));
+	    }
+	});
+
 	var Finding = React.createClass({ displayName: "Finding",
 	    getInitialState: function getInitialState() {
 	        return {
 	            itemTypes: ItemStore.getItems(),
 	            places: PlaceStore.getPlaces(),
-	            findings: FindingStore.getFindingsWithAmount(),
+	            findings: FindingStore.getFindings(),
 	            selectedItemTypes: ItemStore.getSelectedItems(),
-	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	            selectedPlaces: PlaceStore.getSelectedPlaces(),
+	            totalAmount: FindingStore.getTotalAmount(),
+	            position: 1
 	        };
 	    },
 
@@ -22596,7 +22654,7 @@
 	        PlaceStore.addSelectListener(this._onPlaceSelectChange);
 	        ItemTypeAction.fetchData();
 	        PlaceAction.fetchData();
-	        FindingAction.fetchData();
+	        FindingAction.fetchData(0);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -22637,7 +22695,8 @@
 
 	    _onFindingChange: function _onFindingChange() {
 	        this.setState({
-	            findings: FindingStore.getFindingsWithAmount()
+	            findings: FindingStore.getFindings(),
+	            totalAmount: FindingStore.getTotalAmount()
 	        });
 	    },
 
@@ -22649,6 +22708,24 @@
 	        PlaceAction.select(idOperation.decodeId(event.target.id));
 	    },
 
+	    clickPrevious: function clickPrevious() {
+	        this.setState({
+	            position: position - 1
+	        });
+	    },
+
+	    clickNext: function clickNext() {
+	        this.setState({
+	            position: position - 1
+	        });
+	    },
+
+	    clickRange: function clickRange(ev) {
+	        this.setState({
+	            position: idOperation.decodeId(ev.target.id)
+	        });
+	    },
+
 	    render: function render() {
 	        return React.createElement("div", { className: "findingContent" }, React.createElement(FindingType, {
 	            itemTypes: this.state.itemTypes,
@@ -22657,7 +22734,12 @@
 	            selectedPlaces: this.state.selectedPlaces,
 	            selectItemTypeHandler: this.selectItemTypeHandler,
 	            selectPlaceHandler: this.selectPlaceHandler }), React.createElement("hr", null), React.createElement(FindingSection, {
-	            data: this.state.findings }));
+	            data: this.state.findings }), React.createElement(FindingPagination, {
+	            position: this.state.position,
+	            totalAmount: this.state.totalAmount,
+	            clickPrevious: this.clickPrevious,
+	            clickNext: this.clickNext,
+	            clickRange: this.clickRange }));
 	    }
 	});
 

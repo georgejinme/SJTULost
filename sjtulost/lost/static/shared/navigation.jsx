@@ -138,7 +138,7 @@ var App = React.createClass({
                     <Navigation />
                     <div className="sjtulostContent">
                         <Homepage />
-                    </div>    
+                    </div>
                     <hr/>
                     <Footer />
                 </div>

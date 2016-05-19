@@ -5,11 +5,14 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
 
 var FindingAction = {
-    fetchData: function() {
-        $.get('/getfindings/', function(data) {
+    fetchData: function(position) {
+        $.post('/getfindings/', {
+            position: position
+        },function(data) {
             AppDispatcher.dispatch({
                 actionType: 'FINDING_INITIALIZATION',
-                findingArray: data
+                findingArray: data['findings'],
+                amount: data['amount']
             });
         });
     },

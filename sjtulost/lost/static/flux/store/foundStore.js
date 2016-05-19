@@ -38,7 +38,6 @@ var FoundStore = assign({}, EventEmitter.prototype, {
      2: uploading
      */
     uploadImageStatus: -1,
-
     getDefaultFound: function() {
         return {
             id: 0,
