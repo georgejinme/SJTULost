@@ -1199,6 +1199,76 @@ input:focus{
     margin-top: 5px;
 }
 
+/*
+    search found
+*/
+
+.searchFound {
+    margin-top: 90px;
+}
+
+.searchFound .searchFoundContent {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.searchFoundItem {
+    margin-bottom: 20px;
+    background-color: #eeeeee;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.searchFoundItem .searchFoundItemContent {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.searchFoundItem .searchFoundItemContent p{
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    width: 100%;
+    margin-bottom: 0px;
+    color: #666666;
+}
+
+.searchFoundItem .searchFoundItemContent a:hover{
+    text-decoration: none;
+}
+
+.searchFoundItem .searchFoundImage span {
+    position: absolute;
+}
+
+.searchFoundItem .searchFoundImage {
+    padding-left: 0px;
+}
+
+.searchFoundItem .searchFoundImage img{
+    width: 100%;
+    height: 200px;
+}
+
+.searchFoundItem .searchFoundItemContent .searchFoundItemTitle{
+    color: brown !important;
+    font-size: 15px;
+    height: 50px;
+    line-height: 25px;
+    overflow: hidden;
+}
+
+.searchFoundItem .searchFoundItemContent .searchFoundItemDetail{
+    font-size: 13px;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
 
 
 

@@ -139,6 +139,17 @@ var FoundAction = {
         })
     },
 
+    fetchDataWithKeyword: function(keyword){
+        $.post('/getfoundswithkeyword/', {
+            'keyword': keyword
+        }, function(data){
+            AppDispatcher.dispatch({
+                actionType: 'FOUND_INITIALIZATION',
+                foundArray: data
+            })
+        })
+    },
+
     uploadImageInit: function() {
         $('#foundFileupload').fileupload({
             url: '/publishfounduploadimage/',

@@ -116,6 +116,16 @@ def founds_with_item_and_place(item, place):
     founds_list = (item_founds & place_founds).order_by('-found_time')
     return found_format(founds_list)
 
+def founds_with_description(d):
+    return Found.objects.filter(description__contains=d)
+
+def founds_with_detail(d):
+    return Found.objects.filter(detail__contains=d)
+
+def founds_with_place_detail(pd):
+    return Found.objects.filter(place_detail__contains=pd)
+
+
 def founds_with_id(found_id):
     return found_format([Found.objects.get(id = found_id)])
 
@@ -135,6 +145,21 @@ def get_founds_with_filter(request):
 def get_founds_with_id(request):
     found_id = request.POST['id']
     return JsonResponse(founds_with_id(found_id), safe=False)
+
+def get_founds_with_keyword(request):
+    keyword = request.POST['keyword']
+    keyword_list_and = keyword.split(' ')
+    founds_set_and = Found.objects.all().distinct()
+    for each in keyword_list_and:
+        keyword_list_or = each.split('|')
+        founds_set_or = Found.objects.none()
+        for each_keyword in keyword_list_or:
+            each_founds_set = (founds_with_description(each_keyword) | founds_with_detail(each_keyword) | founds_with_place_detail(each_keyword)).distinct()
+            founds_set_or = (founds_set_or | each_founds_set).distinct()
+        founds_set_and = (founds_set_and & founds_set_or).distinct().order_by('-found_time')
+    print founds_set_and
+    return JsonResponse(found_format(founds_set_and), safe=False)
+
 
 # code:
 # 0: success

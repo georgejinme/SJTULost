@@ -22380,6 +22380,17 @@
 	        });
 	    },
 
+	    fetchDataWithKeyword: function fetchDataWithKeyword(keyword) {
+	        $.post('/getfoundswithkeyword/', {
+	            'keyword': keyword
+	        }, function (data) {
+	            AppDispatcher.dispatch({
+	                actionType: 'FOUND_INITIALIZATION',
+	                foundArray: data
+	            });
+	        });
+	    },
+
 	    uploadImageInit: function uploadImageInit() {
 	        $('#foundFileupload').fileupload({
 	            url: '/publishfounduploadimage/',
@@ -57122,15 +57133,77 @@
 /* 437 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var SearchFound = React.createClass({ displayName: "SearchFound",
+	var FoundStore = __webpack_require__(166);
+	var FoundAction = __webpack_require__(171).FoundAction;
+
+	var SearchFoundHeader = React.createClass({ displayName: "SearchFoundHeader",
+	    getKeywordText: function getKeywordText() {
+	        return this.props.keyword.replace('|', ' ');
+	    },
 	    render: function render() {
-	        return React.createElement("div", null, "55");
+	        return React.createElement("div", null, React.createElement("p", null, "为您显示带有关键字 ", React.createElement("strong", null, this.getKeywordText()), " 的结果, 共", this.props.amount, "条"));
 	    }
 	});
+
+	var SearchFoundItem = React.createClass({ displayName: "SearchFoundItem",
+	    badgeColor: function badgeColor() {
+	        if (this.props.json['state'] == 0) return 'label-danger label';else return 'label-success label';
+	    },
+
+	    badgeText: function badgeText() {
+	        if (this.props.json['state'] == 0) return 'Uncompleted';else return 'Completed';
+	    },
+
+	    render: function render() {
+	        return React.createElement("div", { className: "row searchFoundItem" }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFoundImage" }, React.createElement("span", { className: this.badgeColor() }, this.badgeText()), React.createElement("img", { src: this.props.json['img'] })), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFoundItemContent" }, React.createElement("a", { href: '/foundview/' + this.props.json['id'], target: "_blank" }, React.createElement("p", { className: "searchFoundItemTitle" }, this.props.json['description'])), React.createElement("p", { className: "searchFoundItemDetail" }, "物品类别: ", this.props.json['item_type']), React.createElement("p", { className: "searchFoundItemDetail" }, "遗失时间: ", this.props.json['time']), React.createElement("p", { className: "searchFoundItemDetail" }, "遗失地点: ", this.props.json['place']), React.createElement("p", { className: "searchFoundItemDetail" }, "详细位置: ", this.props.json['place_detail'])));
+	    }
+	});
+
+	var SearchFoundContent = React.createClass({ displayName: "SearchFoundContent",
+	    render: function render() {
+	        return React.createElement("div", { className: "row searchFoundContent " }, this.props.founds.map(function (val, index) {
+	            return React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFoundItem, {
+	                json: val }));
+	        }));
+	    }
+	});
+
+	var SearchFound = React.createClass({ displayName: "SearchFound",
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            founds: FoundStore.getFoundsWithAmount()
+	        };
+	    },
+
+	    componentDidMount: function componentDidMount() {
+	        FoundStore.addChangeListener(this._onChange);
+	        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword));
+	    },
+
+	    componentWillUnmount: function componentWillUnmount() {
+	        FoundStore.removeChangeListener(this._onChange);
+	    },
+
+	    _onChange: function _onChange() {
+	        this.setState({
+	            founds: FoundStore.getFoundsWithAmount()
+	        });
+	    },
+
+	    render: function render() {
+	        return React.createElement("div", { className: "searchFinding" }, React.createElement(SearchFoundHeader, {
+	            keyword: decodeURI(this.props.keyword),
+	            amount: this.state.founds.length }), React.createElement("hr", null), React.createElement(SearchFoundContent, {
+	            founds: this.state.founds }));
+	    }
+	});
+
+	module.exports = SearchFound;
 
 /***/ }
 /******/ ]);
