@@ -136,7 +136,9 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <Homepage />
+                    <div className="sjtulostContent">
+                        <Homepage />
+                    </div>    
                     <hr/>
                     <Footer />
                 </div>
@@ -145,7 +147,9 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <Finding />
+                    <div className="sjtulostContent">
+                        <Finding />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -154,7 +158,9 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <Found />
+                    <div className="sjtulostContent">
+                        <Found />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -163,7 +169,9 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <Rank />
+                    <div className="sjtulostContent">
+                        <Rank />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -172,9 +180,11 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <FindingView
-                        id = {this.id}
-                    />
+                    <div className="sjtulostContent">
+                        <FindingView
+                            id = {this.id}
+                        />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -183,9 +193,11 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <FoundView
-                        id = {this.id}
-                    />
+                    <div className="sjtulostContent">
+                        <FoundView
+                            id = {this.id}
+                        />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -194,7 +206,9 @@ var App = React.createClass({
             return (
                 <div className="meContainer">
                     <Navigation />
-                    <Me />
+                    <div className="sjtulostContent">
+                        <Me />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -203,9 +217,11 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <PublishFinding
-                        id = {this.id}
-                    />
+                    <div className="sjtulostContent">
+                        <PublishFinding
+                            id = {this.id}
+                        />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -214,9 +230,11 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <PublishFound
-                        id = {this.id}
-                    />
+                    <div className="sjtulostContent">
+                        <PublishFound
+                            id = {this.id}
+                        />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -225,9 +243,11 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation />
-                    <SearchFinding
-                        keyword = {this.id}
-                    />
+                    <div className="sjtulostContent">
+                        <SearchFinding
+                            keyword = {this.id}
+                        />
+                    </div>
                     <hr/>
                     <Footer />
                 </div>
@@ -236,9 +256,11 @@ var App = React.createClass({
             return (
                 <div className="container">
                     <Navigation/>
-                    <SearchFound
-                        keyword = {this.id}
-                    />
+                    <div className="sjtulostContent">
+                        <SearchFound
+                            keyword = {this.id}
+                        />
+                    </div>
                     <hr />
                     <Footer />
                 </div>

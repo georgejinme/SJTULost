@@ -204,6 +204,10 @@ input:focus{
     margin: auto;
 }
 
+.sjtulostContent {
+    min-height: 450px;
+}
+
 .navPublishHidden {
     display: none !important;
 }

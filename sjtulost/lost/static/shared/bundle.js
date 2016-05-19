@@ -128,33 +128,33 @@
 
 	    render: function render() {
 	        if (this.url == '') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Homepage, null), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(Homepage, null)), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'finding') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Finding, null), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(Finding, null)), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'found') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Found, null), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(Found, null)), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'rank') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(Rank, null), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(Rank, null)), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'findingview') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(FindingView, {
-	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(FindingView, {
+	                id: this.id })), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'foundview') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(FoundView, {
-	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(FoundView, {
+	                id: this.id })), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'me') {
-	            return React.createElement("div", { className: "meContainer" }, React.createElement(Navigation, null), React.createElement(Me, null), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "meContainer" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(Me, null)), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'publishfinding') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(PublishFinding, {
-	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(PublishFinding, {
+	                id: this.id })), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'publishfound') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(PublishFound, {
-	                id: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(PublishFound, {
+	                id: this.id })), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'searchfinding') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(SearchFinding, {
-	                keyword: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(SearchFinding, {
+	                keyword: this.id })), React.createElement("hr", null), React.createElement(Footer, null));
 	        } else if (this.url == 'searchfound') {
-	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement(SearchFound, {
-	                keyword: this.id }), React.createElement("hr", null), React.createElement(Footer, null));
+	            return React.createElement("div", { className: "container" }, React.createElement(Navigation, null), React.createElement("div", { className: "sjtulostContent" }, React.createElement(SearchFound, {
+	                keyword: this.id })), React.createElement("hr", null), React.createElement(Footer, null));
 	        }
 	    }
 	});
