@@ -4,10 +4,13 @@ var FindingStore = require('../flux/store/findingStore');
 var FindingAction = require('../flux/action/initializationAction').FindingAction;
 
 var SearchFindingHeader = React.createClass({
+    getKeywordText: function() {
+        return this.props.keyword.replace('|', ' ')
+    },
     render: function() {
         return (
             <div>
-                <p>为您显示带有关键字 <strong>{this.props.keyword}</strong> 的结果, 共{this.props.amount}条</p>
+                <p>为您显示带有关键字 <strong>{this.getKeywordText()}</strong> 的结果, 共{this.props.amount}条</p>
             </div>
         )
     }

@@ -57054,8 +57054,11 @@
 	var FindingAction = __webpack_require__(171).FindingAction;
 
 	var SearchFindingHeader = React.createClass({ displayName: "SearchFindingHeader",
+	    getKeywordText: function getKeywordText() {
+	        return this.props.keyword.replace('|', ' ');
+	    },
 	    render: function render() {
-	        return React.createElement("div", null, React.createElement("p", null, "为您显示带有关键字 ", React.createElement("strong", null, this.props.keyword), " 的结果, 共", this.props.amount, "条"));
+	        return React.createElement("div", null, React.createElement("p", null, "为您显示带有关键字 ", React.createElement("strong", null, this.getKeywordText()), " 的结果, 共", this.props.amount, "条"));
 	    }
 	});
 
