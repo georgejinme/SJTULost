@@ -1129,6 +1129,79 @@ input:focus{
     width: 100%;
 }
 
+/*
+    search finding
+*/
+
+.searchFinding {
+    margin-top: 90px;
+}
+
+.searchFinding .searchFindingContent {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.searchFindingItem {
+    margin-bottom: 20px;
+    background-color: #eeeeee;
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.searchFindingItem .searchFindingItemContent {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.searchFindingItem .searchFindingItemContent p{
+    word-wrap: break-word;
+    word-break: normal;
+    white-space: pre-wrap;
+    width: 100%;
+    margin-bottom: 0px;
+    color: #666666;
+}
+
+.searchFindingItem .searchFindingItemContent a:hover{
+    text-decoration: none;
+}
+
+.searchFindingItem .searchFindingImage span {
+    position: absolute;
+}
+
+.searchFindingItem .searchFindingImage {
+    padding-left: 0px;
+}
+
+.searchFindingItem .searchFindingImage img{
+    width: 100%;
+    height: 220px;
+}
+
+.searchFindingItem .searchFindingItemContent .searchFindingItemTitle{
+    color: brown !important;
+    font-size: 15px;
+    height: 50px;
+    line-height: 25px;
+    overflow: hidden;
+}
+
+.searchFindingItem .searchFindingItemContent .searchFindingItemDetail{
+    font-size: 13px;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+
+
+
 
 
 

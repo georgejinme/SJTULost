@@ -49,6 +49,14 @@ def search_finding(request, keyword):
     print keyword
     return render(request, 'main.html')
 
+
 def search_found(request, keyword):
     print keyword
+    return render(request, 'main.html')
+
+
+def search_finding_without_keyword(request):
+    return render(request, 'main.html')
+
+def search_found_without_keyword(request):
     return render(request, 'main.html')

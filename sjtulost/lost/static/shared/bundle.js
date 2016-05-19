@@ -57035,13 +57035,57 @@
 /* 436 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var React = __webpack_require__(1);
 
-	var SearchFinding = React.createClass({ displayName: "SearchFinding",
+	var FindingStore = __webpack_require__(165);
+	var FindingAction = __webpack_require__(171).FindingAction;
+
+	var SearchFindingHeader = React.createClass({ displayName: "SearchFindingHeader",
 	    render: function render() {
-	        return React.createElement("div", null, "33");
+	        return React.createElement("div", null, React.createElement("p", null, "为您显示带有关键字 ", React.createElement("strong", null, this.props.keyword), " 的结果, 共3条"));
+	    }
+	});
+
+	var SearchFindingItem = React.createClass({ displayName: "SearchFindingItem",
+	    render: function render() {
+	        return React.createElement("div", { className: "row searchFindingItem" }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFindingImage" }, React.createElement("span", { className: "label-danger label" }, "Uncompleted"), React.createElement("img", { src: "/static/image/qwt.jpg" })), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6 searchFindingItemContent" }, React.createElement("a", { href: "#", target: "_blank" }, React.createElement("p", { className: "searchFindingItemTitle" }, "haahha")), React.createElement("p", { className: "searchFindingItemDetail" }, "物品类别: 钥匙"), React.createElement("p", { className: "searchFindingItemDetail" }, "遗失时间: 2016-01-20 13:02:32"), React.createElement("p", { className: "searchFindingItemDetail" }, "遗失地点: 电群"), React.createElement("p", { className: "searchFindingItemDetail" }, "详细位置: 电群三号楼"), React.createElement("p", { className: "searchFindingItemDetail" }, "酬金: 40 元")));
+	    }
+	});
+
+	var SearchFindingContent = React.createClass({ displayName: "SearchFindingContent",
+	    render: function render() {
+	        return React.createElement("div", { className: "row searchFindingContent " }, React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)), React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(SearchFindingItem, null)));
+	    }
+	});
+
+	var SearchFinding = React.createClass({ displayName: "SearchFinding",
+
+	    getInitialState: function getInitialState() {
+	        return {
+	            findings: FindingStore.getFindingsWithAmount()
+	        };
+	    },
+
+	    componentDidMount: function componentDidMount() {
+	        UserInfoStore.addChangeListener(this._onChange);
+	        UserActions.fetchData();
+	    },
+
+	    componentWillUnmount: function componentWillUnmount() {
+	        UserInfoStore.removeChangeListener(this._onChange);
+	    },
+
+	    _onChange: function _onChange() {
+	        this.setState({
+	            userInfo: UserInfoStore.getUserInfo()
+	        });
+	    },
+
+	    render: function render() {
+	        return React.createElement("div", { className: "searchFinding" }, React.createElement(SearchFindingHeader, {
+	            keyword: decodeURI(this.props.keyword) }), React.createElement("hr", null), React.createElement(SearchFindingContent, null));
 	    }
 	});
 
