@@ -8,6 +8,8 @@ var UserInfoStore = require('../flux/store/userInfoStore');
 var FindingStore = require('../flux/store/findingStore');
 var FoundStore = require('../flux/store/foundStore');
 
+var Pagination = require('../shared/pagination');
+
 
 var MeInformation = React.createClass({
 
@@ -147,9 +149,11 @@ var MeFindingItem = React.createClass({
 var MeFinding = React.createClass({
     getInitialState: function() {
         return {
-            findings: FindingStore.getFindingsWithAmount(),
+            findings: FindingStore.getFindings(),
             updateResult: FindingStore.getUpdateResult(),
-            updating: false
+            updating: false,
+            totalAmount: FindingStore.getTotalAmount(),
+            position: 1
         }
     },
 
@@ -157,7 +161,7 @@ var MeFinding = React.createClass({
     componentDidMount: function() {
         FindingStore.addChangeListener(this._onFindingChange);
         FindingStore.addUpdateListener(this._onFindingUpdate);
-        UserActions.fetchUserFindings();
+        UserActions.fetchUserFindings(1);
     },
 
     componentWillUnmount: function() {
@@ -167,7 +171,8 @@ var MeFinding = React.createClass({
 
     _onFindingChange: function () {
         this.setState({
-            findings: FindingStore.getFindingsWithAmount()
+            findings: FindingStore.getFindings(),
+            totalAmount: FindingStore.getTotalAmount()
         });
     },
 
@@ -182,7 +187,7 @@ var MeFinding = React.createClass({
                 updating: false
             })}, 2100
         );
-        UserActions.fetchUserFindings()
+        UserActions.fetchUserFindings(this.state.position)
     },
 
     getAlertText: function() {
@@ -203,25 +208,58 @@ var MeFinding = React.createClass({
         UserActions.userFindingsDone(id)
     },
 
+    clickPrevious: function() {
+        UserActions.fetchUserFindings(this.state.position - 1);
+        this.setState({
+            position: this.state.position - 1
+        });
+    },
+
+    clickNext: function() {
+        UserActions.fetchUserFindings(this.state.position + 1);
+        this.setState({
+            position: this.state.position + 1
+        });
+    },
+
+    clickRange: function(ev) {
+        var id = idOperation.decodeId(ev.target.id);
+        UserActions.fetchUserFindings(id);
+        this.setState({
+            position: parseInt(id)
+        });
+    },
+
     render: function() {
         var handler = this.findingClick;
         return (
-            <div className="row meFinding">
-                <div className={this.getAlertClass()}>
-                    <p>{this.getAlertText()}</p>
+            <div>
+                <div className="row meFinding">
+                    <div className={this.getAlertClass()}>
+                        <p>{this.getAlertText()}</p>
+                    </div>
+                    {
+                        this.state.findings.map(function(val, index){
+                            return (
+                                <div className="col-lg-6 col-md-6 col-sm-6">
+                                    <MeFindingItem
+                                        json = {val}
+                                        findingHandler = {handler}
+                                    />
+                                </div>
+                            )
+                        })
+                    }
                 </div>
-                {
-                    this.state.findings.map(function(val, index){
-                        return (
-                            <div className="col-lg-6 col-md-6 col-sm-6">
-                                <MeFindingItem
-                                    json = {val}
-                                    findingHandler = {handler}
-                                />
-                            </div>
-                        )
-                    })
-                }
+                <hr/>
+                <Pagination
+                    position = {this.state.position}
+                    totalAmount = {this.state.totalAmount}
+                    clickPrevious = {this.clickPrevious}
+                    clickNext = {this.clickNext}
+                    clickRange = {this.clickRange}
+                    eachPage = {4}
+                />
             </div>
         )
     }

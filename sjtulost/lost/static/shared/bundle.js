@@ -20569,11 +20569,14 @@
 	        });
 	    },
 
-	    fetchUserFindings: function fetchUserFindings() {
-	        $.get('/getuserfindings/', function (data) {
+	    fetchUserFindings: function fetchUserFindings(position) {
+	        $.post('/getuserfindings/', {
+	            'position': position
+	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'USER_FINDING_INITIALIZATION',
-	                findingArray: data
+	                findingArray: data['findings'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
@@ -23099,6 +23102,8 @@
 	var FindingStore = __webpack_require__(165);
 	var FoundStore = __webpack_require__(166);
 
+	var Pagination = __webpack_require__(438);
+
 	var MeInformation = React.createClass({ displayName: "MeInformation",
 
 	    getInitialState: function getInitialState() {
@@ -23194,16 +23199,18 @@
 	var MeFinding = React.createClass({ displayName: "MeFinding",
 	    getInitialState: function getInitialState() {
 	        return {
-	            findings: FindingStore.getFindingsWithAmount(),
+	            findings: FindingStore.getFindings(),
 	            updateResult: FindingStore.getUpdateResult(),
-	            updating: false
+	            updating: false,
+	            totalAmount: FindingStore.getTotalAmount(),
+	            position: 1
 	        };
 	    },
 
 	    componentDidMount: function componentDidMount() {
 	        FindingStore.addChangeListener(this._onFindingChange);
 	        FindingStore.addUpdateListener(this._onFindingUpdate);
-	        UserActions.fetchUserFindings();
+	        UserActions.fetchUserFindings(1);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -23213,7 +23220,8 @@
 
 	    _onFindingChange: function _onFindingChange() {
 	        this.setState({
-	            findings: FindingStore.getFindingsWithAmount()
+	            findings: FindingStore.getFindings(),
+	            totalAmount: FindingStore.getTotalAmount()
 	        });
 	    },
 
@@ -23228,7 +23236,7 @@
 	                updating: false
 	            });
 	        }, 2100);
-	        UserActions.fetchUserFindings();
+	        UserActions.fetchUserFindings(this.state.position);
 	    },
 
 	    getAlertText: function getAlertText() {
@@ -23247,13 +23255,41 @@
 	        UserActions.userFindingsDone(id);
 	    },
 
+	    clickPrevious: function clickPrevious() {
+	        UserActions.fetchUserFindings(this.state.position - 1);
+	        this.setState({
+	            position: this.state.position - 1
+	        });
+	    },
+
+	    clickNext: function clickNext() {
+	        UserActions.fetchUserFindings(this.state.position + 1);
+	        this.setState({
+	            position: this.state.position + 1
+	        });
+	    },
+
+	    clickRange: function clickRange(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        UserActions.fetchUserFindings(id);
+	        this.setState({
+	            position: parseInt(id)
+	        });
+	    },
+
 	    render: function render() {
 	        var handler = this.findingClick;
-	        return React.createElement("div", { className: "row meFinding" }, React.createElement("div", { className: this.getAlertClass() }, React.createElement("p", null, this.getAlertText())), this.state.findings.map(function (val, index) {
+	        return React.createElement("div", null, React.createElement("div", { className: "row meFinding" }, React.createElement("div", { className: this.getAlertClass() }, React.createElement("p", null, this.getAlertText())), this.state.findings.map(function (val, index) {
 	            return React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(MeFindingItem, {
 	                json: val,
 	                findingHandler: handler }));
-	        }));
+	        })), React.createElement("hr", null), React.createElement(Pagination, {
+	            position: this.state.position,
+	            totalAmount: this.state.totalAmount,
+	            clickPrevious: this.clickPrevious,
+	            clickNext: this.clickNext,
+	            clickRange: this.clickRange,
+	            eachPage: 4 }));
 	    }
 	});
 

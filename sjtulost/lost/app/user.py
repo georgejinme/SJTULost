@@ -20,6 +20,8 @@ TOKEN_URL = 'https://jaccount.sjtu.edu.cn/oauth2/token'
 GET_ACCESS_TOKEN_URI = 'http://127.0.0.1:8888/getaccesstoken/'
 HOMEPAGE_URL = 'http://127.0.0.1:8888/'
 
+FINDINGS_AMOUNT_EACH_PAGE = 4
+
 jaccount = OAuth2Service(
     client_id=CLIENT_ID,
     client_secret=SECRET_KEY,
@@ -116,9 +118,16 @@ def update_user_info(request):
 
 
 def get_user_findings(request):
+    page_number = int(request.POST['position']) - 1
+    start = page_number * FINDINGS_AMOUNT_EACH_PAGE
+    end = (page_number + 1) * FINDINGS_AMOUNT_EACH_PAGE
     if check_user_logined(request):
         user = User.objects.get(id = request.session['user_id'])
-        return JsonResponse(FindingFunctions.finding_format(user.finding_set.all()), safe=False)
+        findings = user.finding_set.all()
+        return JsonResponse({
+            'findings': FindingFunctions.finding_format(findings[start:end]),
+            'amount': findings.count()
+        }, safe=False)
     else:
         return JsonResponse([], safe=False)
 

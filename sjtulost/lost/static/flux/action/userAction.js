@@ -24,11 +24,14 @@ var UserActions = {
         })
     },
 
-    fetchUserFindings: function() {
-        $.get('/getuserfindings/', function(data) {
+    fetchUserFindings: function(position) {
+        $.post('/getuserfindings/', {
+            'position': position
+        },function(data) {
             AppDispatcher.dispatch({
                 actionType: 'USER_FINDING_INITIALIZATION',
-                findingArray: data
+                findingArray: data['findings'],
+                amount: data['amount']
             })
         })
     },
