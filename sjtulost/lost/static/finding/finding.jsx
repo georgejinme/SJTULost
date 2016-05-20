@@ -119,7 +119,7 @@ var FindingSection = React.createClass({
 
 var FindingPagination = React.createClass({
     getLeftArrowClass: function() {
-        if (this.props.position == 0) return 'disabled';
+        if (this.props.position == 1) return 'disabled';
         else return ''
     },
 
@@ -184,7 +184,7 @@ var FindingPagination = React.createClass({
                         )
                     })
                 }
-                <li className={this.getRightArrowClass} onClick={this.props.clickNext}><a href="#">&raquo;</a></li>
+                <li className={this.getRightArrowClass()} onClick={this.props.clickNext}><a href="#">&raquo;</a></li>
             </ul>
         )
     }
@@ -211,7 +211,7 @@ var Finding = React.createClass({
         PlaceStore.addSelectListener(this._onPlaceSelectChange);
         ItemTypeAction.fetchData();
         PlaceAction.fetchData();
-        FindingAction.fetchData(0);
+        FindingAction.fetchData(1);
     },
 
     componentWillUnmount: function() {
@@ -266,20 +266,24 @@ var Finding = React.createClass({
     },
 
     clickPrevious: function() {
+        FindingAction.fetchData(this.state.position - 1);
         this.setState({
-            position: position - 1
+            position: this.state.position - 1
         });
     },
 
     clickNext: function() {
+        FindingAction.fetchData(this.state.position + 1);
         this.setState({
-            position: position - 1
+            position: this.state.position + 1
         });
     },
 
     clickRange: function(ev) {
+        var id = idOperation.decodeId(ev.target.id);
+        FindingAction.fetchData(id);
         this.setState({
-            position: idOperation.decodeId(ev.target.id)
+            position: parseInt(id)
         });
     },
 

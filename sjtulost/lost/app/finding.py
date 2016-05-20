@@ -75,6 +75,9 @@ def check_finding(j):
 
 # internal function
 
+def finding_amount():
+    return Finding.objects.count()
+
 def finding_places(finding):
     finding_places_array = [p.description for p in finding.place_ids.all()]
     return ",".join(finding_places_array)
@@ -106,8 +109,10 @@ def finding_format(findings_array):
                            'state': f.state}) for f in findings_array]
     return findings_dict
 
-def findings():
-    findings_array = Finding.objects.all().order_by('-lost_time')
+def findings(page):
+    start = page * FINDINGS_AMOUNT_EACH_PAGE
+    end = (page + 1) * FINDINGS_AMOUNT_EACH_PAGE
+    findings_array = Finding.objects.all().order_by('-lost_time')[start:end]
     return finding_format(findings_array)
 
 def findings_with_item(item):
@@ -130,8 +135,6 @@ def findings_with_place(place):
 def findings_with_item_and_place(item, place):
     item_findings = findings_with_item(item)
     place_findings = findings_with_place(place)
-    print item_findings
-    print place_findings
     findings_list = (item_findings & place_findings).order_by('-lost_time')
     return finding_format(findings_list)
 
@@ -150,9 +153,10 @@ def findings_with_place_detail(pd):
 # external function
 
 def get_all_findings(request):
+    page_number = int(request.POST['position']) - 1
     return JsonResponse({
-        'findings': findings(),
-        'amount': len(findings())
+        'findings': findings(page_number),
+        'amount': finding_amount()
     }, safe=False)
 
 

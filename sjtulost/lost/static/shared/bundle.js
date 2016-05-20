@@ -22593,7 +22593,7 @@
 
 	var FindingPagination = React.createClass({ displayName: "FindingPagination",
 	    getLeftArrowClass: function getLeftArrowClass() {
-	        if (this.props.position == 0) return 'disabled';else return '';
+	        if (this.props.position == 1) return 'disabled';else return '';
 	    },
 
 	    getRightArrowClass: function getRightArrowClass() {
@@ -22629,7 +22629,7 @@
 	        return React.createElement("ul", { className: "pagination findingPagination" }, React.createElement("li", { className: this.getLeftArrowClass(), onClick: this.props.clickPrevious }, React.createElement("a", { href: "#" }, "«")), range.map(function (val, index) {
 	            return React.createElement("li", { className: rangeClass(val),
 	                onClick: clickRange }, React.createElement("a", { href: "#", id: idOperation.encodeId('findingPage', val) }, val));
-	        }), React.createElement("li", { className: this.getRightArrowClass, onClick: this.props.clickNext }, React.createElement("a", { href: "#" }, "»")));
+	        }), React.createElement("li", { className: this.getRightArrowClass(), onClick: this.props.clickNext }, React.createElement("a", { href: "#" }, "»")));
 	    }
 	});
 
@@ -22654,7 +22654,7 @@
 	        PlaceStore.addSelectListener(this._onPlaceSelectChange);
 	        ItemTypeAction.fetchData();
 	        PlaceAction.fetchData();
-	        FindingAction.fetchData(0);
+	        FindingAction.fetchData(1);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -22709,20 +22709,24 @@
 	    },
 
 	    clickPrevious: function clickPrevious() {
+	        FindingAction.fetchData(this.state.position - 1);
 	        this.setState({
-	            position: position - 1
+	            position: this.state.position - 1
 	        });
 	    },
 
 	    clickNext: function clickNext() {
+	        FindingAction.fetchData(this.state.position + 1);
 	        this.setState({
-	            position: position - 1
+	            position: this.state.position + 1
 	        });
 	    },
 
 	    clickRange: function clickRange(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        FindingAction.fetchData(id);
 	        this.setState({
-	            position: idOperation.decodeId(ev.target.id)
+	            position: parseInt(id)
 	        });
 	    },
 
