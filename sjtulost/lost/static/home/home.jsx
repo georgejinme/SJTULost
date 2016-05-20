@@ -76,8 +76,8 @@ var HomepageSection = React.createClass({
 var HomePage = React.createClass({
     getInitialState: function() {
         return {
-            findings: FindingStore.getFindingsWithAmount(4),
-            founds: FoundStore.getFoundsWithAmount(4)
+            findings: FindingStore.getFindings().slice(0, 4),
+            founds: FoundStore.getFounds().slice(0, 4)
         }
     },
 
@@ -85,8 +85,8 @@ var HomePage = React.createClass({
     componentDidMount: function() {
         FindingStore.addChangeListener(this._onFindingChange);
         FoundStore.addChangeListener(this._onFoundChange);
-        FindingAction.fetchData();
-        FoundAction.fetchData();
+        FindingAction.fetchData(1);
+        FoundAction.fetchData(1);
     },
 
     componentWillUnmount: function() {
@@ -96,13 +96,13 @@ var HomePage = React.createClass({
 
     _onFindingChange: function () {
         this.setState({
-            findings: FindingStore.getFindingsWithAmount(4)
+            findings: FindingStore.getFindings().slice(0, 4)
         });
     },
 
     _onFoundChange: function() {
         this.setState({
-            founds: FoundStore.getFoundsWithAmount(4)
+            founds: FoundStore.getFounds().slice(0, 4)
         });
     },
 

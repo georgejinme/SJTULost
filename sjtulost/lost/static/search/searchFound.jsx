@@ -122,7 +122,7 @@ var SearchFound = React.createClass({
 
     render: function() {
         return(
-            <div className="searchFinding">
+            <div className="searchFound">
                 <SearchFoundHeader
                     keyword = {decodeURI(this.props.keyword)}
                     amount = {this.state.totalAmount}

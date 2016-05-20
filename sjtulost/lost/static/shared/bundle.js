@@ -22217,16 +22217,16 @@
 	var HomePage = React.createClass({ displayName: "HomePage",
 	    getInitialState: function getInitialState() {
 	        return {
-	            findings: FindingStore.getFindingsWithAmount(4),
-	            founds: FoundStore.getFoundsWithAmount(4)
+	            findings: FindingStore.getFindings().slice(0, 4),
+	            founds: FoundStore.getFounds().slice(0, 4)
 	        };
 	    },
 
 	    componentDidMount: function componentDidMount() {
 	        FindingStore.addChangeListener(this._onFindingChange);
 	        FoundStore.addChangeListener(this._onFoundChange);
-	        FindingAction.fetchData();
-	        FoundAction.fetchData();
+	        FindingAction.fetchData(1);
+	        FoundAction.fetchData(1);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -22236,13 +22236,13 @@
 
 	    _onFindingChange: function _onFindingChange() {
 	        this.setState({
-	            findings: FindingStore.getFindingsWithAmount(4)
+	            findings: FindingStore.getFindings().slice(0, 4)
 	        });
 	    },
 
 	    _onFoundChange: function _onFoundChange() {
 	        this.setState({
-	            founds: FoundStore.getFoundsWithAmount(4)
+	            founds: FoundStore.getFounds().slice(0, 4)
 	        });
 	    },
 
@@ -57432,7 +57432,7 @@
 	    },
 
 	    render: function render() {
-	        return React.createElement("div", { className: "searchFinding" }, React.createElement(SearchFoundHeader, {
+	        return React.createElement("div", { className: "searchFound" }, React.createElement(SearchFoundHeader, {
 	            keyword: decodeURI(this.props.keyword),
 	            amount: this.state.totalAmount }), React.createElement("hr", null), React.createElement(SearchFoundContent, {
 	            founds: this.state.founds }), React.createElement(SearchFoundPagination, {
