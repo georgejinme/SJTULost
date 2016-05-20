@@ -86,7 +86,6 @@ def user_info(sid):
     }
     return user_dict
 
-
 # external functions
 
 
