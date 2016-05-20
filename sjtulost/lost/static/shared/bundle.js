@@ -22267,14 +22267,16 @@
 	        });
 	    },
 
-	    fetchDataWithFilter: function fetchDataWithFilter(item, place) {
+	    fetchDataWithFilter: function fetchDataWithFilter(item, place, position) {
 	        $.post('/getfindingswithfilter/', {
 	            'item': item,
-	            'place': place
+	            'place': place,
+	            'position': position
 	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FINDING_UPDATE',
-	                findingArray: data
+	                findingArray: data['findings'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
@@ -22681,16 +22683,18 @@
 
 	    _onItemSelectChange: function _onItemSelectChange() {
 	        this.setState({
-	            selectedItemTypes: ItemStore.getSelectedItems()
+	            selectedItemTypes: ItemStore.getSelectedItems(),
+	            position: 1
 	        });
-	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId());
+	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1);
 	    },
 
 	    _onPlaceSelectChange: function _onPlaceSelectChange() {
 	        this.setState({
-	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	            selectedPlaces: PlaceStore.getSelectedPlaces(),
+	            position: 1
 	        });
-	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId());
+	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1);
 	    },
 
 	    _onFindingChange: function _onFindingChange() {
@@ -22709,14 +22713,14 @@
 	    },
 
 	    clickPrevious: function clickPrevious() {
-	        FindingAction.fetchData(this.state.position - 1);
+	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position - 1);
 	        this.setState({
 	            position: this.state.position - 1
 	        });
 	    },
 
 	    clickNext: function clickNext() {
-	        FindingAction.fetchData(this.state.position + 1);
+	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position + 1);
 	        this.setState({
 	            position: this.state.position + 1
 	        });
@@ -22724,7 +22728,7 @@
 
 	    clickRange: function clickRange(ev) {
 	        var id = idOperation.decodeId(ev.target.id);
-	        FindingAction.fetchData(id);
+	        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), id);
 	        this.setState({
 	            position: parseInt(id)
 	        });

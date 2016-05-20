@@ -17,14 +17,16 @@ var FindingAction = {
         });
     },
 
-    fetchDataWithFilter: function(item, place) {
+    fetchDataWithFilter: function(item, place, position) {
         $.post('/getfindingswithfilter/',{
             'item': item,
-            'place': place
+            'place': place,
+            'position': position
         },function(data) {
             AppDispatcher.dispatch({
                 actionType: 'FINDING_UPDATE',
-                findingArray: data
+                findingArray: data['findings'],
+                amount: data['amount']
             });
         });
     },

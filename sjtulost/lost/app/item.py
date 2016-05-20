@@ -1,6 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from lost.models import ItemType
 
+def item_type_amount():
+    return ItemType.objects.count()
+
 def get_item_type_by_id(i):
     return ItemType.objects.get(id=i)
 

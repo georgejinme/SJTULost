@@ -1,6 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from lost.models import Place
 
+def place_amount():
+    return Place.objects.count()
+
+
 def get_place_by_id(i):
     return Place.objects.get(id=i)
 

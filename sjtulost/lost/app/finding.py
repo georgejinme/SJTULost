@@ -75,9 +75,6 @@ def check_finding(j):
 
 # internal function
 
-def finding_amount():
-    return Finding.objects.count()
-
 def finding_places(finding):
     finding_places_array = [p.description for p in finding.place_ids.all()]
     return ",".join(finding_places_array)
@@ -112,8 +109,8 @@ def finding_format(findings_array):
 def findings(page):
     start = page * FINDINGS_AMOUNT_EACH_PAGE
     end = (page + 1) * FINDINGS_AMOUNT_EACH_PAGE
-    findings_array = Finding.objects.all().order_by('-lost_time')[start:end]
-    return finding_format(findings_array)
+    findings_list = Finding.objects.all().order_by('-lost_time')
+    return finding_format(findings_list[start:end]), findings_list.count()
 
 def findings_with_item(item):
     findings_list = Finding.objects.none()
@@ -132,11 +129,13 @@ def findings_with_place(place):
     return findings_list.distinct()
 
 
-def findings_with_item_and_place(item, place):
+def findings_with_item_and_place(item, place, page):
+    start = page * FINDINGS_AMOUNT_EACH_PAGE
+    end = (page + 1) * FINDINGS_AMOUNT_EACH_PAGE
     item_findings = findings_with_item(item)
     place_findings = findings_with_place(place)
     findings_list = (item_findings & place_findings).order_by('-lost_time')
-    return finding_format(findings_list)
+    return finding_format(findings_list[start:end]), findings_list.count()
 
 def findings_with_id(finding_id):
     return finding_format([Finding.objects.get(id = finding_id)])
@@ -154,16 +153,22 @@ def findings_with_place_detail(pd):
 
 def get_all_findings(request):
     page_number = int(request.POST['position']) - 1
+    findings_list, findings_amount = findings(page_number)
     return JsonResponse({
-        'findings': findings(page_number),
-        'amount': finding_amount()
+        'findings': findings_list,
+        'amount': findings_amount
     }, safe=False)
 
 
 def get_findings_with_filter(request):
+    page_number = int(request.POST['position']) - 1
     item = request.POST.getlist('item[]')
     place = request.POST.getlist('place[]')
-    return JsonResponse(findings_with_item_and_place(item, place), safe=False)
+    findings_list, findings_amount = findings_with_item_and_place(item, place, page_number)
+    return JsonResponse({
+        'findings': findings_list,
+        'amount': findings_amount
+    }, safe=False)
 
 
 def get_findings_with_id(request):

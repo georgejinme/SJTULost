@@ -238,16 +238,18 @@ var Finding = React.createClass({
 
     _onItemSelectChange: function() {
         this.setState({
-            selectedItemTypes: ItemStore.getSelectedItems()
+            selectedItemTypes: ItemStore.getSelectedItems(),
+            position: 1
         });
-        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1)
     },
 
     _onPlaceSelectChange: function() {
         this.setState({
-            selectedPlaces: PlaceStore.getSelectedPlaces()
+            selectedPlaces: PlaceStore.getSelectedPlaces(),
+            position: 1
         });
-        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1)
     },
 
     _onFindingChange: function() {
@@ -266,14 +268,14 @@ var Finding = React.createClass({
     },
 
     clickPrevious: function() {
-        FindingAction.fetchData(this.state.position - 1);
+        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position - 1);
         this.setState({
             position: this.state.position - 1
         });
     },
 
     clickNext: function() {
-        FindingAction.fetchData(this.state.position + 1);
+        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position + 1);
         this.setState({
             position: this.state.position + 1
         });
@@ -281,7 +283,7 @@ var Finding = React.createClass({
 
     clickRange: function(ev) {
         var id = idOperation.decodeId(ev.target.id);
-        FindingAction.fetchData(id);
+        FindingAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), id);
         this.setState({
             position: parseInt(id)
         });
