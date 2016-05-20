@@ -42,13 +42,15 @@ var FindingAction = {
         })
     },
 
-    fetchDataWithKeyword: function(keyword){
+    fetchDataWithKeyword: function(keyword, position){
         $.post('/getfindingswithkeyword/', {
-            'keyword': keyword
+            'keyword': keyword,
+            'position': position
         }, function(data){
             AppDispatcher.dispatch({
                 actionType: 'FINDING_INITIALIZATION',
-                findingArray: data
+                findingArray: data['findings'],
+                amount: data['amount']
             })
         })
     },

@@ -208,6 +208,20 @@ input:focus{
     min-height: 450px;
 }
 
+.pagination {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.pagination li a{
+    color: brown;
+}
+
+.pagination .active a {
+    background-color: brown;
+    border-color: brown;
+}
+
 .navPublishHidden {
     display: none !important;
 }
@@ -360,19 +374,6 @@ input:focus{
     text-decoration: none;
 }
 
-.findingPagination {
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
-
-.findingPagination li a{
-    color: brown;
-}
-
-.findingPagination .active a {
-    background-color: brown;
-    border-color: brown;
-}
 
 
 /*

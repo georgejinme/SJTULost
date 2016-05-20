@@ -42,7 +42,7 @@ var FindingStore = assign({}, EventEmitter.prototype, {
      */
     uploadImageStatus: -1,
 
-    //not this.findings.count
+    //not this.findings.length
     totalAmount: 0,
 
     getDefaultFinding: function() {

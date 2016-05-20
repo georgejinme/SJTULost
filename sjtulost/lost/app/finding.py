@@ -176,6 +176,9 @@ def get_findings_with_id(request):
     return JsonResponse(findings_with_id(finding_id), safe=False)
 
 def get_findings_with_keyword(request):
+    page_number = int(request.POST['position']) - 1
+    start = page_number * FINDINGS_AMOUNT_EACH_PAGE
+    end = (page_number + 1) * FINDINGS_AMOUNT_EACH_PAGE
     keyword = request.POST['keyword']
     keyword_list_and = keyword.split(' ')
     findings_set_and = Finding.objects.all().distinct()
@@ -186,7 +189,10 @@ def get_findings_with_keyword(request):
             each_findings_set = (findings_with_description(each_keyword) | findings_with_detail(each_keyword) | findings_with_place_detail(each_keyword)).distinct()
             findings_set_or = (findings_set_or | each_findings_set).distinct()
         findings_set_and = (findings_set_and & findings_set_or).distinct().order_by('-lost_time')
-    return JsonResponse(finding_format(findings_set_and), safe=False)
+    return JsonResponse({
+        'findings': finding_format(findings_set_and[start:end]),
+        'amount': findings_set_and.count()
+    }, safe=False)
 
 
 # code:

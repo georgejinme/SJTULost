@@ -21538,7 +21538,7 @@
 	     */
 	    uploadImageStatus: -1,
 
-	    //not this.findings.count
+	    //not this.findings.length
 	    totalAmount: 0,
 
 	    getDefaultFinding: function getDefaultFinding() {
@@ -22292,13 +22292,15 @@
 	        });
 	    },
 
-	    fetchDataWithKeyword: function fetchDataWithKeyword(keyword) {
+	    fetchDataWithKeyword: function fetchDataWithKeyword(keyword, position) {
 	        $.post('/getfindingswithkeyword/', {
-	            'keyword': keyword
+	            'keyword': keyword,
+	            'position': position
 	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FINDING_INITIALIZATION',
-	                findingArray: data
+	                findingArray: data['findings'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
@@ -22539,7 +22541,7 @@
 
 	var idOperation = __webpack_require__(173);
 
-	var findingsEachPage = 10;
+	var FindingPagination = __webpack_require__(438);
 
 	var FindingTypeRow = React.createClass({ displayName: "FindingTypeRow",
 	    getSelectedClass: function getSelectedClass(index) {
@@ -22590,48 +22592,6 @@
 	            return React.createElement("div", null, React.createElement(FindingItem, {
 	                json: val }), React.createElement("hr", null));
 	        }));
-	    }
-	});
-
-	var FindingPagination = React.createClass({ displayName: "FindingPagination",
-	    getLeftArrowClass: function getLeftArrowClass() {
-	        if (this.props.position == 1) return 'disabled';else return '';
-	    },
-
-	    getRightArrowClass: function getRightArrowClass() {
-	        var lastPos = 0;
-	        if (this.props.totalAmount % findingsEachPage == 0) lastPos = this.props.totalAmount / findingsEachPage;else lastPos = this.props.totalAmount / findingsEachPage + 1;
-	        lastPos = parseInt(lastPos);
-	        if (this.props.position == lastPos) return 'disabled';else return '';
-	    },
-
-	    getRangeClass: function getRangeClass(p) {
-	        if (p == this.props.position) return 'active';else return '';
-	    },
-
-	    getRange: function getRange() {
-	        var lastPos = 0;
-	        if (this.props.totalAmount % findingsEachPage == 0) lastPos = this.props.totalAmount / findingsEachPage;else lastPos = this.props.totalAmount / findingsEachPage + 1;
-	        lastPos = parseInt(lastPos);
-	        var resArray = [];
-	        if (lastPos < 5) {
-	            for (var i = 1; i <= lastPos; ++i) resArray.push(i);
-	        } else if (this.props.position < 3) resArray = [1, 2, 3, 4, 5];else if (this.props.position > lastPos - 2) {
-	            resArray = [lastPos - 4, lastPos - 3, lastPos - 2, lastPos - 1, lastPos];
-	        } else {
-	            resArray = [this.props.position - 2, this.props.position - 1, this.props.position, this.props.position + 1, this.props.position + 2];
-	        }
-	        return resArray;
-	    },
-
-	    render: function render() {
-	        var range = this.getRange();
-	        var rangeClass = this.getRangeClass;
-	        var clickRange = this.props.clickRange;
-	        return React.createElement("ul", { className: "pagination findingPagination" }, React.createElement("li", { className: this.getLeftArrowClass(), onClick: this.props.clickPrevious }, React.createElement("a", { href: "#" }, "«")), range.map(function (val, index) {
-	            return React.createElement("li", { className: rangeClass(val),
-	                onClick: clickRange }, React.createElement("a", { href: "#", id: idOperation.encodeId('findingPage', val) }, val));
-	        }), React.createElement("li", { className: this.getRightArrowClass(), onClick: this.props.clickNext }, React.createElement("a", { href: "#" }, "»")));
 	    }
 	});
 
@@ -22747,7 +22707,8 @@
 	            totalAmount: this.state.totalAmount,
 	            clickPrevious: this.clickPrevious,
 	            clickNext: this.clickNext,
-	            clickRange: this.clickRange }));
+	            clickRange: this.clickRange,
+	            eachPage: 10 }));
 	    }
 	});
 
@@ -57154,6 +57115,9 @@
 	var FindingStore = __webpack_require__(165);
 	var FindingAction = __webpack_require__(171).FindingAction;
 
+	var SearchFindingPagination = __webpack_require__(438);
+	var idOperation = __webpack_require__(173);
+
 	var SearchFindingHeader = React.createClass({ displayName: "SearchFindingHeader",
 	    getKeywordText: function getKeywordText() {
 	        return this.props.keyword.replace('|', ' ');
@@ -57190,13 +57154,15 @@
 
 	    getInitialState: function getInitialState() {
 	        return {
-	            findings: FindingStore.getFindingsWithAmount()
+	            findings: FindingStore.getFindings(),
+	            totalAmount: FindingStore.getTotalAmount(),
+	            position: 1
 	        };
 	    },
 
 	    componentDidMount: function componentDidMount() {
 	        FindingStore.addChangeListener(this._onChange);
-	        FindingAction.fetchDataWithKeyword(decodeURI(this.props.keyword));
+	        FindingAction.fetchDataWithKeyword(decodeURI(this.props.keyword), 1);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -57205,15 +57171,44 @@
 
 	    _onChange: function _onChange() {
 	        this.setState({
-	            findings: FindingStore.getFindingsWithAmount()
+	            findings: FindingStore.getFindings(),
+	            totalAmount: FindingStore.getTotalAmount()
+	        });
+	    },
+
+	    clickPrevious: function clickPrevious() {
+	        FindingAction.fetchDataWithKeyword(decodeURI(this.props.keyword), this.state.position - 1);
+	        this.setState({
+	            position: this.state.position - 1
+	        });
+	    },
+
+	    clickNext: function clickNext() {
+	        FindingAction.fetchDataWithKeyword(decodeURI(this.props.keyword), this.state.position + 1);
+	        this.setState({
+	            position: this.state.position + 1
+	        });
+	    },
+
+	    clickRange: function clickRange(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        FindingAction.fetchDataWithKeyword(decodeURI(this.props.keyword), id);
+	        this.setState({
+	            position: parseInt(id)
 	        });
 	    },
 
 	    render: function render() {
 	        return React.createElement("div", { className: "searchFinding" }, React.createElement(SearchFindingHeader, {
 	            keyword: decodeURI(this.props.keyword),
-	            amount: this.state.findings.length }), React.createElement("hr", null), React.createElement(SearchFindingContent, {
-	            findings: this.state.findings }));
+	            amount: this.state.totalAmount }), React.createElement("hr", null), React.createElement(SearchFindingContent, {
+	            findings: this.state.findings }), React.createElement(SearchFindingPagination, {
+	            position: this.state.position,
+	            totalAmount: this.state.totalAmount,
+	            clickPrevious: this.clickPrevious,
+	            clickNext: this.clickNext,
+	            clickRange: this.clickRange,
+	            eachPage: 10 }));
 	    }
 	});
 
@@ -57294,6 +57289,59 @@
 	});
 
 	module.exports = SearchFound;
+
+/***/ },
+/* 438 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var idOperation = __webpack_require__(173);
+
+	var Pagination = React.createClass({ displayName: "Pagination",
+	    getLeftArrowClass: function getLeftArrowClass() {
+	        if (this.props.position == 1) return 'disabled';else return '';
+	    },
+
+	    getRightArrowClass: function getRightArrowClass() {
+	        var lastPos = 0;
+	        if (this.props.totalAmount % this.props.eachPage == 0) lastPos = this.props.totalAmount / this.props.eachPage;else lastPos = this.props.totalAmount / this.props.eachPage + 1;
+	        lastPos = parseInt(lastPos);
+	        if (this.props.position == lastPos) return 'disabled';else return '';
+	    },
+
+	    getRangeClass: function getRangeClass(p) {
+	        if (p == this.props.position) return 'active';else return '';
+	    },
+
+	    getRange: function getRange() {
+	        var lastPos = 0;
+	        if (this.props.totalAmount % this.props.eachPage == 0) lastPos = this.props.totalAmount / this.props.eachPage;else lastPos = this.props.totalAmount / this.props.eachPage + 1;
+	        lastPos = parseInt(lastPos);
+	        var resArray = [];
+	        if (lastPos < 5) {
+	            for (var i = 1; i <= lastPos; ++i) resArray.push(i);
+	        } else if (this.props.position < 3) resArray = [1, 2, 3, 4, 5];else if (this.props.position > lastPos - 2) {
+	            resArray = [lastPos - 4, lastPos - 3, lastPos - 2, lastPos - 1, lastPos];
+	        } else {
+	            resArray = [this.props.position - 2, this.props.position - 1, this.props.position, this.props.position + 1, this.props.position + 2];
+	        }
+	        return resArray;
+	    },
+
+	    render: function render() {
+	        var range = this.getRange();
+	        var rangeClass = this.getRangeClass;
+	        var clickRange = this.props.clickRange;
+	        return React.createElement("ul", { className: "pagination" }, React.createElement("li", { className: this.getLeftArrowClass(), onClick: this.props.clickPrevious }, React.createElement("a", { href: "#" }, "«")), range.map(function (val, index) {
+	            return React.createElement("li", { className: rangeClass(val),
+	                onClick: clickRange }, React.createElement("a", { href: "#", id: idOperation.encodeId('page', val) }, val));
+	        }), React.createElement("li", { className: this.getRightArrowClass(), onClick: this.props.clickNext }, React.createElement("a", { href: "#" }, "»")));
+	    }
+	});
+
+	module.exports = Pagination;
 
 /***/ }
 /******/ ]);
