@@ -115,22 +115,27 @@ var FindingAction = {
 };
 
 var FoundAction = {
-    fetchData: function() {
-        $.get('/getfounds/', function(data) {
+    fetchData: function(position) {
+        $.post('/getfounds/', {
+            'position': position
+        },function(data) {
             AppDispatcher.dispatch({
                 actionType: 'FOUND_INITIALIZATION',
-                foundArray: data
+                foundArray: data['founds'],
+                amount: data['amount']
             })
         })
     },
-    fetchDataWithFilter: function(item, place) {
+    fetchDataWithFilter: function(item, place, position) {
         $.post('/getfoundswithfilter/',{
             'item': item,
-            'place': place
+            'place': place,
+            'position': position
         },function(data) {
             AppDispatcher.dispatch({
                 actionType: 'FOUND_UPDATE',
-                foundArray: data
+                foundArray: data['founds'],
+                amount: data['amount']
             });
         });
     },

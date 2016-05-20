@@ -10,6 +10,8 @@ var FoundStore = require('../flux/store/foundStore');
 
 var idOperation = require('../shared/util');
 
+var FoundPagination = require('../shared/pagination');
+
 var FoundTypeRow = React.createClass({
     getSelectedClass: function(index) {
         if (this.props.selectedData[index] == true) return 'active';
@@ -122,9 +124,11 @@ var Found = React.createClass({
         return {
             itemTypes: ItemStore.getItems(),
             places: PlaceStore.getPlaces(),
-            founds: FoundStore.getFoundsWithAmount(),
+            founds: FoundStore.getFounds(),
             selectedItemTypes: ItemStore.getSelectedItems(),
-            selectedPlaces: PlaceStore.getSelectedPlaces()
+            selectedPlaces: PlaceStore.getSelectedPlaces(),
+            totalAmount: FoundStore.getTotalAmount(),
+            position: 1
         }
     },
 
@@ -136,7 +140,7 @@ var Found = React.createClass({
         PlaceStore.addSelectListener(this._onPlaceSelectChange);
         ItemTypeAction.fetchData();
         PlaceAction.fetchData();
-        FoundAction.fetchData();
+        FoundAction.fetchData(1);
     },
 
     componentWillUnmount: function() {
@@ -163,21 +167,24 @@ var Found = React.createClass({
 
     _onItemSelectChange: function() {
         this.setState({
-            selectedItemTypes: ItemStore.getSelectedItems()
+            selectedItemTypes: ItemStore.getSelectedItems(),
+            position: 1
         });
-        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1)
     },
 
     _onPlaceSelectChange: function() {
         this.setState({
-            selectedPlaces: PlaceStore.getSelectedPlaces()
+            selectedPlaces: PlaceStore.getSelectedPlaces(),
+            position: 1
         });
-        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId())
+        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1)
     },
 
     _onFoundChange: function() {
         this.setState({
-            founds: FoundStore.getFoundsWithAmount()
+            founds: FoundStore.getFounds(),
+            totalAmount: FoundStore.getTotalAmount()
         })
     },
 
@@ -187,6 +194,28 @@ var Found = React.createClass({
 
     selectPlaceHandler: function(event) {
         PlaceAction.select(idOperation.decodeId(event.target.id));
+    },
+
+    clickPrevious: function() {
+        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position - 1);
+        this.setState({
+            position: this.state.position - 1
+        });
+    },
+
+    clickNext: function() {
+        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position + 1);
+        this.setState({
+            position: this.state.position + 1
+        });
+    },
+
+    clickRange: function(ev) {
+        var id = idOperation.decodeId(ev.target.id);
+        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), id);
+        this.setState({
+            position: parseInt(id)
+        });
     },
 
     render: function() {
@@ -203,6 +232,14 @@ var Found = React.createClass({
                 <hr/>
                 <FoundSection
                     data = {this.state.founds}
+                />
+                <FoundPagination
+                    position = {this.state.position}
+                    totalAmount = {this.state.totalAmount}
+                    clickPrevious = {this.clickPrevious}
+                    clickNext = {this.clickNext}
+                    clickRange = {this.clickRange}
+                    eachPage = {10}
                 />
             </div>
         )

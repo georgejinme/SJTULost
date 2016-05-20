@@ -44,6 +44,7 @@ AppDispatcher.register(function (action) {
         case 'FOUND_UPDATE':
         case 'FOUND_VIEWING':
             FoundStore.setFounds(action.foundArray);
+            FoundStore.setTotalAmount(action.amount);
             FoundStore.emitChange();
             break;
 

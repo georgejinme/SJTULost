@@ -161,3 +161,17 @@ def init_database_finding(request):
         finding.place_ids.add(place)
         finding.type_id.add(item)
     return HttpResponse(u'Initialization Complete!')
+
+def init_database_found(request):
+    user = Models.User.objects.get(id=request.session['user_id'])
+    item = Models.ItemType.objects.get(id = 1)
+    place = Models.Place.objects.get(id=1)
+    for i in range(0, 70):
+        finding = Models.Found(user_id=user, description=str(i), state=0,
+                               image='http://7xtbqj.com2.z0.glb.clouddn.com/qwt.jpg',
+                               place_detail=u'bbb',
+                               place_id=place,
+                               found_time='2016-02-09 15:00:00')
+        finding.save()
+        finding.type_id.add(item)
+    return HttpResponse(u'Initialization Complete!')

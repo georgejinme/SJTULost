@@ -20667,6 +20667,7 @@
 	        case 'FOUND_UPDATE':
 	        case 'FOUND_VIEWING':
 	            FoundStore.setFounds(action.foundArray);
+	            FoundStore.setTotalAmount(action.amount);
 	            FoundStore.emitChange();
 	            break;
 
@@ -21718,6 +21719,10 @@
 	     2: uploading
 	     */
 	    uploadImageStatus: -1,
+
+	    //not this.founds.length
+	    totalAmount: 0,
+
 	    getDefaultFound: function getDefaultFound() {
 	        return {
 	            id: 0,
@@ -21735,14 +21740,20 @@
 	        };
 	    },
 
-	    getFoundsWithAmount: function getFoundsWithAmount() {
-	        var amount = arguments.length <= 0 || arguments[0] === undefined ? this.founds.count : arguments[0];
-
-	        return this.founds.slice(0, amount);
+	    getFounds: function getFounds() {
+	        return this.founds;
 	    },
 
 	    setFounds: function setFounds(array) {
 	        this.founds = array;
+	    },
+
+	    getTotalAmount: function getTotalAmount() {
+	        return this.totalAmount;
+	    },
+
+	    setTotalAmount: function setTotalAmount(t) {
+	        this.totalAmount = t;
 	    },
 
 	    setDescription: function setDescription(d) {
@@ -22368,22 +22379,27 @@
 	};
 
 	var FoundAction = {
-	    fetchData: function fetchData() {
-	        $.get('/getfounds/', function (data) {
+	    fetchData: function fetchData(position) {
+	        $.post('/getfounds/', {
+	            'position': position
+	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FOUND_INITIALIZATION',
-	                foundArray: data
+	                foundArray: data['founds'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
-	    fetchDataWithFilter: function fetchDataWithFilter(item, place) {
+	    fetchDataWithFilter: function fetchDataWithFilter(item, place, position) {
 	        $.post('/getfoundswithfilter/', {
 	            'item': item,
-	            'place': place
+	            'place': place,
+	            'position': position
 	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FOUND_UPDATE',
-	                foundArray: data
+	                foundArray: data['founds'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
@@ -22757,6 +22773,8 @@
 
 	var idOperation = __webpack_require__(173);
 
+	var FoundPagination = __webpack_require__(438);
+
 	var FoundTypeRow = React.createClass({ displayName: "FoundTypeRow",
 	    getSelectedClass: function getSelectedClass(index) {
 	        if (this.props.selectedData[index] == true) return 'active';else return '';
@@ -22814,9 +22832,11 @@
 	        return {
 	            itemTypes: ItemStore.getItems(),
 	            places: PlaceStore.getPlaces(),
-	            founds: FoundStore.getFoundsWithAmount(),
+	            founds: FoundStore.getFounds(),
 	            selectedItemTypes: ItemStore.getSelectedItems(),
-	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	            selectedPlaces: PlaceStore.getSelectedPlaces(),
+	            totalAmount: FoundStore.getTotalAmount(),
+	            position: 1
 	        };
 	    },
 
@@ -22828,7 +22848,7 @@
 	        PlaceStore.addSelectListener(this._onPlaceSelectChange);
 	        ItemTypeAction.fetchData();
 	        PlaceAction.fetchData();
-	        FoundAction.fetchData();
+	        FoundAction.fetchData(1);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -22855,21 +22875,24 @@
 
 	    _onItemSelectChange: function _onItemSelectChange() {
 	        this.setState({
-	            selectedItemTypes: ItemStore.getSelectedItems()
+	            selectedItemTypes: ItemStore.getSelectedItems(),
+	            position: 1
 	        });
-	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId());
+	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1);
 	    },
 
 	    _onPlaceSelectChange: function _onPlaceSelectChange() {
 	        this.setState({
-	            selectedPlaces: PlaceStore.getSelectedPlaces()
+	            selectedPlaces: PlaceStore.getSelectedPlaces(),
+	            position: 1
 	        });
-	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId());
+	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), 1);
 	    },
 
 	    _onFoundChange: function _onFoundChange() {
 	        this.setState({
-	            founds: FoundStore.getFoundsWithAmount()
+	            founds: FoundStore.getFounds(),
+	            totalAmount: FoundStore.getTotalAmount()
 	        });
 	    },
 
@@ -22881,6 +22904,28 @@
 	        PlaceAction.select(idOperation.decodeId(event.target.id));
 	    },
 
+	    clickPrevious: function clickPrevious() {
+	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position - 1);
+	        this.setState({
+	            position: this.state.position - 1
+	        });
+	    },
+
+	    clickNext: function clickNext() {
+	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), this.state.position + 1);
+	        this.setState({
+	            position: this.state.position + 1
+	        });
+	    },
+
+	    clickRange: function clickRange(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        FoundAction.fetchDataWithFilter(ItemStore.getSelectedItemsId(), PlaceStore.getSelectedPlacesId(), id);
+	        this.setState({
+	            position: parseInt(id)
+	        });
+	    },
+
 	    render: function render() {
 	        return React.createElement("div", { className: "foundContent" }, React.createElement(FoundType, {
 	            itemTypes: this.state.itemTypes,
@@ -22889,7 +22934,13 @@
 	            selectedPlaces: this.state.selectedPlaces,
 	            selectItemTypeHandler: this.selectItemTypeHandler,
 	            selectPlaceHandler: this.selectPlaceHandler }), React.createElement("hr", null), React.createElement(FoundSection, {
-	            data: this.state.founds }));
+	            data: this.state.founds }), React.createElement(FoundPagination, {
+	            position: this.state.position,
+	            totalAmount: this.state.totalAmount,
+	            clickPrevious: this.clickPrevious,
+	            clickNext: this.clickNext,
+	            clickRange: this.clickRange,
+	            eachPage: 10 }));
 	    }
 	});
 

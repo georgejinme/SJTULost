@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^initdb/$', 'lost.db.initdb.init_database_finding', name='init_database_finding'),
+    url(r'^initdb/$', 'lost.db.initdb.init_database_found', name='init_database_found'),
 
     url(r'^$', 'lost.app.views.home', name='home'),
     url(r'^finding/$', 'lost.app.views.finding', name='finding'),

@@ -6,6 +6,8 @@ import lost.app.place as Place
 import lost.util.time as time
 import lost.util.qiniu_tools as qiniu
 
+FOUNDS_AMOUNT_EACH_PAGE = 10
+
 def check_description(d):
     if len(d) == 0:
         return False
@@ -87,9 +89,11 @@ def found_format(founds_array):
     return founds_dict
 
 
-def founds():
-    founds_array = Found.objects.all().order_by('-found_time')
-    return found_format(founds_array)
+def founds(page):
+    start = page * FOUNDS_AMOUNT_EACH_PAGE
+    end = (page + 1) * FOUNDS_AMOUNT_EACH_PAGE
+    founds_list = Found.objects.all().order_by('-found_time')
+    return found_format(founds_list[start:end]), founds_list.count()
 
 
 def founds_with_item(item):
@@ -110,11 +114,13 @@ def founds_with_place(place):
     return founds_list.distinct()
 
 
-def founds_with_item_and_place(item, place):
+def founds_with_item_and_place(item, place, page):
+    start = page * FOUNDS_AMOUNT_EACH_PAGE
+    end = (page + 1) * FOUNDS_AMOUNT_EACH_PAGE
     item_founds = founds_with_item(item)
     place_founds = founds_with_place(place)
     founds_list = (item_founds & place_founds).order_by('-found_time')
-    return found_format(founds_list)
+    return found_format(founds_list[start:end]), founds_list.count()
 
 def founds_with_description(d):
     return Found.objects.filter(description__contains=d)
@@ -133,13 +139,23 @@ def founds_with_id(found_id):
 # external function
 
 def get_all_founds(request):
-    return JsonResponse(founds(), safe=False)
+    page_number = int(request.POST['position']) - 1
+    founds_list, founds_amount = founds(page_number)
+    return JsonResponse({
+        'founds': founds_list,
+        'amount': founds_amount
+    }, safe=False)
 
 
 def get_founds_with_filter(request):
+    page_number = int(request.POST['position']) - 1
     item = request.POST.getlist('item[]')
     place = request.POST.getlist('place[]')
-    return JsonResponse(founds_with_item_and_place(item, place), safe=False)
+    founds_list, founds_amount = founds_with_item_and_place(item, place, page_number)
+    return JsonResponse({
+        'founds': founds_list,
+        'amount': founds_amount
+    }, safe=False)
 
 
 def get_founds_with_id(request):
