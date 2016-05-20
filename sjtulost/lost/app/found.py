@@ -165,6 +165,9 @@ def get_founds_with_id(request):
 def get_founds_with_keyword(request):
     keyword = request.POST['keyword']
     keyword_list_and = keyword.split(' ')
+    page_number = int(request.POST['position']) - 1
+    start = page_number * FOUNDS_AMOUNT_EACH_PAGE
+    end = (page_number + 1) * FOUNDS_AMOUNT_EACH_PAGE
     founds_set_and = Found.objects.all().distinct()
     for each in keyword_list_and:
         keyword_list_or = each.split('|')
@@ -173,8 +176,10 @@ def get_founds_with_keyword(request):
             each_founds_set = (founds_with_description(each_keyword) | founds_with_detail(each_keyword) | founds_with_place_detail(each_keyword)).distinct()
             founds_set_or = (founds_set_or | each_founds_set).distinct()
         founds_set_and = (founds_set_and & founds_set_or).distinct().order_by('-found_time')
-    print founds_set_and
-    return JsonResponse(found_format(founds_set_and), safe=False)
+    return JsonResponse({
+        'founds': found_format(founds_set_and[start:end]),
+        'amount': founds_set_and.count()
+    }, safe=False)
 
 
 # code:

@@ -22415,13 +22415,15 @@
 	        });
 	    },
 
-	    fetchDataWithKeyword: function fetchDataWithKeyword(keyword) {
+	    fetchDataWithKeyword: function fetchDataWithKeyword(keyword, position) {
 	        $.post('/getfoundswithkeyword/', {
-	            'keyword': keyword
+	            'keyword': keyword,
+	            'position': position
 	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'FOUND_INITIALIZATION',
-	                foundArray: data
+	                foundArray: data['founds'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
@@ -57312,6 +57314,9 @@
 	var FoundStore = __webpack_require__(166);
 	var FoundAction = __webpack_require__(171).FoundAction;
 
+	var SearchFoundPagination = __webpack_require__(438);
+	var idOperation = __webpack_require__(173);
+
 	var SearchFoundHeader = React.createClass({ displayName: "SearchFoundHeader",
 	    getKeywordText: function getKeywordText() {
 	        return this.props.keyword.replace('|', ' ');
@@ -57348,13 +57353,15 @@
 
 	    getInitialState: function getInitialState() {
 	        return {
-	            founds: FoundStore.getFoundsWithAmount()
+	            founds: FoundStore.getFounds(),
+	            totalAmount: FoundStore.getTotalAmount(),
+	            position: 1
 	        };
 	    },
 
 	    componentDidMount: function componentDidMount() {
 	        FoundStore.addChangeListener(this._onChange);
-	        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword));
+	        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), 1);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -57363,15 +57370,44 @@
 
 	    _onChange: function _onChange() {
 	        this.setState({
-	            founds: FoundStore.getFoundsWithAmount()
+	            founds: FoundStore.getFounds(),
+	            totalAmount: FoundStore.getTotalAmount()
+	        });
+	    },
+
+	    clickPrevious: function clickPrevious() {
+	        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), this.state.position - 1);
+	        this.setState({
+	            position: this.state.position - 1
+	        });
+	    },
+
+	    clickNext: function clickNext() {
+	        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), this.state.position + 1);
+	        this.setState({
+	            position: this.state.position + 1
+	        });
+	    },
+
+	    clickRange: function clickRange(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), id);
+	        this.setState({
+	            position: parseInt(id)
 	        });
 	    },
 
 	    render: function render() {
 	        return React.createElement("div", { className: "searchFinding" }, React.createElement(SearchFoundHeader, {
 	            keyword: decodeURI(this.props.keyword),
-	            amount: this.state.founds.length }), React.createElement("hr", null), React.createElement(SearchFoundContent, {
-	            founds: this.state.founds }));
+	            amount: this.state.totalAmount }), React.createElement("hr", null), React.createElement(SearchFoundContent, {
+	            founds: this.state.founds }), React.createElement(SearchFoundPagination, {
+	            position: this.state.position,
+	            totalAmount: this.state.totalAmount,
+	            clickPrevious: this.clickPrevious,
+	            clickNext: this.clickNext,
+	            clickRange: this.clickRange,
+	            eachPage: 10 }));
 	    }
 	});
 

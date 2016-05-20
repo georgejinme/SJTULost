@@ -3,6 +3,9 @@ var React = require('react');
 var FoundStore = require('../flux/store/foundStore');
 var FoundAction = require('../flux/action/initializationAction').FoundAction;
 
+var SearchFoundPagination = require('../shared/pagination');
+var idOperation = require('../shared/util');
+
 var SearchFoundHeader = React.createClass({
     getKeywordText: function() {
         return this.props.keyword.replace('|', ' ')
@@ -73,13 +76,15 @@ var SearchFound = React.createClass({
 
     getInitialState: function() {
         return {
-            founds: FoundStore.getFoundsWithAmount()
+            founds: FoundStore.getFounds(),
+            totalAmount: FoundStore.getTotalAmount(),
+            position: 1
         }
     },
 
     componentDidMount: function() {
         FoundStore.addChangeListener(this._onChange);
-        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword));
+        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), 1);
     },
 
     componentWillUnmount: function() {
@@ -88,7 +93,30 @@ var SearchFound = React.createClass({
 
     _onChange: function () {
         this.setState({
-            founds: FoundStore.getFoundsWithAmount()
+            founds: FoundStore.getFounds(),
+            totalAmount: FoundStore.getTotalAmount()
+        });
+    },
+
+    clickPrevious: function() {
+        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), this.state.position - 1);
+        this.setState({
+            position: this.state.position - 1
+        });
+    },
+
+    clickNext: function() {
+        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), this.state.position + 1);
+        this.setState({
+            position: this.state.position + 1
+        });
+    },
+
+    clickRange: function(ev) {
+        var id = idOperation.decodeId(ev.target.id);
+        FoundAction.fetchDataWithKeyword(decodeURI(this.props.keyword), id);
+        this.setState({
+            position: parseInt(id)
         });
     },
 
@@ -97,11 +125,19 @@ var SearchFound = React.createClass({
             <div className="searchFinding">
                 <SearchFoundHeader
                     keyword = {decodeURI(this.props.keyword)}
-                    amount = {this.state.founds.length}
+                    amount = {this.state.totalAmount}
                 />
                 <hr/>
                 <SearchFoundContent
                     founds = {this.state.founds}
+                />
+                <SearchFoundPagination
+                    position = {this.state.position}
+                    totalAmount = {this.state.totalAmount}
+                    clickPrevious = {this.clickPrevious}
+                    clickNext = {this.clickNext}
+                    clickRange = {this.clickRange}
+                    eachPage = {10}
                 />
             </div>
         )

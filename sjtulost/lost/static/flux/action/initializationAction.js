@@ -151,13 +151,15 @@ var FoundAction = {
         })
     },
 
-    fetchDataWithKeyword: function(keyword){
+    fetchDataWithKeyword: function(keyword, position){
         $.post('/getfoundswithkeyword/', {
-            'keyword': keyword
+            'keyword': keyword,
+            'position': position
         }, function(data){
             AppDispatcher.dispatch({
                 actionType: 'FOUND_INITIALIZATION',
-                foundArray: data
+                foundArray: data['founds'],
+                amount: data['amount']
             })
         })
     },
