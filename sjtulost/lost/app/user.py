@@ -124,7 +124,7 @@ def get_user_findings(request):
     end = (page_number + 1) * FINDINGS_AMOUNT_EACH_PAGE
     if check_user_logined(request):
         user = User.objects.get(id = request.session['user_id'])
-        findings = user.finding_set.all()
+        findings = user.finding_set.all().order_by('-lost_time')
         return JsonResponse({
             'findings': FindingFunctions.finding_format(findings[start:end]),
             'amount': findings.count()
@@ -152,7 +152,7 @@ def get_user_founds(request):
     end = (page_number + 1) * FOUNDS_AMOUNT_EACH_PAGE
     if check_user_logined(request):
         user = User.objects.get(id = request.session['user_id'])
-        founds = user.found_set.all()
+        founds = user.found_set.all().order_by('-found_time')
         return JsonResponse({
             'founds': FoundFunctions.found_format(founds[start:end]),
             'amount': founds.count()
