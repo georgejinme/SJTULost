@@ -21,6 +21,7 @@ GET_ACCESS_TOKEN_URI = 'http://127.0.0.1:8888/getaccesstoken/'
 HOMEPAGE_URL = 'http://127.0.0.1:8888/'
 
 FINDINGS_AMOUNT_EACH_PAGE = 4
+FOUNDS_AMOUNT_EACH_PAGE = 4
 
 jaccount = OAuth2Service(
     client_id=CLIENT_ID,
@@ -146,9 +147,16 @@ def user_findings_done(request):
 
 
 def get_user_founds(request):
+    page_number = int(request.POST['position']) - 1
+    start = page_number * FOUNDS_AMOUNT_EACH_PAGE
+    end = (page_number + 1) * FOUNDS_AMOUNT_EACH_PAGE
     if check_user_logined(request):
         user = User.objects.get(id = request.session['user_id'])
-        return JsonResponse(FoundFunctions.found_format(user.found_set.all()), safe=False)
+        founds = user.found_set.all()
+        return JsonResponse({
+            'founds': FoundFunctions.found_format(founds[start:end]),
+            'amount': founds.count()
+        }, safe=False)
     else:
         return JsonResponse([], safe=False)
 

@@ -20581,11 +20581,14 @@
 	        });
 	    },
 
-	    fetchUserFounds: function fetchUserFounds() {
-	        $.get('/getuserfounds/', function (data) {
+	    fetchUserFounds: function fetchUserFounds(position) {
+	        $.post('/getuserfounds/', {
+	            'position': position
+	        }, function (data) {
 	            AppDispatcher.dispatch({
 	                actionType: 'USER_FOUND_INITIALIZATION',
-	                foundArray: data
+	                foundArray: data['founds'],
+	                amount: data['amount']
 	            });
 	        });
 	    },
@@ -23371,16 +23374,18 @@
 	var MeFound = React.createClass({ displayName: "MeFound",
 	    getInitialState: function getInitialState() {
 	        return {
-	            founds: FoundStore.getFoundsWithAmount(),
+	            founds: FoundStore.getFounds(),
 	            updateResult: FoundStore.getUpdateResult(),
-	            updating: false
+	            updating: false,
+	            totalAmount: FoundStore.getTotalAmount(),
+	            position: 1
 	        };
 	    },
 
 	    componentDidMount: function componentDidMount() {
 	        FoundStore.addChangeListener(this._onFoundChange);
 	        FoundStore.addUpdateListener(this._onFoundUpdate);
-	        UserActions.fetchUserFounds();
+	        UserActions.fetchUserFounds(1);
 	    },
 
 	    componentWillUnmount: function componentWillUnmount() {
@@ -23390,7 +23395,8 @@
 
 	    _onFoundChange: function _onFoundChange() {
 	        this.setState({
-	            founds: FoundStore.getFoundsWithAmount()
+	            founds: FoundStore.getFounds(),
+	            totalAmount: FoundStore.getTotalAmount()
 	        });
 	    },
 
@@ -23405,7 +23411,7 @@
 	                updating: false
 	            });
 	        }, 2100);
-	        UserActions.fetchUserFounds();
+	        UserActions.fetchUserFounds(this.state.position);
 	    },
 
 	    getAlertText: function getAlertText() {
@@ -23424,13 +23430,41 @@
 	        UserActions.userFoundsDone(id);
 	    },
 
+	    clickPrevious: function clickPrevious() {
+	        UserActions.fetchUserFounds(this.state.position - 1);
+	        this.setState({
+	            position: this.state.position - 1
+	        });
+	    },
+
+	    clickNext: function clickNext() {
+	        UserActions.fetchUserFounds(this.state.position + 1);
+	        this.setState({
+	            position: this.state.position + 1
+	        });
+	    },
+
+	    clickRange: function clickRange(ev) {
+	        var id = idOperation.decodeId(ev.target.id);
+	        UserActions.fetchUserFounds(id);
+	        this.setState({
+	            position: parseInt(id)
+	        });
+	    },
+
 	    render: function render() {
 	        var handler = this.foundClick;
-	        return React.createElement("div", { className: "row meFound" }, React.createElement("div", { className: this.getAlertClass() }, React.createElement("p", null, this.getAlertText())), this.state.founds.map(function (val, index) {
+	        return React.createElement("div", null, React.createElement("div", { className: "row meFound" }, React.createElement("div", { className: this.getAlertClass() }, React.createElement("p", null, this.getAlertText())), this.state.founds.map(function (val, index) {
 	            return React.createElement("div", { className: "col-lg-6 col-md-6 col-sm-6" }, React.createElement(MeFoundItem, {
 	                json: val,
 	                foundHandler: handler }));
-	        }));
+	        })), React.createElement("hr", null), React.createElement(Pagination, {
+	            position: this.state.position,
+	            totalAmount: this.state.totalAmount,
+	            clickPrevious: this.clickPrevious,
+	            clickNext: this.clickNext,
+	            clickRange: this.clickRange,
+	            eachPage: 4 }));
 	    }
 	});
 

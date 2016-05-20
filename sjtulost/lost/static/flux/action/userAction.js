@@ -36,11 +36,14 @@ var UserActions = {
         })
     },
 
-    fetchUserFounds: function () {
-        $.get('/getuserfounds/', function(data) {
+    fetchUserFounds: function (position) {
+        $.post('/getuserfounds/',{
+            'position': position
+        }, function(data) {
             AppDispatcher.dispatch({
                 actionType: 'USER_FOUND_INITIALIZATION',
-                foundArray: data
+                foundArray: data['founds'],
+                amount: data['amount']
             })
         })
     },

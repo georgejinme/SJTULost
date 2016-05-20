@@ -311,9 +311,11 @@ var MeFoundItem = React.createClass({
 var MeFound = React.createClass({
     getInitialState: function() {
         return {
-            founds: FoundStore.getFoundsWithAmount(),
+            founds: FoundStore.getFounds(),
             updateResult: FoundStore.getUpdateResult(),
-            updating: false
+            updating: false,
+            totalAmount: FoundStore.getTotalAmount(),
+            position: 1
         }
     },
 
@@ -321,7 +323,7 @@ var MeFound = React.createClass({
     componentDidMount: function() {
         FoundStore.addChangeListener(this._onFoundChange);
         FoundStore.addUpdateListener(this._onFoundUpdate);
-        UserActions.fetchUserFounds();
+        UserActions.fetchUserFounds(1);
     },
 
     componentWillUnmount: function() {
@@ -331,7 +333,8 @@ var MeFound = React.createClass({
 
     _onFoundChange: function () {
         this.setState({
-            founds: FoundStore.getFoundsWithAmount()
+            founds: FoundStore.getFounds(),
+            totalAmount: FoundStore.getTotalAmount()
         });
     },
 
@@ -346,7 +349,7 @@ var MeFound = React.createClass({
                 updating: false
             })}, 2100
         );
-        UserActions.fetchUserFounds()
+        UserActions.fetchUserFounds(this.state.position)
     },
 
     getAlertText: function() {
@@ -367,25 +370,58 @@ var MeFound = React.createClass({
         UserActions.userFoundsDone(id)
     },
 
+    clickPrevious: function() {
+        UserActions.fetchUserFounds(this.state.position - 1);
+        this.setState({
+            position: this.state.position - 1
+        });
+    },
+
+    clickNext: function() {
+        UserActions.fetchUserFounds(this.state.position + 1);
+        this.setState({
+            position: this.state.position + 1
+        });
+    },
+
+    clickRange: function(ev) {
+        var id = idOperation.decodeId(ev.target.id);
+        UserActions.fetchUserFounds(id);
+        this.setState({
+            position: parseInt(id)
+        });
+    },
+
     render: function() {
         var handler = this.foundClick;
         return (
-            <div className="row meFound">
-                <div className={this.getAlertClass()}>
-                    <p>{this.getAlertText()}</p>
+            <div>
+                <div className="row meFound">
+                    <div className={this.getAlertClass()}>
+                        <p>{this.getAlertText()}</p>
+                    </div>
+                    {
+                        this.state.founds.map(function(val, index){
+                            return (
+                                <div className="col-lg-6 col-md-6 col-sm-6">
+                                    <MeFoundItem
+                                        json = {val}
+                                        foundHandler = {handler}
+                                    />
+                                </div>
+                            )
+                        })
+                    }
                 </div>
-                {
-                    this.state.founds.map(function(val, index){
-                        return (
-                            <div className="col-lg-6 col-md-6 col-sm-6">
-                                <MeFoundItem
-                                    json = {val}
-                                    foundHandler = {handler}
-                                />
-                            </div>
-                        )
-                    })
-                }
+                <hr/>
+                <Pagination
+                    position = {this.state.position}
+                    totalAmount = {this.state.totalAmount}
+                    clickPrevious = {this.clickPrevious}
+                    clickNext = {this.clickNext}
+                    clickRange = {this.clickRange}
+                    eachPage = {4}
+                />
             </div>
         )
     }
