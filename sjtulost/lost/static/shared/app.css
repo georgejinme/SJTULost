@@ -223,6 +223,15 @@ input:focus{
     border-color: brown;
 }
 
+.pagination .active a:hover{
+    background-color: brown;
+    border-color: brown;
+}
+
+.pagination li a:hover{
+    color: brown;
+}
+
 .navPublishHidden {
     display: none !important;
 }
